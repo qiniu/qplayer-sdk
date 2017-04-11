@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">qplayerTest</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_exit">Exit</string>
+    <string name="set_videoquality_title">Video Playback</string>
+    <string name="set_videoquality_desc">Prefer video quality or play smooth</string>
+    <string name="set_videoquality_option_quality">Video Quality</string>
+    <string name="set_videoquality_option_smooth">Play Smooth</string>
+    <string name="set_subtitle_title">Subtitle</string>
+    <string name="set_subtitle_desc">Show or hide subtitle</string>
+    <string name="set_colortype_title">Color Format</string>
+    <string name="set_colortype_desc">Set color format to render</string>
+    <string name="set_colortype_option_yuv">YUV</string>
+    <string name="set_colortype_option_rgb">RGB</string>
+    <string name="set_videodec_title">Video Decoder</string>
+    <string name="set_videoeec_desc">Set video decoder type</string>
+    <string name="set_videoeec_option_auto">Auto</string>
+    <string name="set_videoeec_option_Soft">Soft</string>
+    <string name="set_videoeec_option_IOMX">IOMX</string>
+    <string name="set_videoeec_option_MediaCodec">MediaCodec</string>
+    <string name="title_activity_file_list_view">yyPlayer</string>
+    <string name="tabFileList">Local File</string>
+    <string name="tabLastPlay">Last Played</string>
+    <string name="tabMyBox">My Box</string>
+</resources>

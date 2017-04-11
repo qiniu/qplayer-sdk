@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlMain"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000" >
+    	      
+	 <RelativeLayout
+	     android:id="@+id/layView"
+	     android:layout_width="fill_parent"
+	     android:layout_height="fill_parent"
+	     android:layout_centerInParent="true" >
+	     
+         <SurfaceView
+	        android:id="@+id/svVideo"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent" 
+	        android:layout_centerInParent="true"/>
+         
+      <TextView
+          android:id="@+id/tvSubTT"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentBottom="true"
+          android:layout_centerHorizontal="true"
+          android:layout_centerInParent="true"
+          android:layout_marginBottom="12dp"
+          android:gravity="center"
+          android:textSize="24dp"
+          android:textStyle="normal"
+          android:typeface="normal" />
+
+    <RelativeLayout
+        android:id="@+id/layControls"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:background="@android:color/transparent" >
+
+        <ImageButton
+            android:id="@+id/btnPlay"
+            android:layout_width="116dp"
+            android:layout_height="116dp"
+            android:layout_centerInParent="true"
+            android:background="@layout/btn_play" >
+        </ImageButton>
+
+		<SeekBar
+           android:id="@+id/sbPlayer"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+           android:layout_marginLeft="20dp"
+           android:layout_marginRight="20dp"
+           android:paddingBottom="30dp"
+           android:paddingLeft="8dp"
+           android:paddingRight="8dp"
+           android:paddingTop="7dp"
+           android:max="100"
+           android:progress="0"
+           android:progressDrawable="@layout/seek_player"
+           android:thumb="@layout/seek_thumb" />
+
+		<ImageButton
+           android:id="@+id/btnPause"
+           android:layout_width="116dp"
+           android:layout_height="116dp"
+			android:background="@layout/btn_pause"
+			android:layout_alignTop="@+id/btnPlay"
+			android:layout_alignLeft="@+id/btnPlay"
+			android:layout_alignStart="@+id/btnPlay">
+       </ImageButton>
+
+		<Button
+			android:text="Streams"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:id="@+id/btnStreams" />
+
+	</RelativeLayout>
+
+	 </RelativeLayout>
+	 
+</RelativeLayout>
