@@ -54,6 +54,9 @@ typedef struct
 	// get the source is end of stream or not.
 	bool			(* IsEOS) (void * hParser); 
 
+	// get the source is live or not.
+	bool			(* IsLive) (void * hParser); 
+
 	// enable the subtitle or not.
 	int				(* EnableSubtt) (void * hParser,bool bEnable);
 

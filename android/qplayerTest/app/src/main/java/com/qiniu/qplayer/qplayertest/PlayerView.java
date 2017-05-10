@@ -103,7 +103,10 @@ public class PlayerView extends Activity
 		{
 			m_Player.SetView(m_svVideo);
 
-			m_Player.Play();
+			if (m_Player.GetDuration() <= 0)
+				m_Player.SetParam(BasePlayer.QCPLAY_PID_Disable_Video, 0, null);
+			else
+				m_Player.Play();
 
 			m_btnPause.setVisibility(View.VISIBLE);
 			m_btnPlay.setVisibility(View.INVISIBLE);
@@ -241,7 +244,7 @@ public class PlayerView extends Activity
 		if (m_Player != null) 
 		{
 			if (m_Player.GetDuration() <= 0) {
-				Close();
+				m_Player.SetParam(BasePlayer.QCPLAY_PID_Disable_Video, 1, null);
 			}  else {
 				m_Player.SetPos(m_Player.GetPos());
 				m_Player.Pause();

@@ -25,6 +25,8 @@ import android.view.MenuItem;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -32,6 +34,8 @@ public class FileListView extends AppCompatActivity {
     private String							m_strRootPath = null;
     static private String					m_strListPath = null;
     private ListView						m_lstFiles = null;
+    private EditText                        m_txtURL = null;
+    private Button                          m_btnPlay = null;
     private AdapterView.OnItemClickListener m_lvListener = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +140,17 @@ public class FileListView extends AppCompatActivity {
         };
         m_lstFiles = (ListView)findViewById (R.id.listViewFile);
         m_lstFiles.setOnItemClickListener(m_lvListener);
+        m_txtURL = (EditText)findViewById (R.id.editTextURL);
+        m_btnPlay = (Button)findViewById (R.id.buttonPlay);
+
+        m_btnPlay.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            String strURL = m_txtURL.getText ().toString();
+            Intent intent = new Intent(FileListView.this, PlayerView.class);
+            intent.setData(Uri.parse(strURL));
+            startActivity(intent);
+            }
+        });
     }
 
     private void updateURLList (String strFile) {

@@ -23,6 +23,9 @@ public interface BasePlayer {
 	public static final int 	PARAM_PID_EVENT_DONE		= 0X100;
 	// the param should be double
 	public static final	int 	QCPLAY_PID_Speed			= 0X11000002;
+	// the param shoud be 1 disable video rnd, 0 enable render.
+	public static final	int 	QCPLAY_PID_Disable_Video	= 0X11000003;
+
 	// the param shoudl be int
 	public static final	int 	QCPLAY_PID_StreamNum		= 0X11000005;
 	public static final	int 	QCPLAY_PID_StreamPlay		= 0X11000006;
