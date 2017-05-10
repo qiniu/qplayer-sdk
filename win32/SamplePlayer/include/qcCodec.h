@@ -18,6 +18,36 @@
 extern "C" {
 #endif /* __cplusplus */
 
+enum qcAudioSampleFormat {
+	QA_SAMPLE_FMT_NONE = -1,
+	QA_SAMPLE_FMT_U8,          ///< unsigned 8 bits
+	QA_SAMPLE_FMT_S16,         ///< signed 16 bits
+	QA_SAMPLE_FMT_S32,         ///< signed 32 bits
+	QA_SAMPLE_FMT_FLT,         ///< float
+	QA_SAMPLE_FMT_DBL,         ///< double
+
+	QA_SAMPLE_FMT_U8P,         ///< unsigned 8 bits, planar
+	QA_SAMPLE_FMT_S16P,        ///< signed 16 bits, planar
+	QA_SAMPLE_FMT_S32P,        ///< signed 32 bits, planar
+	QA_SAMPLE_FMT_FLTP,        ///< float, planar
+	QA_SAMPLE_FMT_DBLP,        ///< double, planar
+	QA_SAMPLE_FMT_S64,         ///< signed 64 bits
+	QA_SAMPLE_FMT_S64P,        ///< signed 64 bits, planar
+
+	QA_SAMPLE_FMT_NB           ///< Number of sample formats. DO NOT USE if linking dynamically
+};
+
+// qc Audio frame info
+typedef struct
+{
+	int			nSampleRate;
+	int			nChannels;
+	int			nFormat;
+	int			nNBSamples;
+	char *		pDataBuff[3];
+	int			nDataSize[3];
+} QC_AUDIO_FRAME;
+
 /**
  * the qc parser interface 
  */
@@ -25,6 +55,9 @@ typedef struct
 {
 	// Define the version of the Codec. It shuild be 1
 	int				nVer;
+
+	// indicate it is video or audio. 1 is video, 0 is audio, -1 is subtt
+	int				nAVType;
 	// The Codec handle, it will fill in function qcCreateDecoder.
 	void *			hCodec;
 
@@ -47,8 +80,8 @@ typedef struct
 } QC_Codec_Func;
 
 // create the Codec with Codec type.
-DLLEXPORT_C int	qcCreateDecoder (QC_Codec_Func * pCodec, int nCodecID);
-typedef int	(* QCCREATEDECODER) (QC_Codec_Func * pCodec, int nCodecID);
+DLLEXPORT_C int	qcCreateDecoder (QC_Codec_Func * pCodec, void * pFormat);
+typedef int(*QCCREATEDECODER) (QC_Codec_Func * pCodec, void * pFormat);
 
 // destory the Codec
 DLLEXPORT_C int	qcDestroyDecoder (QC_Codec_Func * pCodec);

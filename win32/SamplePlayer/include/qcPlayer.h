@@ -32,6 +32,8 @@ typedef enum {
 // the flag for open source
 #define	QCPLAY_OPEN_VIDDEC_HW				0X01000000
 
+#define	QCPLAY_OPEN_SAME_SOURCE				0X02000000
+
 //  Call back function of player notify event
 typedef void (QC_API * QCPlayerNotifyEvent) (void * pUserData, int nID, void * pValue1);
 
