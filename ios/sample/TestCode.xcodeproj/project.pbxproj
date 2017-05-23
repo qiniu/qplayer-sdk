@@ -27,7 +27,6 @@
 		A015036E1E72482300B6093E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A015036D1E72482300B6093E /* libz.tbd */; };
 		A01503701E72488500B6093E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A015036F1E72488500B6093E /* libiconv.tbd */; };
 		A09DCC991E91F0CB00DC855E /* export.plist in Resources */ = {isa = PBXBuildFile; fileRef = A09DCC981E91F0CB00DC855E /* export.plist */; };
-		A0F30F961EBAB871009F714B /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0F30F951EBAB871009F714B /* AdSupport.framework */; };
 		A0F41EA71E6C1BAC0024DA4C /* seekbar.png in Resources */ = {isa = PBXBuildFile; fileRef = A0F41EA51E6C1BAC0024DA4C /* seekbar.png */; };
 		A0F41EA81E6C1BAC0024DA4C /* seekbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A0F41EA61E6C1BAC0024DA4C /* seekbar@2x.png */; };
 /* End PBXBuildFile section */
@@ -60,7 +59,6 @@
 		A09DCC981E91F0CB00DC855E /* export.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = export.plist; sourceTree = "<group>"; };
 		A0DBD2661E6E60B600EBF5B8 /* qcMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qcMsg.h; path = ../../../../include/qcMsg.h; sourceTree = "<group>"; };
 		A0DBD2671E6E60B600EBF5B8 /* qcPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qcPlayer.h; path = ../../../../include/qcPlayer.h; sourceTree = "<group>"; };
-		A0F30F951EBAB871009F714B /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		A0F41EA51E6C1BAC0024DA4C /* seekbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = seekbar.png; sourceTree = "<group>"; };
 		A0F41EA61E6C1BAC0024DA4C /* seekbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "seekbar@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,7 +68,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A0F30F961EBAB871009F714B /* AdSupport.framework in Frameworks */,
 				A01503701E72488500B6093E /* libiconv.tbd in Frameworks */,
 				A015036E1E72482300B6093E /* libz.tbd in Frameworks */,
 				2741A0B81E55A9ED009F87FA /* VideoToolbox.framework in Frameworks */,
@@ -93,7 +90,6 @@
 		27648E1D1E3716FA005C1A20 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A0F30F951EBAB871009F714B /* AdSupport.framework */,
 				A015036F1E72488500B6093E /* libiconv.tbd */,
 				A015036D1E72482300B6093E /* libz.tbd */,
 				2741A0B71E55A9ED009F87FA /* VideoToolbox.framework */,
@@ -349,6 +345,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -375,6 +372,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = GDFHW66V92;
 				ENABLE_BITCODE = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					../../../include,
 					../include,
@@ -403,6 +401,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = GDFHW66V92;
 				ENABLE_BITCODE = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				HEADER_SEARCH_PATHS = (
 					../../../include,
 					../include,

@@ -55,9 +55,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if (nID == QC_MSG_PLAY_OPEN_DONE)
     {
         NSLog(@"Run\n");
-        //[self updateStreamInfo];
         if(_player.hPlayer)
             _player.Run(_player.hPlayer);
+        _btnStart.enabled = ![self isLive];
+        _sliderPosition.enabled = ![self isLive];
     }
     else if(nID == QC_MSG_PLAY_OPEN_FAILED)
     {
@@ -203,13 +204,13 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear4/prog_index.m3u8"];
     
     //NSString* base = @"http://192.168.0.123";
-    NSString* base = @"http://192.168.101.100";
+    NSString* base = @"http://100.100.41.244";
     
     [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/hls/gear/index.m3u8"]];
     [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/1920x1080_25f_1200k_TMVP_randomaccess_main.mp4"]];
     [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/h264_MP_1920x1080_8000k_30f.mp4"]];
     [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/1920x1080.flv"]];
-    [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/karaok.flv"]];
+    [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/02.mp3"]];
     [_urlList addObject:[NSString stringWithFormat:@"%@%@", @"", @""]];
 #endif
     
@@ -437,19 +438,14 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [self prepareURL];
     
     _isFullScreen = NO;
-    
-    //[self onStart:_btnStart];
 }
 
 #pragma mark UI action
 -(IBAction)onStart:(id)sender
 {
     [self createPlayer];
-    
     UIButton* btn = (UIButton*)sender;
-    
     NSLog(@"+Start, %s", [_urlList count]<=0?"":[_urlList[_currURL] UTF8String]);
-    
     QCPLAY_STATUS status = _player.GetStatus(_player.hPlayer);
     
     if(status == QC_PLAY_Pause)
@@ -555,7 +551,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if(!url)
         return;
     
-    bool isLive = [url containsString:@"rtmp://"];
+    bool isLive = [self isLive];
     
     if(active)
     {
@@ -852,7 +848,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     return [[NSProcessInfo processInfo] systemUptime] * 1000;
 }
 
+-(bool)isLive
+{
+    if(_player.hPlayer)
+    {
+        if(_player.GetDur(_player.hPlayer) > 0)
+            return NO;
+    }
 
+    return YES;
+}
 
 #pragma mark Other
 - (void)didReceiveMemoryWarning
