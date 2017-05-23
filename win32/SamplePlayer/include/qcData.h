@@ -42,6 +42,8 @@ typedef enum {
     QC_PARSER_MP4,
     QC_PARSER_FLV,
 	QC_PARSER_TS,
+    QC_PARSER_MP3,
+    QC_PARSER_AAC,
 	QC_PARSER_MAX		= 0X7FFFFFFF
 }QCParserFormat;
 
@@ -56,6 +58,7 @@ typedef enum {
     // audio codecs 
     QC_CODEC_ID_AAC		= 0x10000,
     QC_CODEC_ID_MP3, 
+	QC_CODEC_ID_MP2,
 	QC_CODEC_ID_MAX		= 0X7FFFFFFF
 }QCCodecID;
 
@@ -193,6 +196,8 @@ typedef enum {
 #ifdef __cplusplus
 class CBuffMng;
 #endif /* __cplusplus */
+typedef int (*QC_FREE_BUFF) (void * pUser, void * pBuff);
+
 typedef struct
 {
 	QCMediaType			nMediaType;		/*!< buffer type    */
@@ -214,6 +219,8 @@ typedef struct
 	CBuffMng *			pBuffMng;
 	int					nUsed;			/*!< The buffer used times. It can free when is 0 */
 #endif // __cplusplus
+	void *				pUserData;
+	QC_FREE_BUFF		fFreeBuff;
 	// for buffer track info
 #ifdef __QC_BUFF_TRACE__
 	int					nBuffID;

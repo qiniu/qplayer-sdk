@@ -89,6 +89,12 @@ DLLEXPORT_C int		qcCreateParser (QC_Parser_Func * pParser, QCParserFormat nForma
 // destory the Parser
 DLLEXPORT_C int		qcDestroyParser (QC_Parser_Func * pParser);
 
+DLLEXPORT_C int		ffCreateParser(QC_Parser_Func * pParser, QCParserFormat nFormat);
+typedef int (*FFCREATEPARSER) (QC_Parser_Func * pParser, QCParserFormat nFormat);
+
+DLLEXPORT_C int		ffDestroyParser(QC_Parser_Func * pParser);
+typedef int (*FFDESTROYPARSER) (QC_Parser_Func * pParser);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif /* __cplusplus */
