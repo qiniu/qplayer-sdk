@@ -54,6 +54,9 @@ typedef struct
 	// get the source is end of stream or not.
 	bool			(* IsEOS) (void * hParser); 
 
+	// get the source is live or not.
+	bool			(* IsLive) (void * hParser); 
+
 	// enable the subtitle or not.
 	int				(* EnableSubtt) (void * hParser,bool bEnable);
 
@@ -85,6 +88,12 @@ DLLEXPORT_C int		qcCreateParser (QC_Parser_Func * pParser, QCParserFormat nForma
 
 // destory the Parser
 DLLEXPORT_C int		qcDestroyParser (QC_Parser_Func * pParser);
+
+DLLEXPORT_C int		ffCreateParser(QC_Parser_Func * pParser, QCParserFormat nFormat);
+typedef int (*FFCREATEPARSER) (QC_Parser_Func * pParser, QCParserFormat nFormat);
+
+DLLEXPORT_C int		ffDestroyParser(QC_Parser_Func * pParser);
+typedef int (*FFDESTROYPARSER) (QC_Parser_Func * pParser);
 
 #ifdef __cplusplus
 } /* extern "C" */

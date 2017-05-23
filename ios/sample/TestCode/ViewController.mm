@@ -55,9 +55,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if (nID == QC_MSG_PLAY_OPEN_DONE)
     {
         NSLog(@"Run\n");
-        //[self updateStreamInfo];
         if(_player.hPlayer)
             _player.Run(_player.hPlayer);
+        _btnStart.enabled = ![self isLive];
+        _sliderPosition.enabled = ![self isLive];
     }
     else if(nID == QC_MSG_PLAY_OPEN_FAILED)
     {
@@ -111,8 +112,82 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
 }
 
+-(void) createPlayer
+{
+    if(_player.hPlayer)
+        return;
+    
+    qcCreatePlayer(&_player, NULL);
+    _player.SetNotify(_player.hPlayer, NotifyEvent, self);
+    _player.SetView(_player.hPlayer, (void*)_viewVideo, NULL);
+}
+
+-(void) destroyPlayer
+{
+    if(!_player.hPlayer)
+        return;
+    qcDestroyPlayer(&_player);
+    _player.hPlayer = NULL;
+}
 
 #pragma mark setup UI
+- (void)parseStream:(NSString *)html
+{
+    NSScanner* theScanner;
+    NSString* text = nil;
+    NSString* keyString = @"?stream=";
+    
+    [_urlList insertObject:@"" atIndex:0];
+    theScanner = [NSScanner scannerWithString:html];
+    
+    while ([theScanner isAtEnd] == NO)
+    {
+        BOOL res = [theScanner scanUpToString:keyString intoString:nil] ;
+        if(res && [theScanner isAtEnd] == NO)
+        {
+            theScanner.scanLocation += [keyString length];
+            res = [theScanner scanUpToString:@"\"" intoString:&text] ;
+            
+            if(text && res)
+            {
+                [_urlList insertObject:[NSString stringWithFormat:@"http://pili-live-hls.pili2test.qbox.net/pili2test/%@.m3u8", text] atIndex:0];
+                [_urlList insertObject:[NSString stringWithFormat:@"http://pili-live-hdl.pili2test.qbox.net/pili2test/%@.flv", text] atIndex:0];
+                [_urlList insertObject:[NSString stringWithFormat:@"rtmp://pili-live-rtmp.pili2test.qbox.net/pili2test/%@", text] atIndex:0];
+            }
+        }
+    }
+}
+
+-(void)parseDemoLive
+{
+    NSString *host = @"http://pili2-demo.qiniu.com";
+    NSString *method = @"GET";
+    
+    NSString *url = [NSString stringWithFormat:@"%@",  host];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString: url]  cachePolicy:NSURLRequestReloadIgnoringLocalCacheData  timeoutInterval:  5];
+    request.HTTPMethod  =  method;
+    NSURLSession *requestSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    NSURLSessionDataTask *task = [requestSession dataTaskWithRequest:request
+                                                   completionHandler:^(NSData * _Nullable body , NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                                                       if(response && body)
+                                                       {
+                                                           NSString *bodyString = [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding];
+                                                           //NSLog(@"Response body: %@" , bodyString);
+                                                           [self parseStream:bodyString];
+                                                           [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                                               [_tableViewURL reloadData];
+                                                           }];
+                                                           [bodyString release];
+                                                       }
+                                                       else
+                                                       {
+                                                           [self parseDemoLive];
+                                                       }
+                                                   }];
+    [task resume];
+}
+
 -(void)prepareURL
 {
     if(_urlList)
@@ -123,17 +198,19 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _currURL = 0;
     
 #if 0
+    [_urlList addObject:@"rtmp://www.scbtv.cn/live/new"];
+    [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear4/prog_index.m3u8"];
     
     //NSString* base = @"http://192.168.0.123";
-    NSString* base = @"http://192.168.101.100";
+    NSString* base = @"http://100.100.41.244";
     
     [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/hls/gear/index.m3u8"]];
     [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/1920x1080_25f_1200k_TMVP_randomaccess_main.mp4"]];
     [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/h264_MP_1920x1080_8000k_30f.mp4"]];
     [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/1920x1080.flv"]];
-    [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/karaok.flv"]];
+    [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/02.mp3"]];
     [_urlList addObject:[NSString stringWithFormat:@"%@%@", @"", @""]];
 #endif
     
@@ -155,6 +232,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         else if(![fileName hasSuffix:@".log"])
             [_urlList addObject:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName]];
     }
+    
+    [self parseDemoLive];
 }
 
 -(void)setupUI
@@ -359,26 +438,14 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [self prepareURL];
     
     _isFullScreen = NO;
-    
-    qcCreatePlayer(&_player, NULL);
-    _player.SetNotify(_player.hPlayer, NotifyEvent, self);
-    _player.SetView(_player.hPlayer, (void*)_viewVideo, NULL);
-    
-    NSLog(@"Player version: %d", _player.nVersion);
-    
-    //[self onStart:_btnStart];
 }
 
 #pragma mark UI action
 -(IBAction)onStart:(id)sender
 {
-    if(!_player.hPlayer)
-        return;
-    
+    [self createPlayer];
     UIButton* btn = (UIButton*)sender;
-    
     NSLog(@"+Start, %s", [_urlList count]<=0?"":[_urlList[_currURL] UTF8String]);
-    
     QCPLAY_STATUS status = _player.GetStatus(_player.hPlayer);
     
     if(status == QC_PLAY_Pause)
@@ -422,6 +489,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _timer = nil;
     _player.Stop(_player.hPlayer);
     _player.Close(_player.hPlayer);
+    //[self destroyPlayer];
     
     //
     [_switchHW setHidden:NO];
@@ -433,18 +501,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     NSLog(@"-Stop");
 }
 
--(IBAction)onPause:(id)sender
-{
-    if(!_player.hPlayer)
-        return;
-    
-    [_switchHW setHidden:NO];
-    [_labelHW setHidden:NO];
-    [((UIButton*)sender) setTitle:@"START" forState:UIControlStateNormal];
-    
-    _player.Pause(_player.hPlayer);
-}
-    
 - (IBAction)onPositionChangeBegin:(id)sender
 {
     _isDragSlider = true;
@@ -470,7 +526,13 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     long long dur = _player.GetDur(_player.hPlayer) / 1000;
     //NSLog(@"Pos %lld, duration %lld", _player.GetPos(_player.hPlayer), _player.GetDur(_player.hPlayer));
     if(!_isDragSlider)
-        _sliderPosition.value = (float)pos/(float)dur;
+    {
+        if(dur <= 0)
+            _sliderPosition.value = 1.0;
+        else
+            _sliderPosition.value = (float)pos/(float)dur;
+    }
+    
     
     NSString* strPos = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", pos / 3600, pos % 3600 / 60, pos % 3600 % 60];
     NSString* strDur = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", dur / 3600, dur % 3600 / 60, dur % 3600 % 60];
@@ -485,17 +547,31 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if(!_player.hPlayer)
     	return;
     
+    NSString* url = _urlList[_currURL];
+    if(!url)
+        return;
+    
+    bool isLive = [self isLive];
+    
     if(active)
     {
-        //
-//        long long pos = _player.GetPos(_player.hPlayer);
-//        NSLog(@"Set pos %lld", pos);
-//        _player.SetPos(_player.hPlayer, pos);
-        _player.Run(_player.hPlayer);
+        if(isLive)
+        {
+            int nVal = QC_PLAY_VideoEnable;
+            _player.SetParam(_player.hPlayer, QCPLAY_PID_Disable_Video, &nVal);
+        }
+        else
+        	_player.Run(_player.hPlayer);
     }
     else
     {
-        _player.Pause(_player.hPlayer);
+        if(isLive)
+        {
+            int nVal = _switchHW.enabled?QC_PLAY_VideoDisable_Decoder|QC_PLAY_VideoDisable_Render:QC_PLAY_VideoDisable_Render;
+            _player.SetParam(_player.hPlayer, QCPLAY_PID_Disable_Video, &nVal);
+        }
+        else
+        	_player.Pause(_player.hPlayer);
     }
 }
 
@@ -576,32 +652,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     {
         return UIInterfaceOrientationMaskLandscape;
     }
-    //return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
-    //return UIInterfaceOrientationMaskPortrait;
 }
-
-//- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id)coordinator {
-//    [super viewWillTransitionToSize:size withTransitionCoordinator: coordinator];
-//
-//    [coordinator animateAlongsideTransition: ^(id context)
-//     {
-//         NSLog(@"before rotate");
-//     } completion: ^(id context) {
-//         NSLog(@"after rotate");
-//         if(_player.hPlayer)
-//             _player.SetView(_player.hPlayer, _viewVideo, NULL);
-//     }];
-//}
-
-
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-//{
-//    NSLog(@"Rotate done.");
-//    
-//    if(_player.hPlayer)
-//        _player.SetView(_player.hPlayer, _viewVideo, NULL);
-//}
-
 
 
 #pragma mark Table view processing
@@ -797,7 +848,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     return [[NSProcessInfo processInfo] systemUptime] * 1000;
 }
 
+-(bool)isLive
+{
+    if(_player.hPlayer)
+    {
+        if(_player.GetDur(_player.hPlayer) > 0)
+            return NO;
+    }
 
+    return YES;
+}
 
 #pragma mark Other
 - (void)didReceiveMemoryWarning
@@ -808,12 +868,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(void)dealloc
 {
-    qcDestroyPlayer(&_player);
-    _player.hPlayer = NULL;
+    [self destroyPlayer];
     [super dealloc];
     
     [_urlList release];
     _urlList = nil;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 @end

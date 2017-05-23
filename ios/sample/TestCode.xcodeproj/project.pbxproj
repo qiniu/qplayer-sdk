@@ -40,7 +40,7 @@
 		27648E281E3723EB005C1A20 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		27648E321E37A336005C1A20 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		27648E341E37A34F005C1A20 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		27C98B021E3500270018DFA1 /* TestCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27C98B021E3500270018DFA1 /* corePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = corePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27C98B061E3500270018DFA1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		27C98B081E3500270018DFA1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		27C98B091E3500270018DFA1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -121,7 +121,7 @@
 		27C98B031E3500270018DFA1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				27C98B021E3500270018DFA1 /* TestCode.app */,
+				27C98B021E3500270018DFA1 /* corePlayer.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -188,7 +188,7 @@
 			);
 			name = TestCode;
 			productName = TestCode;
-			productReference = 27C98B021E3500270018DFA1 /* TestCode.app */;
+			productReference = 27C98B021E3500270018DFA1 /* corePlayer.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -345,6 +345,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -371,6 +372,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = GDFHW66V92;
 				ENABLE_BITCODE = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					../../../include,
 					../include,
@@ -383,7 +385,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.qiniu.testcode;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = corePlayer;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VALID_ARCHS = "arm64 armv7 armv7s";
@@ -399,6 +401,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = GDFHW66V92;
 				ENABLE_BITCODE = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				HEADER_SEARCH_PATHS = (
 					../../../include,
 					../include,
@@ -411,7 +414,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.qiniu.testcode;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = corePlayer;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VALID_ARCHS = "arm64 armv7 armv7s";

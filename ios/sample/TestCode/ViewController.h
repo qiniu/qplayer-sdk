@@ -18,7 +18,6 @@
 
 -(IBAction)onStart:(id)sender;
 -(IBAction)onStop:(id)sender;
--(IBAction)onPause:(id)sender;
 -(IBAction)onFullScreen:(id)sender;
 -(IBAction)onSelectStream:(id)sender;
 @end

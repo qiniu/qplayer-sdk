@@ -102,6 +102,8 @@ typedef struct
 	int				(* GetSpeed)	(void * hIO, int nLastSecs);
 	// return the io is newwork live, vod or local file
 	QCIOType		(* GetType)		(void * hIO);
+	// get the io is live streaming or vod
+	bool			(* IsStreaming)	(void * hIO);
 
 	// for extend function later.
 	int 			(* GetParam)	(void * hIO, int nID, void * pParam);
