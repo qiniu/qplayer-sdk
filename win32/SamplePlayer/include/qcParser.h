@@ -18,6 +18,14 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#define								QC_PARSER_BASE	0X13000000
+// Set the last playback bitrate
+// The parameter should be int *.
+#define	QCPARSER_PID_LastBitrate	QC_PARSER_BASE + 0X01
+
+// Set to exit read immediately
+// The parameter should be int. 1 exit, 0 no.
+#define	QCPARSER_PID_ExitRead		QC_PARSER_BASE + 0X02
 
 /**
  * the qc parser interface 

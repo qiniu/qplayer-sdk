@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 public interface BasePlayer {
 	// define the flag for player
 	public static final int		QCPLAY_OPEN_VIDDEC_HW		= 0X01000000;
+	public static final int		QCPLAY_OPEN_SAME_SOURCE		= 0X02000000;
 
 	// define the param id
 	public static final int 	PARAM_PID_EVENT_DONE		= 0X100;
