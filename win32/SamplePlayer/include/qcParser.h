@@ -18,6 +18,14 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#define								QC_PARSER_BASE	0X13000000
+// Set the last playback bitrate
+// The parameter should be int *.
+#define	QCPARSER_PID_LastBitrate	QC_PARSER_BASE + 0X01
+
+// Set to exit read immediately
+// The parameter should be int. 1 exit, 0 no.
+#define	QCPARSER_PID_ExitRead		QC_PARSER_BASE + 0X02
 
 /**
  * the qc parser interface 
@@ -88,6 +96,12 @@ DLLEXPORT_C int		qcCreateParser (QC_Parser_Func * pParser, QCParserFormat nForma
 
 // destory the Parser
 DLLEXPORT_C int		qcDestroyParser (QC_Parser_Func * pParser);
+
+DLLEXPORT_C int		ffCreateParser(QC_Parser_Func * pParser, QCParserFormat nFormat);
+typedef int (*FFCREATEPARSER) (QC_Parser_Func * pParser, QCParserFormat nFormat);
+
+DLLEXPORT_C int		ffDestroyParser(QC_Parser_Func * pParser);
+typedef int (*FFDESTROYPARSER) (QC_Parser_Func * pParser);
 
 #ifdef __cplusplus
 } /* extern "C" */

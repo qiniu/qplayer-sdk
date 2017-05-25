@@ -29,10 +29,21 @@
 #define QC_MSG_HTTP_REDIRECT			0x11000012		// Param: redirect url
 #define QC_MSG_HTTP_DISCONNECT_START	0x11000021		// Param: 
 #define QC_MSG_HTTP_DISCONNECT_DONE		0x11000022		// Param: 
+#define QC_MSG_HTTP_RETURN_CODE			0x11000023		// Param: long 
+
 #define QC_MSG_HTTP_DOWNLOAD_SPEED		0x11000030		// Param: int speed
 #define QC_MSG_HTTP_DISCONNECTED		0x11000050		// Param: 
 #define QC_MSG_HTTP_RECONNECT_FAILED	0x11000051		// Param: 
-#define QC_MSG_HTTP_RECONNECT_SUCESS	0x11000052		// Param: 
+#define QC_MSG_HTTP_RECONNECT_SUCESS	0x11000052		// Param:
+
+#define QC_MSG_RTMP_CONNECT_START		0x11010001		// Param: URL.
+#define QC_MSG_RTMP_CONNECT_FAILED		0x11010002		// Param:
+#define QC_MSG_RTMP_CONNECT_SUCESS		0x11010003		// Param:
+#define QC_MSG_RTMP_DOWNLOAD_SPEED		0x11010004		// Param: int speed
+#define QC_MSG_RTMP_DNS_GET_IPADDR		0x11010005		// Param:
+
+#define QC_MSG_IO_FIRST_BYTE_DONE		0x11020001		// Param:
+
 
 // define the parser msg ID
 #define QC_MSG_PARSER_BASE				0x12000000
@@ -85,10 +96,16 @@
 // define the buffer msg ID
 #define QC_MSG_BUFF_VBUFFTIME			0x18000001		//param: video buff time
 #define QC_MSG_BUFF_ABUFFTIME			0x18000002		//param: audio buff time
+#define QC_MSG_BUFF_GOPTIME				0x18000003		//param: video GOP time
 
 #define QC_MSG_BUFF_NEWSTREAM			0x18000004		//param: 
 #define QC_MSG_BUFF_START_BUFFERING		0x18000006		//param: playing time
-#define QC_MSG_BUFF_END_BUFFERING		0x18000007		//param: 
+#define QC_MSG_BUFF_END_BUFFERING		0x18000007		//param:
+
+// define the render msg ID
+#define QC_MSG_RENDER_BASE				0x19000000
+#define QC_MSG_RENDER_VIDEO_FPS			0x19000001		//param: fps of video render
+
 
 
 #endif // __QCMSG_H__

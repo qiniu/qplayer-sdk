@@ -44,8 +44,8 @@ typedef struct
 	int			nChannels;
 	int			nFormat;
 	int			nNBSamples;
-	char *		pDataBuff[3];
-	int			nDataSize[3];
+	char *		pDataBuff[8];
+	int			nDataSize[8];
 } QC_AUDIO_FRAME;
 
 /**

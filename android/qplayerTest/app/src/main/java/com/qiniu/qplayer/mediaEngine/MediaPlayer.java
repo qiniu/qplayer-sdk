@@ -12,6 +12,7 @@
 package com.qiniu.qplayer.mediaEngine;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Surface;
@@ -46,8 +47,8 @@ public class MediaPlayer implements BasePlayer {
 	private int m_nVideoHeight = 0;
 	private int m_nSampleRate = 0;
 	private int m_nChannels = 0;
+	private int m_nBTOffset = 0;
 
-	private AudioRender m_AudioRender = null;
 	private onEventListener m_EventListener = null;
 
 	static {
@@ -57,6 +58,9 @@ public class MediaPlayer implements BasePlayer {
 	public int Init(Context context, String apkPath, int nFlag) {
 		m_context = context;
 		m_nInitFlag = nFlag;
+		AudioManager am = (AudioManager)context.getSystemService(context.AUDIO_SERVICE);
+		if (am != null && am.isBluetoothA2dpOn())
+			m_nBTOffset = 250;
 		m_NativeContext = nativeInit(new WeakReference<MediaPlayer>(this), apkPath, nFlag);
 		if (m_NativeContext == 0)
 			return -1;
@@ -109,10 +113,6 @@ public class MediaPlayer implements BasePlayer {
 		return nativeSetPos(m_NativeContext, nPos);
 	}
 
-	public int WaitRendTime(long lTime) {
-		return nativeWaitRendTime(m_NativeContext, (int) lTime);
-	}
-
 	public int GetParam(int nParamId, int nParam, Object objParam) {
 		return nativeGetParam(m_NativeContext, nParamId, nParam, objParam);
 	}
@@ -122,10 +122,7 @@ public class MediaPlayer implements BasePlayer {
 	}
 
 	public void Uninit() {
-		if (m_AudioRender != null)
-			m_AudioRender.closeTrack();
 		nativeUninit(m_NativeContext);
-		m_AudioRender = null;
 	}
 
 	public int GetVideoWidth() {
@@ -136,9 +133,8 @@ public class MediaPlayer implements BasePlayer {
 		return m_nVideoHeight;
 	}
 
-	public void SetVolume(float left, float right) {
-		if (m_AudioRender != null)
-			m_AudioRender.SetVolume(left, right);
+	public void SetVolume(int nVolume) {
+		SetParam (PARAM_PID_AUDIO_VOLUME, nVolume, null);
 	}
 
 	public int GetStreamNum() {
@@ -167,7 +163,7 @@ public class MediaPlayer implements BasePlayer {
 
 	
 	public void OnOpenComplete () {
-
+		SetParam (QCPLAY_PID_Clock_OffTime,  m_nBTOffset, null);
 	}
 
 	public void onVideoSizeChanged () {	
@@ -208,10 +204,6 @@ public class MediaPlayer implements BasePlayer {
 		{
 			player.m_nSampleRate = ext1;
 			player.m_nChannels = ext2;
-			
-			if (player.m_AudioRender == null)	
-				player.m_AudioRender = new AudioRender(player.m_context, player);
-			player.m_AudioRender.openTrack (player.m_nSampleRate, player.m_nChannels);
 			return;
 		}			
 		Message msg = player.mHandle.obtainMessage(what, obj);
@@ -223,7 +215,6 @@ public class MediaPlayer implements BasePlayer {
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
 			return;		
-		player.m_AudioRender.writeData(data,  size);
 	}
 	
 	private static void videoDataFromNative(Object baselayer_ref, byte[] data, int size, int lTime, int nFlag)
@@ -264,7 +255,6 @@ public class MediaPlayer implements BasePlayer {
     private native int 	nativeGetPos(int nNativeContext);    
     private native int 	nativeSetPos(int nNativeContext,int nPos);
     private native long nativeGetDuration(int nNativeContext);
-	private native int  nativeWaitRendTime(int nNativeContext, int lTime);
 	private native int 	nativeGetParam(int nNativeContext,int nParamId, int nParam, Object objParam);
     private native int 	nativeSetParam(int nNativeContext,int nParamId, int nParam, Object objParam);
 }
