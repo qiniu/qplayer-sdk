@@ -29,6 +29,8 @@
 #define QC_MSG_HTTP_REDIRECT			0x11000012		// Param: redirect url
 #define QC_MSG_HTTP_DISCONNECT_START	0x11000021		// Param: 
 #define QC_MSG_HTTP_DISCONNECT_DONE		0x11000022		// Param: 
+#define QC_MSG_HTTP_RETURN_CODE			0x11000023		// Param: long 
+
 #define QC_MSG_HTTP_DOWNLOAD_SPEED		0x11000030		// Param: int speed
 #define QC_MSG_HTTP_DISCONNECTED		0x11000050		// Param: 
 #define QC_MSG_HTTP_RECONNECT_FAILED	0x11000051		// Param: 

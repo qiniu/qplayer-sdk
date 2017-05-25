@@ -444,6 +444,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 -(IBAction)onStart:(id)sender
 {
     [self createPlayer];
+    
     UIButton* btn = (UIButton*)sender;
     NSLog(@"+Start, %s", [_urlList count]<=0?"":[_urlList[_currURL] UTF8String]);
     QCPLAY_STATUS status = _player.GetStatus(_player.hPlayer);
@@ -489,7 +490,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _timer = nil;
     _player.Stop(_player.hPlayer);
     _player.Close(_player.hPlayer);
-    //[self destroyPlayer];
+    [self destroyPlayer];
     
     //
     [_switchHW setHidden:NO];
@@ -661,6 +662,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if(_tableViewURL == tableView)
     {
         [tableView deselectRowAtIndexPath:[NSIndexPath indexPathWithIndex:_currURL] animated:YES];
+        
+        if([self fastOpen:indexPath.row])
+            return;
+        
         _currURL = indexPath.row;
         [self onStop:_btnStart];
         [self onStart:_btnStart];
@@ -858,6 +863,35 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
     return YES;
 }
+
+-(bool)fastOpen:(NSInteger)newIdx
+{
+    return NO;
+    if(_player.hPlayer)
+    {
+        QCPLAY_STATUS status = _player.GetStatus(_player.hPlayer);
+        if(status == QC_PLAY_Run)
+        {
+            const char* oldURL = [_urlList[_currURL] UTF8String];
+            char* end = strchr(oldURL, ':');
+            if(end)
+            {
+                if(!strncmp([_urlList[newIdx] UTF8String], oldURL, end-oldURL))
+                {
+                    _currURL = newIdx;
+                    NSLog(@"+Fast open, %s", [_urlList count]<=0?"":[_urlList[_currURL] UTF8String]);
+                    int flag = _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0;
+                    _player.Open(_player.hPlayer, [_urlList[_currURL] UTF8String], (flag|QCPLAY_OPEN_SAME_SOURCE));
+                    NSLog(@"-Fast open");
+                    return YES;
+                }
+            }
+        }
+    }
+    
+    return NO;
+}
+
 
 #pragma mark Other
 - (void)didReceiveMemoryWarning
