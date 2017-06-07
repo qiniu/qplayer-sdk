@@ -25,28 +25,63 @@ public interface BasePlayer {
 	// get: the param is null, set the param is 0 -100
 	public static final int 	PARAM_PID_AUDIO_VOLUME		= 0X101;
 
-	// the param should be double
+	// the param should be: 0X00010002 is 0.5 speed. 0X00040001 is 4 speed.
 	public static final	int 	QCPLAY_PID_Speed			= 0X11000002;
 	// the param shoud be 1 disable video rnd, 0 enable render.
 	public static final	int 	QCPLAY_PID_Disable_Video	= 0X11000003;
 
-	// the param shoudl be int
+	// the param should be int
 	public static final	int 	QCPLAY_PID_StreamNum		= 0X11000005;
 	public static final	int 	QCPLAY_PID_StreamPlay		= 0X11000006;
 	public static final	int 	QCPLAY_PID_StreamInfo		= 0X1100000F;
 	public static final int 	QCPLAY_PID_Clock_OffTime	= 0X11000020;
+
+	// the param.
 	public static final int 	QCPLAY_PID_Reconnect		= 0X11000030;
+
+	// Set to capture video image
+	// The parameter should be long long * (ms). capture time. 0 is immediatily.
+	public static final int 	QCPLAY_PID_Capture_Image	= 0X11000310;
+
+	// Set / get the socket connect timeout time
+	// The parameter should be int (ms)
+	public static final int	QCPLAY_PID_Socket_ConnectTimeout	= 0X11000200;
+
+	// Set / get the socket read timeout time
+	// The parameter should be int (ms)
+	public static final int	QCPLAY_PID_Socket_ReadTimeout		= 0X11000201;
+
+	// Set the http header referer
+	// The parameter should be String.
+	public static final int	QCPLAY_PID_HTTP_HeadReferer			= 0X11000205;
+
+	// Set the max buffer time
+	// The parameter should be int (ms)
+	public static final int	QCPLAY_PID_PlayBuff_MaxTime			= 0X11000211;
+
+	// Set  the min buffer time
+	// The parameter should be int (ms)
+	public static final int	QCPLAY_PID_PlayBuff_MinTime			= 0X11000212;
+
+	// Set the log out level
+	// The parameter should be int, 0, None, 1 error, 2 warning, 3 info, 4 debug.
+	public static final int	QCPLAY_PID_Log_Level				= 0X11000320;
+	// Set the DRM key
+	// The parameter should be byte[].
+	public static final int	QCPLAY_PID_DRM_KeyText				= 0X11000301;
 
 	// Define id of event listener.
 	public static final int 	QC_MSG_PLAY_OPEN_DONE 		= 0x16000001;
 	public static final int 	QC_MSG_PLAY_OPEN_FAILED 	= 0x16000002;
 	public static final int 	QC_MSG_PLAY_COMPLETE 		= 0x16000007;
-	public static final int 	QC_MSG_PLAY_STATUS	 		= 0x16000008;
-	public static final int 	QC_MSG_PLAY_DURATION 		= 0x16000009;
 	public static final int 	QC_MSG_PLAY_SEEK_DONE 		= 0x16000005;
 	public static final int 	QC_MSG_PLAY_SEEK_FAILED 	= 0x16000006;
 	// The first frame video was displayed.
 	public static final int 	QC_MSG_SNKV_FIRST_FRAME 	= 0x15200001;
+
+	// The nArg1 is the value
+	public static final int 	QC_MSG_PLAY_STATUS	 		= 0x16000008;
+	public static final int 	QC_MSG_PLAY_DURATION 		= 0x16000009;
 	
 	public static final int 	QC_MSG_PLAY_RUN				= 0x1600000C;
 	public static final int 	QC_MSG_PLAY_PAUSE			= 0x1600000D;
@@ -69,11 +104,15 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_RTMP_CONNECT_START		= 0x11010001;
 	public static final int 	QC_MSG_RTMP_CONNECT_FAILED		= 0x11010002;
 	public static final int 	QC_MSG_RTMP_CONNECT_SUCESS		= 0x11010003;
+	// The obj is the string value
+	public static final int		QC_MSG_RTMP_METADATA			= 0x11010006;
+
+	// The nArg1 is the value.
 	public static final int 	QC_MSG_RTMP_DOWNLOAD_SPEED		= 0x11010004;
-	
 	public static final int 	QC_MSG_BUFF_VBUFFTIME			= 0x18000001;
 	public static final int 	QC_MSG_BUFF_ABUFFTIME			= 0x18000002;
 
+	// there is no value.
 	public static final int 	QC_MSG_BUFF_START_BUFFERING		= 0x18000006;
 	public static final int 	QC_MSG_BUFF_END_BUFFERING		= 0x18000007;
 
@@ -84,10 +123,13 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_SNKA_NEW_FORMAT 		= 0x15100003;
 
 
+	public static final int 	QC_FLAG_Video_CaptureImage	= 0x00000010;
+
 	// The event listener function
 	public interface onEventListener{
-		public int onEvent (int nID, Object obj);
-		public int OnSubTT (String strText, int nTime);	
+		public int onEvent (int nID, int nArg1, int nArg2, Object obj);
+		public int OnSubTT (String strText, int nTime);
+		public int OnImage (byte[] pData, int nSize);
 	}
 	
 	// Define the functions

@@ -54,11 +54,13 @@ typedef enum {
     QC_CODEC_ID_H264,
     QC_CODEC_ID_H265,
     QC_CODEC_ID_MPEG4,
+	QC_CODEC_ID_MJPEG,
 
     // audio codecs 
     QC_CODEC_ID_AAC		= 0x10000,
     QC_CODEC_ID_MP3, 
 	QC_CODEC_ID_MP2,
+	QC_CODEC_ID_SPEEX,
 	QC_CODEC_ID_MAX		= 0X7FFFFFFF
 }QCCodecID;
 

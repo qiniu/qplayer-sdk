@@ -19,6 +19,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Environment;
+
+import java.io.File;
+import java.io.FileOutputStream;
+
 import android.app.Activity;
 import android.util.Log;
 import android.content.SharedPreferences;
@@ -128,11 +133,11 @@ public class PlayerView extends Activity
 	}
 	
 	// @Override
-	public int onEvent(int nID, Object obj) {
+	public int onEvent(int nID, int nArg1, int nArg2, Object obj) {
 		if (nID == BasePlayer.QC_MSG_PLAY_OPEN_DONE) {
 			m_nDuration = (int)m_Player.GetDuration();
 			m_Player.Play ();
-		} 
+		}
 		else if (nID == BasePlayer.QC_MSG_PLAY_DURATION)
 			m_nDuration = (int)m_Player.GetDuration();
 		else if (nID == BasePlayer.QC_MSG_PLAY_OPEN_FAILED) {
@@ -198,6 +203,10 @@ public class PlayerView extends Activity
 				m_dlgWait = null;
 			}
 		}
+		else if (nID == BasePlayer.QC_MSG_RTMP_METADATA) {
+			String strMetaData = (String) obj;
+			Log.v("PlayerView  MetaData *** ", strMetaData);
+		}
 
 		return 0;
 	}
@@ -213,7 +222,24 @@ public class PlayerView extends Activity
 		}
 		return 0;
 	}
-	
+
+	public int OnImage (byte[] pData, int nSize) {
+		try{
+			File parent_path = Environment.getExternalStorageDirectory();
+			File dir = new File(parent_path.getAbsoluteFile(), "CaptureVideo");
+			dir.mkdir();
+			File file = new File(dir.getAbsoluteFile(), "0001.jpg");
+			file.createNewFile();
+			FileOutputStream fos = new FileOutputStream(file);
+			fos.write(pData, 0, pData.length);
+			fos.flush();
+			fos.close();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) 
@@ -286,6 +312,9 @@ public class PlayerView extends Activity
 		}
 				
 		m_Player.setEventListener(this);
+		//String 	strKeyText = "kdnljjlcn2iu2384";
+		//byte[]  byKeyText = {0x6b, 0x64, 0x6e, 0x6c, 0x6a, 0x6a, 0x6c, 0x63, 0x6e, 0x32, 0x69, 0x75, 0x32, 0x33, 0x38, 0x34 };
+		//m_Player.SetParam(BasePlayer.QCPLAY_PID_Speed, 0, byKeyText);
 		nRet = m_Player.Open (strPath, 	0);
 		if (nRet != 0) {
 			Close ();		
@@ -332,6 +361,11 @@ public class PlayerView extends Activity
 		
 		m_btnPause.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				if (m_Player != null) {
+					//m_Player.Open(m_strFile, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
+					m_Player.SetParam (BasePlayer.QCPLAY_PID_Capture_Image, 0, null);
+					return;
+				}
 				if (m_Player != null)
 					m_Player.Pause();
 				m_btnPause.setVisibility(View.INVISIBLE);
@@ -347,7 +381,7 @@ public class PlayerView extends Activity
 
 		m_sbPlayer.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				int nPos = seekBar.getProgress() * m_nDuration / 100;
+				int nPos = seekBar.getProgress() * (m_nDuration / 100);
 				if (m_Player != null) {
 					if (m_Player.SetPos(nPos) != 0)
 						return;
@@ -382,7 +416,7 @@ public class PlayerView extends Activity
 						hideControls ();
 					
 					if (m_nDuration > 0) {
-						int nPos = m_Player.GetPos() * 100 / m_nDuration;
+						int nPos = m_Player.GetPos() / (m_nDuration / 100);
 						m_sbPlayer.setProgress(nPos);	
 					}
 				} 

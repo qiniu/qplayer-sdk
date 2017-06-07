@@ -189,8 +189,6 @@ public class MediaPlayer implements BasePlayer {
 		
 	private static void postEventFromNative(Object baselayer_ref, int what, int ext1, int ext2, Object obj)
 	{
-		Log.v(TAG, "postEventFromNative this id is  " + what);
-		
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
 			return;
@@ -205,13 +203,19 @@ public class MediaPlayer implements BasePlayer {
 			player.m_nSampleRate = ext1;
 			player.m_nChannels = ext2;
 			return;
-		}			
-		Message msg = player.mHandle.obtainMessage(what, obj);
+		}
+		else if (what == QC_MSG_RTMP_METADATA) {
+			if (player.m_EventListener != null)
+				player.m_EventListener.onEvent(what, ext1, ext2, obj);
+			return;
+		}
+
+		Message msg = player.mHandle.obtainMessage(what, ext1, ext2, obj);
 		msg.sendToTarget();	
 	}
 		
 	private static void audioDataFromNative(Object baselayer_ref, byte[] data, int size)
-	{
+		{
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
 			return;		
@@ -222,6 +226,10 @@ public class MediaPlayer implements BasePlayer {
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
 			return;
+		if (nFlag == QC_FLAG_Video_CaptureImage) {
+			// Save the jpeg buff to file.
+			player.m_EventListener.OnImage(data, size);
+		}
 	}	
 
 	private Handler mHandle = new Handler()  
@@ -234,7 +242,7 @@ public class MediaPlayer implements BasePlayer {
 			}
 				
 			if (m_EventListener != null) {
-				nRC = m_EventListener.onEvent(msg.what, msg.obj);
+				nRC = m_EventListener.onEvent(msg.what, msg.arg1, msg.arg2, msg.obj);
 			}
 
 			if (msg.what == QC_MSG_SNKV_NEW_FORMAT && nRC == 0)
