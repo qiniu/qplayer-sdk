@@ -12,6 +12,7 @@
 #ifndef __qcIO_h__
 #define __qcIO_h__
 #include "qcErr.h"
+#include "qcDef.h"
 #include "qcType.h"
 #include "qcData.h"
 
@@ -40,6 +41,10 @@ extern "C" {
 #define QCIO_OPEN_CONTENT		0X0200
 
 #define	QCIO_MAX_CONTENT_LEN	0X7FFFFFFFFFFFFFFF
+
+// Set the http host header 
+// The parameter should be char *. 
+#define	QCIO_PID_HTTP_HeadHost			QC_MOD_IO_HTTP + 0X01
 
 // the IO source type
 typedef enum {

@@ -80,7 +80,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     {
         if(_networkConnectionErrorTime == -1)
         {
-            NSLog(@"Connect lost\n");
+            NSLog(@"Connect lost, %x\n", nID);
             _networkConnectionErrorTime = [self getSysTime];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -198,20 +198,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _currURL = 0;
     
 #if 0
-    [_urlList addObject:@"rtmp://www.scbtv.cn/live/new"];
+    [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
+    [_urlList addObject:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
     [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear4/prog_index.m3u8"];
-    
-    //NSString* base = @"http://192.168.0.123";
-    NSString* base = @"http://100.100.41.244";
-    
-    [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/hls/gear/index.m3u8"]];
-    [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/1920x1080_25f_1200k_TMVP_randomaccess_main.mp4"]];
-    [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/h264_MP_1920x1080_8000k_30f.mp4"]];
-    [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/1920x1080.flv"]];
-    [_urlList addObject:[NSString stringWithFormat:@"%@%@", base, @"/pd/02.mp3"]];
-    [_urlList addObject:[NSString stringWithFormat:@"%@%@", @"", @""]];
 #endif
     
     NSString* docPathDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -864,7 +855,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     return YES;
 }
 
--(bool)fastOpen:(NSInteger)newIdx
+-(BOOL)fastOpen:(NSInteger)newIdx
 {
     return NO;
     if(_player.hPlayer)

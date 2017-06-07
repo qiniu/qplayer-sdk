@@ -41,6 +41,7 @@
 #define QC_MSG_RTMP_CONNECT_SUCESS		0x11010003		// Param:
 #define QC_MSG_RTMP_DOWNLOAD_SPEED		0x11010004		// Param: int speed
 #define QC_MSG_RTMP_DNS_GET_IPADDR		0x11010005		// Param:
+#define QC_MSG_RTMP_METADATA			0x11010006		// Param: string, JSON object
 
 #define QC_MSG_IO_FIRST_BYTE_DONE		0x11020001		// Param:
 
@@ -92,19 +93,25 @@
 #define QC_MSG_PLAY_RUN					0x1600000C
 #define QC_MSG_PLAY_PAUSE				0x1600000D
 #define QC_MSG_PLAY_STOP				0x1600000E
+#define QC_MSG_PLAY_CAPTURE_IMAGE		0x16000010		//param m_pInfo QC_DATA_BUFF pointer. 
 
 // define the buffer msg ID
 #define QC_MSG_BUFF_VBUFFTIME			0x18000001		//param: video buff time
 #define QC_MSG_BUFF_ABUFFTIME			0x18000002		//param: audio buff time
 #define QC_MSG_BUFF_GOPTIME				0x18000003		//param: video GOP time
+#define QC_MSG_BUFF_VFPS				0x18000004		//param: video FPS
+#define QC_MSG_BUFF_AFPS				0x18000005		//param: audio FPS
+#define QC_MSG_BUFF_VBITRATE			0x18000006		//param: video bitrate
+#define QC_MSG_BUFF_ABITRATE			0x18000007		//param: audio bitrate
 
-#define QC_MSG_BUFF_NEWSTREAM			0x18000004		//param: 
-#define QC_MSG_BUFF_START_BUFFERING		0x18000006		//param: playing time
-#define QC_MSG_BUFF_END_BUFFERING		0x18000007		//param:
+#define QC_MSG_BUFF_NEWSTREAM			0x18000014		//param: 
+#define QC_MSG_BUFF_START_BUFFERING		0x18000016		//param: playing time
+#define QC_MSG_BUFF_END_BUFFERING		0x18000017		//param:
 
 // define the render msg ID
 #define QC_MSG_RENDER_BASE				0x19000000
-#define QC_MSG_RENDER_VIDEO_FPS			0x19000001		//param: fps of video render
+#define QC_MSG_RENDER_VIDEO_FPS			0x19000001		//param: FPS of video render
+#define QC_MSG_RENDER_AUDIO_FPS			0x19000002		//param: FPS of audio render
 
 
 

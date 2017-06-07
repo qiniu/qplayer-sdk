@@ -15,6 +15,7 @@
 #include "qcType.h"
 #include "qcErr.h"
 #include "qcMsg.h"
+#include "qcData.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,8 +35,13 @@ typedef enum {
 
 #define	QCPLAY_OPEN_SAME_SOURCE				0X02000000
 
-//  Call back function of player notify event
+// Call back function of player notify event
 typedef void (QC_API * QCPlayerNotifyEvent) (void * pUserData, int nID, void * pValue1);
+
+// Call back function of player send out video or audio render data. 
+// The pUserData as same as pUserData of QCPlayerNotifyEvent.
+// The param pBuffer field nValue is 11 means player don't need render.
+typedef int  (QC_API * QCPlayerOutAVData) (void * pUserData, QC_DATA_BUFF * pBuffer);
 
 /**
  * the yy media player interface 
@@ -134,17 +140,13 @@ typedef struct
 // Set to reconnect source.
 #define	QCPLAY_PID_Reconnect		QC_PLAY_BASE + 0X30
 
-// Set ext audio render 
+// Set ext audio render. Internal use.
 // The parameter should be CBaseAudioRnd *.
 #define	QCPLAY_PID_EXT_AudioRnd		QC_PLAY_BASE + 0X0100
 
-// Set ext video render 
+// Set ext video render. Internal use.
 // The parameter should be CBaseVideoRnd *.
 #define	QCPLAY_PID_EXT_VideoRnd		QC_PLAY_BASE + 0X0101
-
-// Set data send out function pointer
-// The parameter should be QCPlayerDataSendOut *.
-#define	QCPLAY_PID_Data_SendOut		QC_PLAY_BASE + 0X0110
 
 // Set / get the socket connect timeout time
 // The parameter should be int *. (ms)
@@ -160,13 +162,31 @@ typedef struct
 
 // Set / get the max buffer time
 // The parameter should be int *. (ms)
-#define	QCPLAY_PID_Buffer_MaxTime			QC_PLAY_BASE + 0X0211
+#define	QCPLAY_PID_PlayBuff_MaxTime			QC_PLAY_BASE + 0X0211
+
+// Set / get the min buffer time
+// The parameter should be int *. (ms)
+#define	QCPLAY_PID_PlayBuff_MinTime			QC_PLAY_BASE + 0X0212
 
 // Set the DRM key 
 // The parameter should be char *.
 #define	QCPLAY_PID_DRM_KeyText				QC_PLAY_BASE + 0X0301
 
+// Set to capture video image
+// The parameter should be long long * (ms). capture time. 0 is immediatily.
+#define	QCPLAY_PID_Capture_Image			QC_PLAY_BASE + 0X0310
 
+// Set the log out level
+// The parameter should be int *. 0, None, 1 error, 2 warning, 3 info, 4 debug.
+#define	QCPLAY_PID_Log_Level				QC_PLAY_BASE + 0X0320
+
+// Set to call back video buffer. It should be set after open before run.
+// The parameter should be function: QCPlayerOutAVData
+#define	QCPLAY_PID_SendOut_VideoBuff		QC_PLAY_BASE + 0X0330
+
+// Set to call back Audio buffer. It should be set after open before run.
+// The parameter should be function: QCPlayerOutAVData
+#define	QCPLAY_PID_SendOut_AudioBuff		QC_PLAY_BASE + 0X0331
 
 // the video aspect ratio. 
 typedef struct {
@@ -180,10 +200,9 @@ typedef struct {
 #define	QC_PLAY_VideoDisable_Decoder	2
 
 DLLEXPORT_C int QC_API qcCreatePlayer (QCM_Player * fPlayer, void * hInst);
+typedef int (QC_API QCCREATEPLAYER) (QCM_Player * fPlayer, void * hInst);
 
 DLLEXPORT_C int QC_API qcDestroyPlayer (QCM_Player * fPlayer);
-
-typedef int (QC_API QCCREATEPLAYER) (QCM_Player * fPlayer, void * hInst);
 typedef int (QC_API QCDESTROYPLAYER) (QCM_Player * fPlayer);
 
 #ifdef __cplusplus

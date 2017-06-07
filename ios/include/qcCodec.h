@@ -87,6 +87,17 @@ typedef int(*QCCREATEDECODER) (QC_Codec_Func * pCodec, void * pFormat);
 DLLEXPORT_C int	qcDestroyDecoder (QC_Codec_Func * pCodec);
 typedef int	(* QCDESTROYDECODER) (QC_Codec_Func * pCodec);
 
+// create the encoder with video foramt
+DLLEXPORT_C int	qcCreateEncoder (void ** phEnc, QC_VIDEO_FORMAT * pFormat);
+typedef int (* QCCREATEENCODER) (void ** phEnc, QC_VIDEO_FORMAT * pFormat);
+
+DLLEXPORT_C int	qcEncodeImage(void * hEnc, QC_VIDEO_BUFF * pVideo, QC_DATA_BUFF * pData);
+typedef int(*QCENCODEIMAGE) (void * hEnc, QC_VIDEO_BUFF * pVideo, QC_DATA_BUFF * pData);
+
+// destory the Codec
+DLLEXPORT_C int	qcDestroyEncoder(void * hEnc);
+typedef int (* QCDESTROYENCODER) (void * hEnc);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif /* __cplusplus */

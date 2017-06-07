@@ -63,7 +63,7 @@ typedef struct tagQCANA_EVT_BASE
     long long	llEvtDuration;		/*!< event duration, in ms */
     int			nEventID;			/*!< event ID */
     int			nErrCode;			/*!< error code, refer to QC_ERR_XXX */
-    char		szSessionID[36];	/*!< playback session ID */
+    char		szSessionID[37];	/*!< playback session ID */
 } QCANA_EVT_BASE;
 
 // Close event
