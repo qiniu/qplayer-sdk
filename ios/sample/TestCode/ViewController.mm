@@ -460,6 +460,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         _timer = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
         
         _networkConnectionErrorTime = -1;
+        //_player.SetParam(_player.hPlayer, QCPLAY_PID_DRM_KeyText, (void*)"XXXXXXXXXXXX");
         _player.Open(_player.hPlayer, [_urlList[_currURL] UTF8String], _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0);
         [_switchHW setHidden:YES];
         [_labelHW setHidden:YES];
