@@ -16,6 +16,10 @@ import android.view.SurfaceView;
 import android.graphics.Bitmap;
 
 public interface BasePlayer {
+	public static final int		QCPLAY_FORMAT_M3U8			= 1;
+	public static final int		QCPLAY_FORMAT_MP4			= 2;
+	public static final int		QCPLAY_FORMAT_FLV			= 3;
+
 	// define the flag for player
 	public static final int		QCPLAY_OPEN_VIDDEC_HW		= 0X01000000;
 	public static final int		QCPLAY_OPEN_SAME_SOURCE		= 0X02000000;
@@ -38,6 +42,10 @@ public interface BasePlayer {
 
 	// the param.
 	public static final int 	QCPLAY_PID_Reconnect		= 0X11000030;
+
+	// Set the perfer file format. Param should QCParserFormat *
+	// This should be called before open.
+	public static final int 	QCPLAY_PID_Prefer_Format	= 0X11000050;
 
 	// Set to capture video image
 	// The parameter should be long long * (ms). capture time. 0 is immediatily.
@@ -71,21 +79,21 @@ public interface BasePlayer {
 	public static final int	QCPLAY_PID_DRM_KeyText				= 0X11000301;
 
 	// Define id of event listener.
-	public static final int 	QC_MSG_PLAY_OPEN_DONE 		= 0x16000001;
-	public static final int 	QC_MSG_PLAY_OPEN_FAILED 	= 0x16000002;
-	public static final int 	QC_MSG_PLAY_COMPLETE 		= 0x16000007;
-	public static final int 	QC_MSG_PLAY_SEEK_DONE 		= 0x16000005;
-	public static final int 	QC_MSG_PLAY_SEEK_FAILED 	= 0x16000006;
+	public static final int 	QC_MSG_PLAY_OPEN_DONE 			= 0x16000001;
+	public static final int 	QC_MSG_PLAY_OPEN_FAILED 		= 0x16000002;
+	public static final int 	QC_MSG_PLAY_COMPLETE 			= 0x16000007;
+	public static final int 	QC_MSG_PLAY_SEEK_DONE 			= 0x16000005;
+	public static final int 	QC_MSG_PLAY_SEEK_FAILED 		= 0x16000006;
 	// The first frame video was displayed.
-	public static final int 	QC_MSG_SNKV_FIRST_FRAME 	= 0x15200001;
+	public static final int 	QC_MSG_SNKV_FIRST_FRAME 		= 0x15200001;
 
 	// The nArg1 is the value
-	public static final int 	QC_MSG_PLAY_STATUS	 		= 0x16000008;
-	public static final int 	QC_MSG_PLAY_DURATION 		= 0x16000009;
+	public static final int 	QC_MSG_PLAY_STATUS	 			= 0x16000008;
+	public static final int 	QC_MSG_PLAY_DURATION 			= 0x16000009;
 	
-	public static final int 	QC_MSG_PLAY_RUN				= 0x1600000C;
-	public static final int 	QC_MSG_PLAY_PAUSE			= 0x1600000D;
-	public static final int 	QC_MSG_PLAY_STOP			= 0x1600000E;
+	public static final int 	QC_MSG_PLAY_RUN					= 0x1600000C;
+	public static final int 	QC_MSG_PLAY_PAUSE				= 0x1600000D;
+	public static final int 	QC_MSG_PLAY_STOP				= 0x1600000E;
 
 
 	// http protocol messaage id
@@ -104,6 +112,9 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_RTMP_CONNECT_START		= 0x11010001;
 	public static final int 	QC_MSG_RTMP_CONNECT_FAILED		= 0x11010002;
 	public static final int 	QC_MSG_RTMP_CONNECT_SUCESS		= 0x11010003;
+
+	public static final int		QC_MSG_HTTP_RETURN_CODE			= 0x11000023;
+
 	// The obj is the string value
 	public static final int		QC_MSG_RTMP_METADATA			= 0x11010006;
 
@@ -112,15 +123,27 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_BUFF_VBUFFTIME			= 0x18000001;
 	public static final int 	QC_MSG_BUFF_ABUFFTIME			= 0x18000002;
 
+	public static final int		QC_MSG_BUFF_GOPTIME				= 0x18000003;
+	public static final int		QC_MSG_BUFF_VFPS				= 0x18000004;
+	public static final int		QC_MSG_BUFF_AFPS				= 0x18000005;
+	public static final int		QC_MSG_BUFF_VBITRATE			= 0x18000006;
+	public static final int		QC_MSG_BUFF_ABITRATE			= 0x18000007;
+
 	// there is no value.
 	public static final int 	QC_MSG_BUFF_START_BUFFERING		= 0x18000006;
 	public static final int 	QC_MSG_BUFF_END_BUFFERING		= 0x18000007;
 
+	public static final int		QC_MSG_PARSER_M3U8_ERROR		= 0x12000010;
+	public static final int		QC_MSG_PARSER_FLV_ERROR			= 0x12000020;
+	public static final int		QC_MSG_PARSER_MP4_ERROR			= 0x12000030;	
+
+	public static final int		QC_MSG_VIDEO_HWDEC_FAILED		= 0x14000001;
+
 	// The video size was changed. The player need to resize the
 	// surface pos and size.
-	public static final int 	QC_MSG_SNKV_NEW_FORMAT 		= 0x15200003;
+	public static final int 	QC_MSG_SNKV_NEW_FORMAT 			= 0x15200003;
 	// The audio format was changed.
-	public static final int 	QC_MSG_SNKA_NEW_FORMAT 		= 0x15100003;
+	public static final int 	QC_MSG_SNKA_NEW_FORMAT 			= 0x15100003;
 
 
 	public static final int 	QC_FLAG_Video_CaptureImage	= 0x00000010;

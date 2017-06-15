@@ -140,6 +140,10 @@ typedef struct
 // Set to reconnect source.
 #define	QCPLAY_PID_Reconnect		QC_PLAY_BASE + 0X30
 
+// Set the perfer file format. Param should QCParserFormat *
+// This should be called before open.
+#define	QCPLAY_PID_Prefer_Format	QC_PLAY_BASE + 0X50
+
 // Set ext audio render. Internal use.
 // The parameter should be CBaseAudioRnd *.
 #define	QCPLAY_PID_EXT_AudioRnd		QC_PLAY_BASE + 0X0100

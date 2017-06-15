@@ -50,6 +50,9 @@
 #define QC_MSG_PARSER_BASE				0x12000000
 // m_nValue is bitrate
 #define QC_MSG_PARSER_NEW_STREAM		0x12000001
+#define QC_MSG_PARSER_M3U8_ERROR		0x12000010
+#define QC_MSG_PARSER_FLV_ERROR			0x12000020
+#define QC_MSG_PARSER_MP4_ERROR			0x12000030
 
 
 // define the Audio Dec msg ID

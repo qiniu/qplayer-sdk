@@ -34,6 +34,10 @@ typedef struct
 {
 	// Define the version of the Parser. It shuild be 1
 	int				nVer;
+
+	// Define the base instance
+	void *			pBaseInst;
+
 	// The Parser handle, it will fill in function.
 	void *			hParser;
 
