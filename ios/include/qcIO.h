@@ -46,6 +46,10 @@ extern "C" {
 // The parameter should be char *. 
 #define	QCIO_PID_HTTP_HeadHost			QC_MOD_IO_HTTP + 0X01
 
+// Set the ext lib file name
+// The parameter should be char *. 
+#define	QCIO_PID_EXT_LibName			QC_MOD_IO_BASE + 0X02
+
 // the IO source type
 typedef enum {
     QC_IOTYPE_NONE,
@@ -53,6 +57,7 @@ typedef enum {
     QC_IOTYPE_HTTP_VOD,
     QC_IOTYPE_HTTP_LIVE,
     QC_IOTYPE_RTMP,
+	QC_IOTYPE_EXTLIB,
 	QC_IOTYPE_MAX		= 0X7FFFFFFF
 }QCIOType;
 
@@ -63,6 +68,10 @@ typedef struct
 {
 	// Define the version of the IO. It shuild be 1
 	int				nVer;
+
+	// Define the base instance
+	void *			pBaseInst;
+
 	// The IO handle, it will fill in function.
 	void *			hIO;
 
@@ -113,6 +122,9 @@ typedef struct
 	// for extend function later.
 	int 			(* GetParam)	(void * hIO, int nID, void * pParam);
 	int 			(* SetParam)	(void * hIO, int nID, void * pParam);
+
+	QCIOProtocol	m_nProtocol;
+	char			m_szLibInfo[256];
 } QC_IO_Func;
 
 // create the IO with IO type.
@@ -120,6 +132,12 @@ DLLEXPORT_C int		qcCreateIO (QC_IO_Func * pIO, QCIOProtocol nProt);
 
 // destroy the IO
 DLLEXPORT_C int		qcDestroyIO (QC_IO_Func * pIO);
+
+DLLEXPORT_C int		qcFFCreateIO(QC_IO_Func * pIO, QCIOProtocol nProt);
+DLLEXPORT_C int		qcFFDestroyIO(QC_IO_Func * pIO);
+
+typedef int (*QCCREATEIO) (QC_IO_Func * pIO, QCIOProtocol nProt);
+typedef int (*QCDESTROYIO) (QC_IO_Func * pIO);
 
 #ifdef __cplusplus
 } /* extern "C" */

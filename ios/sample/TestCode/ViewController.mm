@@ -38,6 +38,7 @@
     UITapGestureRecognizer* _tapGesture;
     
     NSInteger		_networkConnectionErrorTime;
+    NSString*		_clipboardURL;
 }
 @end
 
@@ -196,6 +197,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     	_urlList = [[NSMutableArray alloc] init];
     
     _currURL = 0;
+    _clipboardURL = nil;
     
 #if 0
     [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
@@ -460,8 +462,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         _timer = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
         
         _networkConnectionErrorTime = -1;
+        const char* url = [_urlList[_currURL] UTF8String];
+        if(_clipboardURL)
+            url = [_clipboardURL UTF8String];
         //_player.SetParam(_player.hPlayer, QCPLAY_PID_DRM_KeyText, (void*)"XXXXXXXXXXXX");
-        _player.Open(_player.hPlayer, [_urlList[_currURL] UTF8String], _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0);
+        _player.Open(_player.hPlayer, url, _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0);
+        if(_clipboardURL)
+        {
+            [_clipboardURL release];
+            _clipboardURL = nil;
+        }
         [_switchHW setHidden:YES];
         [_labelHW setHidden:YES];
     }
@@ -475,7 +485,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     if(!_player.hPlayer)
         return;
-    
+
     [((UIButton*)sender) setTitle:@"START" forState:UIControlStateNormal];
     
     [_timer invalidate];
@@ -490,7 +500,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_sliderPosition setValue:0.0];
     [_tableViewStreamInfo removeFromSuperview];
     _tableViewStreamInfo = nil;
-    
     NSLog(@"-Stop");
 }
 
@@ -525,7 +534,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         else
             _sliderPosition.value = (float)pos/(float)dur;
     }
-    
     
     NSString* strPos = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", pos / 3600, pos % 3600 / 60, pos % 3600 % 60];
     NSString* strDur = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", dur / 3600, dur % 3600 / 60, dur % 3600 % 60];
@@ -655,10 +663,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     {
         [tableView deselectRowAtIndexPath:[NSIndexPath indexPathWithIndex:_currURL] animated:YES];
         
-        if([self fastOpen:indexPath.row])
-            return;
-        
         _currURL = indexPath.row;
+        if([self fastOpen:[[_urlList objectAtIndex:indexPath.row] UTF8String]])
+			return;
+        
         [self onStop:_btnStart];
         [self onStart:_btnStart];
     }
@@ -793,6 +801,39 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     return cell;
 }
 
+- (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
+{
+    if (action == @selector(paste:) || action == @selector(copy:))
+    {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
+{
+    if (action == @selector(copy:))
+    {
+        [UIPasteboard generalPasteboard].string = [_urlList objectAtIndex:indexPath.row];
+    }
+    if (action == @selector(paste:))
+    {
+        if(_clipboardURL)
+            [_clipboardURL release];
+        _clipboardURL = [[UIPasteboard generalPasteboard].string retain];
+        if([self fastOpen:[_clipboardURL UTF8String]])
+            return;
+        
+        [self onStop:_btnStart];
+        [self onStart:_btnStart];
+    }
+}
+
 #pragma mark show warning message
 -(void) showMessage:(NSString *)message duration:(NSTimeInterval)time
 {
@@ -856,7 +897,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     return YES;
 }
 
--(BOOL)fastOpen:(NSInteger)newIdx
+-(BOOL)fastOpen:(const char*)newURL
 {
     return NO;
     if(_player.hPlayer)
@@ -868,12 +909,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             char* end = strchr(oldURL, ':');
             if(end)
             {
-                if(!strncmp([_urlList[newIdx] UTF8String], oldURL, end-oldURL))
+                if(!strncmp(newURL, oldURL, end-oldURL))
                 {
-                    _currURL = newIdx;
-                    NSLog(@"+Fast open, %s", [_urlList count]<=0?"":[_urlList[_currURL] UTF8String]);
+                    NSLog(@"+Fast open, %s", newURL);
                     int flag = _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0;
-                    _player.Open(_player.hPlayer, [_urlList[_currURL] UTF8String], (flag|QCPLAY_OPEN_SAME_SOURCE));
+                    _player.Open(_player.hPlayer, newURL, (flag|QCPLAY_OPEN_SAME_SOURCE));
                     NSLog(@"-Fast open");
                     return YES;
                 }

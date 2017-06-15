@@ -21,6 +21,7 @@
 #endif // __QC_OS_IOS__
 
 // define the module ID
+#define QC_MOD_IO_BASE					0x41000000
 #define QC_MOD_IO_FILE					0x41100000
 #define QC_MOD_IO_HTTP					0x41200000
 #define QC_MOD_IO_RTMP					0x41300000
@@ -77,7 +78,16 @@ typedef struct tagRECT
     int    right;
     int    bottom;
 } RECT, *PRECT;
+
+#ifndef MAKEFOURCC
+#define MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
+                ((unsigned int)(unsigned char)(ch0) | ((unsigned int)(unsigned char)(ch1) << 8) |   \
+                ((unsigned int)(unsigned char)(ch2) << 16) | ((unsigned int)(unsigned char)(ch3) << 24 ))
+#endif // MAKEFOURCC
+
 #endif // __QC_OS_WIN32__
+
+
 
 #ifdef __QC_OS_WIN32__
 #pragma warning (disable : 4996)

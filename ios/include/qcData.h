@@ -32,7 +32,8 @@ typedef enum {
     QC_IOPROTOCOL_FILE,
     QC_IOPROTOCOL_HTTP,
     QC_IOPROTOCOL_RTMP,
-	QC_IOPROTOCOL_MAX		= 0X7FFFFFFF
+	QC_IOPROTOCOL_EXTLIB,
+	QC_IOPROTOCOL_MAX = 0X7FFFFFFF
 }QCIOProtocol;
 
 // the parser format 
@@ -68,6 +69,11 @@ typedef enum {
 typedef enum  {
 	QC_VDT_YUV420_P		= 0,
 	QC_VDT_NV12			= 1,
+	QC_VDT_YUYV422		= 2,
+	QC_VDT_YUV422_P		= 3,
+	QC_VDT_YUV444_P		= 4,
+	QC_VDT_YUV410_P		= 5,
+	QC_VDT_YUV411_P		= 6,
 	QC_VDT_RGB565		= 11,
 	QC_VDT_RGB24		= 12,
 	QC_VDT_RGBA			= 13,
