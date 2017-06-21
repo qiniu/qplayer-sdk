@@ -144,6 +144,10 @@ typedef struct
 // This should be called before open.
 #define	QCPLAY_PID_Prefer_Format	QC_PLAY_BASE + 0X50
 
+// Set the perfer file format. Param should QCParserFormat *
+// This should be called before open.
+#define	QCPLAY_PID_Prefer_Protocol	QC_PLAY_BASE + 0X60
+
 // Set ext audio render. Internal use.
 // The parameter should be CBaseAudioRnd *.
 #define	QCPLAY_PID_EXT_AudioRnd		QC_PLAY_BASE + 0X0100

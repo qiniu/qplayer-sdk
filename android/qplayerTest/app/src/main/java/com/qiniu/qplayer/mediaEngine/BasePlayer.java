@@ -130,8 +130,8 @@ public interface BasePlayer {
 	public static final int		QC_MSG_BUFF_ABITRATE			= 0x18000007;
 
 	// there is no value.
-	public static final int 	QC_MSG_BUFF_START_BUFFERING		= 0x18000006;
-	public static final int 	QC_MSG_BUFF_END_BUFFERING		= 0x18000007;
+	public static final int 	QC_MSG_BUFF_START_BUFFERING		= 0x18000016;
+	public static final int 	QC_MSG_BUFF_END_BUFFERING		= 0x18000017;
 
 	public static final int		QC_MSG_PARSER_M3U8_ERROR		= 0x12000010;
 	public static final int		QC_MSG_PARSER_FLV_ERROR			= 0x12000020;

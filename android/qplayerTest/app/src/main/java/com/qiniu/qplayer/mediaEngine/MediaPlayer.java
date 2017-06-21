@@ -189,6 +189,8 @@ public class MediaPlayer implements BasePlayer {
 		
 	private static void postEventFromNative(Object baselayer_ref, int what, int ext1, int ext2, Object obj)
 	{
+		Log.v("MediaPlayer", String.format("QC_MSG ID = 0X%08X", what));
+
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
 			return;

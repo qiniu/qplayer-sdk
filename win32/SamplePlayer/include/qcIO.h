@@ -22,7 +22,7 @@ extern "C" {
 
 #define	QCIO_FLAG_READ			1                                   /**< read-only */
 #define QCIO_FLAG_WRITE			2                                   /**< write-only */
-#define QCIO_FLAG_READ_WRITE	QCIO_FLAG_READ | QCIO_FLAG_WRITE)	/**< read-write pseudo flag */
+#define QCIO_FLAG_READ_WRITE	(QCIO_FLAG_READ | QCIO_FLAG_WRITE)	/**< read-write pseudo flag */
 #define	QCIO_FLAG_URL			8                                   /**< connect with URL  */
 
 
