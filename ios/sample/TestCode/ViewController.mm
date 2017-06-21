@@ -439,7 +439,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [self createPlayer];
     
     UIButton* btn = (UIButton*)sender;
-    NSLog(@"+Start, %s", [_urlList count]<=0?"":[_urlList[_currURL] UTF8String]);
+    NSLog(@"+Start, %s", _clipboardURL?[_clipboardURL UTF8String]:[_urlList count]<=0?"":[_urlList[_currURL] UTF8String]);
     QCPLAY_STATUS status = _player.GetStatus(_player.hPlayer);
     
     if(status == QC_PLAY_Pause)
