@@ -55,7 +55,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 {
     if (nID == QC_MSG_PLAY_OPEN_DONE)
     {
-        NSLog(@"Run\n");
+        NSLog(@"[EVT]Run\n");
         if(_player.hPlayer)
             _player.Run(_player.hPlayer);
         _btnStart.enabled = ![self isLive];
@@ -75,19 +75,22 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
     {
-        NSLog(@"Seek done\n");
+        NSLog(@"[EVT]Seek done\n");
     }
-    else if (nID == QC_MSG_HTTP_DISCONNECTED || nID == QC_MSG_HTTP_RECONNECT_FAILED)
+    else if (nID == QC_MSG_HTTP_DISCONNECTED || nID == QC_MSG_HTTP_RECONNECT_FAILED
+             || nID == QC_MSG_RTMP_DISCONNECTED || nID == QC_MSG_RTMP_RECONNECT_FAILED)
     {
         if(_networkConnectionErrorTime == -1)
         {
-            NSLog(@"Connect lost, %x\n", nID);
+            NSLog(@"[EVT]Connect lost, %x\n", nID);
             _networkConnectionErrorTime = [self getSysTime];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self showMessage:@"Connection loss" duration:5.0];
             }];
         }
+        if(nID == QC_MSG_HTTP_RECONNECT_FAILED || nID == QC_MSG_RTMP_RECONNECT_FAILED)
+        	NSLog(@"[EVT]Reconnect fail, %x\n", nID);
         
         //
         if(([self getSysTime]-_networkConnectionErrorTime) > 300*1000)
@@ -102,15 +105,35 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             }];
         }
     }
-    else if (nID == QC_MSG_HTTP_RECONNECT_SUCESS)
+    else if(nID == QC_MSG_RTMP_CONNECT_START || nID == QC_MSG_HTTP_CONNECT_START)
     {
-        NSLog(@"Connect recovered\n");
+        NSLog(@"[EVT]Connect start, %x", nID);
+    }
+    else if (nID == QC_MSG_HTTP_RECONNECT_SUCESS || nID == QC_MSG_RTMP_RECONNECT_SUCESS)
+    {
+        NSLog(@"[EVT]Reconnect success, %x\n", nID);
         _networkConnectionErrorTime = -1;
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            [self showMessage:@"Connection recovered" duration:5.0];
+            [self showMessage:@"Reconnect success" duration:5.0];
         }];
     }
+    else if (nID == QC_MSG_HTTP_CONNECT_SUCESS || nID == QC_MSG_RTMP_CONNECT_SUCESS)
+    {
+        NSLog(@"[EVT]Connect success, %x\n", nID);
+    }
+    else if(nID == QC_MSG_SNKV_FIRST_FRAME)
+    {
+        NSLog(@"[EVT]First video frame rendered, %x\n", nID);
+    }
+}
+
+-(void)setVideoView:(UIView*)view rect:(RECT*)drawRect
+{
+    if(!_player.hPlayer)
+        return;
+    
+    _player.SetView(_player.hPlayer, (void*)view, drawRect);
 }
 
 -(void) createPlayer
@@ -120,7 +143,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     qcCreatePlayer(&_player, NULL);
     _player.SetNotify(_player.hPlayer, NotifyEvent, self);
-    _player.SetView(_player.hPlayer, (void*)_viewVideo, NULL);
+    
+    CGRect r = _viewVideo.bounds;
+    RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
+    _player.SetView(_player.hPlayer, (void*)_viewVideo, &drawRect);
 }
 
 -(void) destroyPlayer
@@ -254,6 +280,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _rectSmallScreen.origin.y = 0;//[[UIApplication sharedApplication] statusBarFrame].size.height;
     _viewVideo = [[UIView alloc] initWithFrame:_rectSmallScreen];
     _viewVideo.backgroundColor = [UIColor blackColor];
+    _viewVideo.contentMode =  UIViewContentModeScaleAspectFit;
     [self.view insertSubview:_viewVideo atIndex:0];
     [_viewVideo release];
     
@@ -543,8 +570,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(void)onAppActive:(BOOL)active
 {
-    NSLog(@"Active %d", active?1:0);
-    
     if(!_player.hPlayer)
     	return;
     
@@ -592,15 +617,19 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     
     [_tableViewURL setHidden:_isFullScreen?YES:NO];
-    _viewVideo.frame = _isFullScreen?_rectFullScreen:_rectSmallScreen;
     
-    [UIView animateWithDuration:1.0 animations:^{
-        
+//    [UIView animateWithDuration:1.0 animations:^{
+    
         if(_player.hPlayer)
-            _player.SetView(_player.hPlayer, _viewVideo, NULL);
+        {
+            _viewVideo.frame = _isFullScreen?_rectFullScreen:_rectSmallScreen;
+            CGRect r = _viewVideo.bounds;
+            RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
+            _player.SetView(_player.hPlayer, _viewVideo, &drawRect);
+        }
         
-    } completion:^(BOOL finished) {
-    }];
+//    } completion:^(BOOL finished) {
+//    }];
 }
 
 -(IBAction)onSelectStreamEnd:(id)sender
