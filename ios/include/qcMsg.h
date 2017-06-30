@@ -42,6 +42,10 @@
 #define QC_MSG_RTMP_DOWNLOAD_SPEED		0x11010004		// Param: int speed
 #define QC_MSG_RTMP_DNS_GET_IPADDR		0x11010005		// Param:
 #define QC_MSG_RTMP_METADATA			0x11010006		// Param: string, JSON object
+#define QC_MSG_RTMP_DISCONNECTED		0x11010007		// Param:
+#define QC_MSG_RTMP_RECONNECT_FAILED	0x11010008		// Param:
+#define QC_MSG_RTMP_RECONNECT_SUCESS	0x11010009		// Param:
+
 
 #define QC_MSG_IO_FIRST_BYTE_DONE		0x11020001		// Param:
 
