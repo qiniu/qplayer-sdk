@@ -30,13 +30,11 @@ import java.io.UnsupportedEncodingException;
 
 public class MediaPlayer implements BasePlayer {
 	private static final String TAG = "QCLOGMediaPlayer";
-	// The draw the video on view in main thread
-	public static final int QC_EV_Draw_Video = 0x1001;
 
-	private int m_nInitFlag = 0;
-	private Context m_context = null;
-	private int m_NativeContext = 0;
-	private Surface m_NativeSurface = null;
+	private int 		m_nInitFlag = 0;
+	private Context 	m_context = null;
+	private long 		m_NativeContext = 0;
+	private Surface 	m_NativeSurface = null;
 	private SurfaceView m_SurfaceView = null;
 
 	private int m_nStreamNum = 0;
@@ -255,16 +253,16 @@ public class MediaPlayer implements BasePlayer {
 	};
 	
 	// the native functions
-    private native int 	nativeInit(Object player, String apkPath, int nFlag);
-    private native int 	nativeUninit(int nNativeContext);
-    private native int 	nativeSetView(int nNativeContext, Object view);  
-    private native int 	nativeOpen(int nNativeContext,String strPath, int nFlag);
-    private native int 	nativePlay(int nNativeContext);
-    private native int 	nativePause(int nNativeContext);   
-    private native int 	nativeStop(int nNativeContext);     
-    private native int 	nativeGetPos(int nNativeContext);    
-    private native int 	nativeSetPos(int nNativeContext,int nPos);
-    private native long nativeGetDuration(int nNativeContext);
-	private native int 	nativeGetParam(int nNativeContext,int nParamId, int nParam, Object objParam);
-    private native int 	nativeSetParam(int nNativeContext,int nParamId, int nParam, Object objParam);
+    private native long	nativeInit(Object player, String apkPath, int nFlag);
+    private native int 	nativeUninit(long nNativeContext);
+    private native int 	nativeSetView(long nNativeContext, Object view);
+    private native int 	nativeOpen(long nNativeContext,String strPath, int nFlag);
+    private native int 	nativePlay(long nNativeContext);
+    private native int 	nativePause(long nNativeContext);
+    private native int 	nativeStop(long nNativeContext);
+    private native int 	nativeGetPos(long nNativeContext);
+    private native int 	nativeSetPos(long nNativeContext,int nPos);
+    private native long nativeGetDuration(long nNativeContext);
+	private native int 	nativeGetParam(long nNativeContext,int nParamId, int nParam, Object objParam);
+    private native int 	nativeSetParam(long nNativeContext,int nParamId, int nParam, Object objParam);
 }

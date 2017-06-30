@@ -86,6 +86,9 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_PLAY_SEEK_FAILED 		= 0x16000006;
 	// The first frame video was displayed.
 	public static final int 	QC_MSG_SNKV_FIRST_FRAME 		= 0x15200001;
+	// The first frame audio was displayed.
+	public static final int 	QC_MSG_SNKA_FIRST_FRAME 		= 0x15100001;
+
 
 	// The nArg1 is the value
 	public static final int 	QC_MSG_PLAY_STATUS	 			= 0x16000008;
@@ -112,6 +115,9 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_RTMP_CONNECT_START		= 0x11010001;
 	public static final int 	QC_MSG_RTMP_CONNECT_FAILED		= 0x11010002;
 	public static final int 	QC_MSG_RTMP_CONNECT_SUCESS		= 0x11010003;
+	public static final int 	QC_MSG_RTMP_DISCONNECTED		= 0x11010007;
+	public static final int 	QC_MSG_RTMP_RECONNECT_FAILED	= 0x11010008;
+	public static final int 	QC_MSG_RTMP_RECONNECT_SUCESS	= 0x11010009;
 
 	public static final int		QC_MSG_HTTP_RETURN_CODE			= 0x11000023;
 
