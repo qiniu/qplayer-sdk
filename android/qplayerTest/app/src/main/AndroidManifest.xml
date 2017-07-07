@@ -40,12 +40,11 @@
 
         <activity
             android:name=".PlayerView"
-            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" >
                 </action>
-
                 <category android:name="android.intent.category.DEFAULT" >
                 </category>
                 <data android:mimeType="video/mp4" />
@@ -56,7 +55,7 @@
                 <data android:mimeType="video/x-flv" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />\
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="rtmp" />

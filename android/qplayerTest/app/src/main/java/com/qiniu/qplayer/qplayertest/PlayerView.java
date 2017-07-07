@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,6 +44,8 @@ import android.widget.TextView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.app.ProgressDialog;
+
+import android.content.pm.ActivityInfo;
 
 import com.qiniu.qplayer.mediaEngine.*;
 
@@ -131,12 +134,32 @@ public class PlayerView extends Activity
 		if (m_Player != null)
 			m_Player.SetView(null);
 	}
-	
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		if(m_Player != null)
+			m_Player.onVideoSizeChanged ();
+	}
 	// @Override
 	public int onEvent(int nID, int nArg1, int nArg2, Object obj) {
 		if (nID == BasePlayer.QC_MSG_PLAY_OPEN_DONE) {
 			m_nDuration = (int)m_Player.GetDuration();
 			m_Player.Play ();
+		}
+		else if (nID == BasePlayer.QC_MSG_SNKV_NEW_FORMAT) {
+			if (nArg1 == 0 || nArg2 == 0)
+				return 0;
+			if (nArg1 > nArg2) {
+				if(getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+					setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+				}
+			}
+			else{
+				if(getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+					setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+				}
+			}
 		}
 		else if (nID == BasePlayer.QC_MSG_PLAY_DURATION)
 			m_nDuration = (int)m_Player.GetDuration();

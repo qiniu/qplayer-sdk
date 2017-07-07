@@ -64,6 +64,7 @@ public class FileListView extends AppCompatActivity {
         strVer = "corePlayer V" + strVer + "  B " + bldVer;
         super.setTitle(strVer);
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK)
@@ -75,6 +76,7 @@ public class FileListView extends AppCompatActivity {
             startActivity(intent);
             return true;
         */
+
             if (m_strListPath.equals(m_strRootPath)) {
                 //finish ();
                 System.exit(0);
@@ -85,6 +87,7 @@ public class FileListView extends AppCompatActivity {
                 updateFileList (m_strListPath);
             }
             return true;
+
         }
 
         return super.onKeyDown(keyCode, event);

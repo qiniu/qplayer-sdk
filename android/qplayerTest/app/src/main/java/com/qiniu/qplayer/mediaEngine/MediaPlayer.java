@@ -167,7 +167,7 @@ public class MediaPlayer implements BasePlayer {
 	public void onVideoSizeChanged () {	
 		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)m_SurfaceView.getLayoutParams();
 		DisplayMetrics dm = m_context.getResources().getDisplayMetrics();
-		if (m_nVideoWidth != 0 && m_nVideoHeight != 0 && lp.width == LayoutParams.FILL_PARENT && lp.height == LayoutParams.FILL_PARENT) 
+		if (m_nVideoWidth != 0 && m_nVideoHeight != 0)// && lp.width == LayoutParams.FILL_PARENT && lp.height == LayoutParams.FILL_PARENT)
 		{
 			int nMaxOutW = dm.widthPixels;
 			int nMaxOutH = dm.heightPixels;
@@ -187,7 +187,7 @@ public class MediaPlayer implements BasePlayer {
 		
 	private static void postEventFromNative(Object baselayer_ref, int what, int ext1, int ext2, Object obj)
 	{
-		Log.v("MediaPlayer", String.format("QC_MSG ID = 0X%08X", what));
+		Log.v("MediaPlayer", String.format("QC_MSG ID = 0X%08X   value %d   %d", what, ext1, ext2));
 
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
@@ -195,6 +195,8 @@ public class MediaPlayer implements BasePlayer {
 		
 		if (what == QC_MSG_SNKV_NEW_FORMAT)
 		{
+			if (player.m_nVideoWidth == ext1 && player.m_nVideoHeight == ext2)
+				return;
 			player.m_nVideoWidth = ext1;
 			player.m_nVideoHeight = ext2;
 		}		
