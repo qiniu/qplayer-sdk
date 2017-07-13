@@ -20,6 +20,8 @@ public interface BasePlayer {
 	public static final int		QCPLAY_FORMAT_MP4			= 2;
 	public static final int		QCPLAY_FORMAT_FLV			= 3;
 
+	public static final int		QC_IOPROTOCOL_HTTPPD 		= 5;
+
 	// define the flag for player
 	public static final int		QCPLAY_OPEN_VIDDEC_HW		= 0X01000000;
 	public static final int		QCPLAY_OPEN_SAME_SOURCE		= 0X02000000;
@@ -43,7 +45,15 @@ public interface BasePlayer {
 	// the param.
 	public static final int 	QCPLAY_PID_Reconnect		= 0X11000030;
 
-	// Set the perfer file format. Param should QCParserFormat *
+	// Set the perfer io protocol. Param should QC_IOPROTOCOL_HTTPPD 
+	// This should be called before open.
+	public static final int 	QCPLAY_PID_Prefer_Protocol	= 0X11000060;
+
+	// Set the PD save path. Param should char *
+	// This should be called before open.
+	public static final int 	QCPLAY_PID_PD_Save_Path		= 0X11000061;
+
+	// Set the perfer file format. Param should QCPLAY_FORMAT_* 
 	// This should be called before open.
 	public static final int 	QCPLAY_PID_Prefer_Format	= 0X11000050;
 

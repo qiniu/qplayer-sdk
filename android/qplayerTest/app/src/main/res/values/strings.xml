@@ -6,8 +6,8 @@
     <string name="set_videoquality_desc">Prefer video quality or play smooth</string>
     <string name="set_videoquality_option_quality">Video Quality</string>
     <string name="set_videoquality_option_smooth">Play Smooth</string>
-    <string name="set_subtitle_title">Subtitle</string>
-    <string name="set_subtitle_desc">Show or hide subtitle</string>
+    <string name="set_subtitle_title">Download File</string>
+    <string name="set_subtitle_desc">Download File when playback</string>
     <string name="set_colortype_title">Color Format</string>
     <string name="set_colortype_desc">Set color format to render</string>
     <string name="set_colortype_option_yuv">YUV</string>

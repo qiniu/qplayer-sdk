@@ -316,7 +316,7 @@ public class PlayerView extends Activity
 	
 	private void OpenFile (String strPath) {
 		SharedPreferences settings = this.getSharedPreferences("Player_Setting", 0);
-		int nSubTT     	= settings.getInt("Subtitle", 1);
+		int nDownloadFile  = settings.getInt("DownloadFile", 0);
 		int nColorType     = settings.getInt("ColorType", 0);
 		int nVideoDec      = settings.getInt("VideoDec", 1);
 		int	nFlag = 0;
@@ -338,6 +338,14 @@ public class PlayerView extends Activity
 		//String 	strKeyText = "kdnljjlcn2iu2384";
 		//byte[]  byKeyText = {0x6b, 0x64, 0x6e, 0x6c, 0x6a, 0x6a, 0x6c, 0x63, 0x6e, 0x32, 0x69, 0x75, 0x32, 0x33, 0x38, 0x34 };
 		//m_Player.SetParam(BasePlayer.QCPLAY_PID_Speed, 0, byKeyText);
+
+		if (nDownloadFile > 0) {
+			m_Player.SetParam(BasePlayer.QCPLAY_PID_Prefer_Protocol, BasePlayer.QC_IOPROTOCOL_HTTPPD, null);
+			File file = Environment.getExternalStorageDirectory();
+			String strPDPath = file.getPath() + "/QPlayer/PDFile";
+			m_Player.SetParam(BasePlayer.QCPLAY_PID_PD_Save_Path, 0, strPDPath);
+		}
+
 		nRet = m_Player.Open (strPath, 	0);
 		if (nRet != 0) {
 			Close ();		
@@ -385,8 +393,8 @@ public class PlayerView extends Activity
 		m_btnPause.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if (m_Player != null) {
-					//m_Player.Open(m_strFile, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
-					m_Player.SetParam (BasePlayer.QCPLAY_PID_Capture_Image, 0, null);
+					m_Player.Open(m_strFile, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
+					//m_Player.SetParam (BasePlayer.QCPLAY_PID_Capture_Image, 0, null);
 					return;
 				}
 				if (m_Player != null)

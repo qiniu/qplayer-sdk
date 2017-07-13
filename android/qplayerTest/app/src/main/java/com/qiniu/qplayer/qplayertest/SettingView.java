@@ -24,7 +24,7 @@ import android.widget.TextView;
 public class SettingView extends Activity implements OnGroupClickListener, OnChildClickListener,
         OnGroupExpandListener {
 	public static final int 	POS_VIDEOQUALITY		= 0;
-	public static final int 	POS_SUBTITLE			= 1;
+	public static final int 	POS_DOWNLOADFILE		= 1;
 	public static final int 	POS_COLORTYPE			= 2;
 	public static final int 	POS_VIDEODEC			= 3;
 	
@@ -36,7 +36,7 @@ public class SettingView extends Activity implements OnGroupClickListener, OnChi
     ExpandableListView 				mListView;
     MyExpandableListViewAdapter 	mAdapter;
     private int 					m_nVideoQuality;
-    private int 					m_nSubTT;
+    private int 					m_nDownloadFile;
     private int 					m_nColorType;
     private int						m_nVideoDec;
 
@@ -88,7 +88,7 @@ public class SettingView extends Activity implements OnGroupClickListener, OnChi
             case POS_VIDEOQUALITY:
             	mImageView.setImageResource(R.drawable.set_videoquality);
             	break;
-            case POS_SUBTITLE:
+            case POS_DOWNLOADFILE:
             	mImageView.setImageResource(R.drawable.set_subtitle);
             	break;
             case POS_COLORTYPE:
@@ -275,7 +275,7 @@ public class SettingView extends Activity implements OnGroupClickListener, OnChi
     
     private void saveValues() {    		
  	   m_nVideoQuality 	= getValueFromGroup(POS_VIDEOQUALITY);
- 	   m_nSubTT     	= getValueFromGroup(POS_SUBTITLE); 
+ 	   m_nDownloadFile 	= getValueFromGroup(POS_DOWNLOADFILE);
 	   m_nColorType     = getValueFromGroup(POS_COLORTYPE);  
 	   m_nVideoDec      = getValueFromGroup(POS_VIDEODEC);  
 	   
@@ -283,7 +283,7 @@ public class SettingView extends Activity implements OnGroupClickListener, OnChi
 	   SharedPreferences.Editor editor = settings.edit(); 
 
 	   editor.putInt("VideoQuality", m_nVideoQuality);  
-	   editor.putInt("Subtitle", m_nSubTT); 
+	   editor.putInt("DownloadFile", m_nDownloadFile);
 	   editor.putInt("ColorType", m_nColorType); 
 	   editor.putInt("VideoDec", m_nVideoDec); 
 	   editor.commit(); 
@@ -292,11 +292,11 @@ public class SettingView extends Activity implements OnGroupClickListener, OnChi
     private void loadDefaultValue() {
 	   SharedPreferences settings = this.getSharedPreferences("Player_Setting", 0);
 	   m_nVideoQuality 	= settings.getInt("VideoQuality", 0);
-	   m_nSubTT     	= settings.getInt("Subtitle", 1); 
+       m_nDownloadFile	= settings.getInt("DownloadFile", 0);
 	   m_nColorType     = settings.getInt("ColorType", 0);   	   
 	   m_nVideoDec      = settings.getInt("VideoDec", 1);   	
 	   setChildValue(POS_VIDEOQUALITY, m_nVideoQuality);
-	   setChildValue(POS_SUBTITLE, m_nSubTT);
+	   setChildValue(POS_DOWNLOADFILE, m_nDownloadFile);
 	   setChildValue(POS_COLORTYPE, m_nColorType);    	   
 	   setChildValue(POS_VIDEODEC, m_nVideoDec);    
     }    
