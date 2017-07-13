@@ -225,7 +225,9 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _currURL = 0;
     _clipboardURL = nil;
     
-#if 0
+#if 1
+    [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
+    [_urlList addObject:@"http://192.168.0.123/pd/h264_MP_1920x1080_8000k_30f.mp4"];
     [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
     [_urlList addObject:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
     [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
@@ -508,11 +510,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(IBAction)onStop:(id)sender
 {
-    NSLog(@"+Stop");
-    
     if(!_player.hPlayer)
         return;
 
+    NSLog(@"+Stop");
+    
     [((UIButton*)sender) setTitle:@"START" forState:UIControlStateNormal];
     
     [_timer invalidate];
@@ -952,7 +954,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     return NO;
 }
-
 
 #pragma mark Other
 - (void)didReceiveMemoryWarning
