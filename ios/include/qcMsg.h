@@ -76,6 +76,8 @@
 #define QC_MSG_SNKA_EOS					0x15100002
 // m_nValue is sample rate, m_llValue is channel
 #define QC_MSG_SNKA_NEW_FORMAT			0x15100003
+// m_llValue is timestamp
+#define QC_MSG_SNKA_RENDER				0x15100004
 
 // define the Video Sink msg ID
 #define QC_MSG_SINK_VIDEO				0x15200000
@@ -83,6 +85,8 @@
 #define QC_MSG_SNKV_EOS					0x15200002
 // m_nValue is width, m_llValue is Height
 #define QC_MSG_SNKV_NEW_FORMAT			0x15200003
+// m_llValue is timestamp
+#define QC_MSG_SNKV_RENDER				0x15200004
 
 // define the play msg ID
 #define QC_MSG_PLAY_BASE				0x16000000

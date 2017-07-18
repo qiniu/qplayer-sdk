@@ -30,6 +30,8 @@
     UILabel*        _labelPlayingTime;
     UISwitch*       _switchHW;
     UILabel*        _labelHW;
+    UISwitch*       _switchCache;
+    UILabel*        _labelCache;
     UILabel*        _labelVersion;
     UIButton*       _btnCancelSelectStream;
     
@@ -147,6 +149,9 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     CGRect r = _viewVideo.bounds;
     RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
     _player.SetView(_player.hPlayer, (void*)_viewVideo, &drawRect);
+    
+    if(_switchCache.on == YES)
+    	[self enableFileCacheMode];
 }
 
 -(void) destroyPlayer
@@ -225,9 +230,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _currURL = 0;
     _clipboardURL = nil;
     
-#if 1
-    [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
-    [_urlList addObject:@"http://192.168.0.123/pd/h264_MP_1920x1080_8000k_30f.mp4"];
+#if 0
+    [_urlList addObject:@"http://replay1.live.gulugulu.cn/2017-06-13_LFM.mp4"];
+    [_urlList addObject:@"http://100.100.32.24/pd/058-EminemiPodAd.mp4"];
+    [_urlList addObject:@"http://100.100.32.24/pd/dump.flv"];
     [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
     [_urlList addObject:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
     [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
@@ -321,6 +327,21 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     contraint4 = [NSLayoutConstraint constraintWithItem:_labelPlayingTime attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeRight multiplier:1.0 constant:-5.0];
     array = [NSArray arrayWithObjects:contraint3, contraint4, nil, nil, nil, nil];
     [_viewVideo addConstraints:array];
+    
+    // Cache for MP4
+    width = 80;
+    _switchCache = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width +20, _rectSmallScreen.origin.y + 90, width, 20)];
+    _switchCache.on = NO;
+    [_viewVideo addSubview:_switchCache];
+    [_switchCache release];
+    
+    width = 80;
+    _labelCache = [[UILabel alloc] initWithFrame:CGRectMake(_switchCache.frame.origin.x - width, _switchCache.frame.origin.y, width, 20)];
+    _labelCache.text = @"Cache:";
+    _labelCache.font = [UIFont systemFontOfSize:15];
+    _labelCache.textColor = [UIColor redColor];
+    [_viewVideo addSubview:_labelCache];
+    [_labelCache release];
     
     //Switch HW and SW
     width = 80;
@@ -954,6 +975,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     return NO;
 }
+
+-(void)enableFileCacheMode
+{
+    NSString* docPathDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    docPathDir = [docPathDir stringByAppendingString:@"/cache/"];
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_PD_Save_Path, (void*)[docPathDir UTF8String]);
+    int nProtocol = QC_IOPROTOCOL_HTTPPD;
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Protocol, &nProtocol);
+}
+
 
 #pragma mark Other
 - (void)didReceiveMemoryWarning
