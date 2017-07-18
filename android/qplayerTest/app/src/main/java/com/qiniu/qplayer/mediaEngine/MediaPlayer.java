@@ -187,7 +187,8 @@ public class MediaPlayer implements BasePlayer {
 		
 	private static void postEventFromNative(Object baselayer_ref, int what, int ext1, int ext2, Object obj)
 	{
-		Log.v("MediaPlayer", String.format("QC_MSG ID = 0X%08X   value %d   %d", what, ext1, ext2));
+		if (what != BasePlayer.QC_MSG_SNKA_RENDER && what != BasePlayer.QC_MSG_SNKV_RENDER)
+			Log.v("MediaPlayer", String.format("QC_MSG ID = 0X%08X   value %d   %d", what, ext1, ext2));
 
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
@@ -216,8 +217,9 @@ public class MediaPlayer implements BasePlayer {
 		msg.sendToTarget();	
 	}
 		
-	private static void audioDataFromNative(Object baselayer_ref, byte[] data, int size)
-		{
+	private static void audioDataFromNative(Object baselayer_ref, byte[] data, int size, int lTime)
+	{
+		// Log.v("audioDataFromNative", String.format("Size %d  Time  %d", size, lTime));
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
 			return;		
@@ -225,6 +227,7 @@ public class MediaPlayer implements BasePlayer {
 	
 	private static void videoDataFromNative(Object baselayer_ref, byte[] data, int size, int lTime, int nFlag)
 	{
+		//Log.v("videoDataFromNative", String.format("Size %d  Time  %d, Flag   %d", size, lTime, nFlag));
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
 			return;

@@ -64,8 +64,17 @@ public class PlayerView extends Activity
 	private ImageButton		m_btnPause = null;
 	private SeekBar 		m_sbPlayer = null;
 	private Button			m_btnStream = null;
+
+	private boolean 		m_bActionMove = false;
 	
 	private String			m_strFile = null;
+	private String			m_strNextFile1 = "http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4";
+	private String			m_strNextFile2 = "http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4";
+	private String			m_strNextFile3 = "http://musically.muscdn.com/reg02/2017/06/29/09/244762267827998720.mp4";
+	private String			m_strNextFile4 = "http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4";
+	private String			m_strNextFile5 = "http://musically.muscdn.com/reg02/2017/05/31/02/234148590598897664.mp4";
+	private int				m_nPlayIndex = 0;
+
 	private MediaPlayer		m_Player = null;
 	private int				m_nDuration = 0;
 	private int				m_nStreamPlay = -1;
@@ -78,7 +87,7 @@ public class PlayerView extends Activity
 	private AlertDialog.Builder 	m_dlgOK = null;
 	private ProgressDialog 			m_dlgWait = null;
 	private Activity				m_Activity = null;
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);     
@@ -144,6 +153,10 @@ public class PlayerView extends Activity
 	// @Override
 	public int onEvent(int nID, int nArg1, int nArg2, Object obj) {
 		if (nID == BasePlayer.QC_MSG_PLAY_OPEN_DONE) {
+
+		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_AudioBuff, 0, null);
+		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_VideoBuff, 0, null);
+
 			m_nDuration = (int)m_Player.GetDuration();
 			m_Player.Play ();
 		}
@@ -273,13 +286,48 @@ public class PlayerView extends Activity
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			m_dateShowTime = new Date(System.currentTimeMillis());
-			if (m_layButtons.getVisibility() != View.VISIBLE) {
-				showControls ();
-			} else {
-				hideControls ();
-			}
+		int nAction = event.getAction();
+		switch (nAction) {
+			case MotionEvent.ACTION_DOWN:
+				return true;
+
+			case MotionEvent.ACTION_MOVE:
+				if (m_bActionMove == true)
+					return false;
+				m_bActionMove = true;
+				if (m_Player != null) {
+					if (m_nPlayIndex == 0)
+						m_Player.Open(m_strNextFile1, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
+					else if (m_nPlayIndex == 1)
+						m_Player.Open(m_strNextFile2, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
+					else if (m_nPlayIndex == 2)
+						m_Player.Open(m_strNextFile3, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
+					else if (m_nPlayIndex == 3)
+						m_Player.Open(m_strNextFile4, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
+					else if (m_nPlayIndex == 4)
+						m_Player.Open(m_strNextFile5, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
+					}
+				m_nPlayIndex++;
+				if (m_nPlayIndex >= 5)
+					m_nPlayIndex = 0;
+				//  m_Player.SetParam (BasePlayer.QCPLAY_PID_Capture_Image, 0, null);
+				return true;
+
+			case MotionEvent.ACTION_UP:
+				if (m_bActionMove == true) {
+					m_bActionMove = false;
+					return true;
+				}
+				m_dateShowTime = new Date(System.currentTimeMillis());
+				if (m_layButtons.getVisibility() != View.VISIBLE) {
+					showControls ();
+				} else {
+					hideControls ();
+				}
+				break;
+
+			default:
+				break;
 		}
 
 		return super.onTouchEvent(event);
@@ -392,11 +440,11 @@ public class PlayerView extends Activity
 		
 		m_btnPause.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (m_Player != null) {
-					m_Player.Open(m_strFile, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
-					//m_Player.SetParam (BasePlayer.QCPLAY_PID_Capture_Image, 0, null);
-					return;
-				}
+				//if (m_Player != null) {
+				//	m_Player.Open(m_strFile, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
+				//  m_Player.SetParam (BasePlayer.QCPLAY_PID_Capture_Image, 0, null);
+				//	return;
+				//}
 				if (m_Player != null)
 					m_Player.Pause();
 				m_btnPause.setVisibility(View.INVISIBLE);

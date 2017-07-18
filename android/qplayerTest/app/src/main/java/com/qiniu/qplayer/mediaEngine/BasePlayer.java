@@ -88,6 +88,14 @@ public interface BasePlayer {
 	// The parameter should be byte[].
 	public static final int	QCPLAY_PID_DRM_KeyText				= 0X11000301;
 
+	// Set to call back video buffer. It should be set after open before run.
+	// The parameter is 1, it will render outside, 0 render internal
+	public static final int	QCPLAY_PID_SendOut_VideoBuff		= 0X11000330;
+
+	// Set to call back Audio buffer. It should be set after open before run.
+	// The parameter is 1, it will render outside, 0 render internal
+	public static final int	QCPLAY_PID_SendOut_AudioBuff		= 0X11000331;
+
 	// Define id of event listener.
 	public static final int 	QC_MSG_PLAY_OPEN_DONE 			= 0x16000001;
 	public static final int 	QC_MSG_PLAY_OPEN_FAILED 		= 0x16000002;
@@ -96,9 +104,12 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_PLAY_SEEK_FAILED 		= 0x16000006;
 	// The first frame video was displayed.
 	public static final int 	QC_MSG_SNKV_FIRST_FRAME 		= 0x15200001;
+	// The video was render, the param is timestamp.
+	public static final int 	QC_MSG_SNKV_RENDER		 		= 0x15200004;
 	// The first frame audio was displayed.
 	public static final int 	QC_MSG_SNKA_FIRST_FRAME 		= 0x15100001;
-
+	// The audio was render, the param is timestamp.
+	public static final int 	QC_MSG_SNKA_RENDER		 		= 0x15100004;
 
 	// The nArg1 is the value
 	public static final int 	QC_MSG_PLAY_STATUS	 			= 0x16000008;
@@ -162,7 +173,8 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_SNKA_NEW_FORMAT 			= 0x15100003;
 
 
-	public static final int 	QC_FLAG_Video_CaptureImage	= 0x00000010;
+	public static final int 	QC_FLAG_Video_CaptureImage		= 0x00000010;
+	public static final int 	QC_FLAG_Video_YUV420P			= 0x00000000;
 
 	// The event listener function
 	public interface onEventListener{
