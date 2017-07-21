@@ -155,7 +155,7 @@ public class PlayerView extends Activity
 		if (nID == BasePlayer.QC_MSG_PLAY_OPEN_DONE) {
 
 		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_AudioBuff, 0, null);
-		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_VideoBuff, 0, null);
+			m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_VideoBuff, 0, null);
 
 			m_nDuration = (int)m_Player.GetDuration();
 			m_Player.Play ();
@@ -247,9 +247,9 @@ public class PlayerView extends Activity
 		return 0;
 	}
 	
-	public int OnSubTT (String strText, int nTime) {
+	public int OnSubTT (String strText, long lTime) {
 		m_txtSubTT.setText(strText);
-		if (nTime >= 0) {
+		if (lTime >= 0) {
 			m_txtSubTT.setText(strText);
 			m_txtSubTT.setVisibility(View.VISIBLE);
 		} else {
@@ -495,8 +495,8 @@ public class PlayerView extends Activity
 						hideControls ();
 					
 					if (m_nDuration > 0) {
-						int nPos = m_Player.GetPos() / (m_nDuration / 100);
-						m_sbPlayer.setProgress(nPos);	
+						int nPos = (int)(m_Player.GetPos() / (m_nDuration / 100));
+						m_sbPlayer.setProgress(nPos);
 					}
 				} 
 			}

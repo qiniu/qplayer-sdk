@@ -103,12 +103,12 @@ public class MediaPlayer implements BasePlayer {
 		return nativeGetDuration(m_NativeContext);
 	}
 
-	public int GetPos() {
+	public long GetPos() {
 		return nativeGetPos(m_NativeContext);
 	}
 
-	public int SetPos(int nPos) {
-		return nativeSetPos(m_NativeContext, nPos);
+	public int SetPos(long lPos) {
+		return nativeSetPos(m_NativeContext, lPos);
 	}
 
 	public int GetParam(int nParamId, int nParam, Object objParam) {
@@ -217,7 +217,7 @@ public class MediaPlayer implements BasePlayer {
 		msg.sendToTarget();	
 	}
 		
-	private static void audioDataFromNative(Object baselayer_ref, byte[] data, int size, int lTime)
+	private static void audioDataFromNative(Object baselayer_ref, byte[] data, int size, long lTime)
 	{
 		// Log.v("audioDataFromNative", String.format("Size %d  Time  %d", size, lTime));
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
@@ -225,7 +225,7 @@ public class MediaPlayer implements BasePlayer {
 			return;		
 	}
 	
-	private static void videoDataFromNative(Object baselayer_ref, byte[] data, int size, int lTime, int nFlag)
+	private static void videoDataFromNative(Object baselayer_ref, byte[] data, int size, long lTime, int nFlag)
 	{
 		//Log.v("videoDataFromNative", String.format("Size %d  Time  %d, Flag   %d", size, lTime, nFlag));
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
@@ -265,8 +265,8 @@ public class MediaPlayer implements BasePlayer {
     private native int 	nativePlay(long nNativeContext);
     private native int 	nativePause(long nNativeContext);
     private native int 	nativeStop(long nNativeContext);
-    private native int 	nativeGetPos(long nNativeContext);
-    private native int 	nativeSetPos(long nNativeContext,int nPos);
+    private native long	nativeGetPos(long nNativeContext);
+    private native int 	nativeSetPos(long nNativeContext,long lPos);
     private native long nativeGetDuration(long nNativeContext);
 	private native int 	nativeGetParam(long nNativeContext,int nParamId, int nParam, Object objParam);
     private native int 	nativeSetParam(long nNativeContext,int nParamId, int nParam, Object objParam);

@@ -179,7 +179,7 @@ public interface BasePlayer {
 	// The event listener function
 	public interface onEventListener{
 		public int onEvent (int nID, int nArg1, int nArg2, Object obj);
-		public int OnSubTT (String strText, int nTime);
+		public int OnSubTT (String strText, long lTime);
 		public int OnImage (byte[] pData, int nSize);
 	}
 	
@@ -192,8 +192,8 @@ public interface BasePlayer {
 	public void 	Pause();
 	public void 	Stop();	
 	public long 	GetDuration();	
-	public int 		GetPos();
-	public int	 	SetPos(int nPos);
+	public long		GetPos();
+	public int	 	SetPos(long lPos);
 	public int	 	GetParam(int nParamId, int nParam, Object objParam);
 	public int	 	SetParam(int nParamId, int nParam, Object objParam);
 	public void 	Uninit();
