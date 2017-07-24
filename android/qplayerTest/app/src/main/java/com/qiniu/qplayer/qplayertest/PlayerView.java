@@ -155,7 +155,7 @@ public class PlayerView extends Activity
 		if (nID == BasePlayer.QC_MSG_PLAY_OPEN_DONE) {
 
 		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_AudioBuff, 0, null);
-			m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_VideoBuff, 0, null);
+		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_VideoBuff, 0, null);
 
 			m_nDuration = (int)m_Player.GetDuration();
 			m_Player.Play ();

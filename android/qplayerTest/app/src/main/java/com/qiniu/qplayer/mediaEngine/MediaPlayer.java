@@ -222,7 +222,7 @@ public class MediaPlayer implements BasePlayer {
 		// Log.v("audioDataFromNative", String.format("Size %d  Time  %d", size, lTime));
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
-			return;		
+			return;
 	}
 	
 	private static void videoDataFromNative(Object baselayer_ref, byte[] data, int size, long lTime, int nFlag)
