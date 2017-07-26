@@ -232,7 +232,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
 #if 0
     [_urlList addObject:@"http://replay1.live.gulugulu.cn/2017-06-13_LFM.mp4"];
-    [_urlList addObject:@"http://100.100.32.24/pd/058-EminemiPodAd.mp4"];
+    [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
     [_urlList addObject:@"http://100.100.32.24/pd/dump.flv"];
     [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
     [_urlList addObject:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
