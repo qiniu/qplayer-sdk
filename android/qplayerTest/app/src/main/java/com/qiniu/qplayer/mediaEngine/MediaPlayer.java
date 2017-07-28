@@ -13,6 +13,7 @@ package com.qiniu.qplayer.mediaEngine;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Surface;
@@ -22,6 +23,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
 import android.graphics.Bitmap;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 
 import android.util.DisplayMetrics;
@@ -47,6 +50,9 @@ public class MediaPlayer implements BasePlayer {
 	private int m_nChannels = 0;
 	private int m_nBTOffset = 0;
 
+	private File 				m_dbgFile = null;
+	private FileOutputStream	m_dbgStream = null;
+
 	private onEventListener m_EventListener = null;
 
 	static {
@@ -64,6 +70,18 @@ public class MediaPlayer implements BasePlayer {
 			return -1;
 		if (m_NativeSurface != null)
 			nativeSetView(m_NativeContext, m_NativeSurface);
+/*
+		try{
+			File parent_path = Environment.getExternalStorageDirectory();
+			File dir = new File(parent_path.getAbsoluteFile(), "CaptureVideo");
+			dir.mkdir();
+			m_dbgFile = new File(dir.getAbsoluteFile(), "test.pcm");
+			m_dbgFile.createNewFile();
+			m_dbgStream = new FileOutputStream(m_dbgFile);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+*/
 		return 0;
 	}
 
@@ -223,6 +241,14 @@ public class MediaPlayer implements BasePlayer {
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
 			return;
+		if (player.m_dbgStream != null) {
+			try {
+				player.m_dbgStream.write(data, 0, size);
+				player.m_dbgStream.flush();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private static void videoDataFromNative(Object baselayer_ref, byte[] data, int size, long lTime, int nFlag)

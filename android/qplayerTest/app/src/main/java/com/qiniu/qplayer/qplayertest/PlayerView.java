@@ -208,9 +208,10 @@ public class PlayerView extends Activity
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							Close ();
+
 						}
-					});
+					}
+				);
 			m_dlgOK.show();
 			m_dlgOK = null;
 		}
@@ -224,9 +225,10 @@ public class PlayerView extends Activity
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							Close ();
+
 						}
-					});
+					}
+				);
 			m_dlgOK.show();
 			m_dlgOK = null;
 		}
