@@ -375,7 +375,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     //Lable version
     width = 80;
     _labelVersion = [[UILabel alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width, _rectSmallScreen.origin.y+_rectSmallScreen.size.height + 50, width, 20)];
-    _labelVersion.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];//@"V1.0.0.0 B1";
+    _labelVersion.text = [self getVersion];//[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];//@"V1.0.0.0 B1";
     _labelVersion.font = [UIFont systemFontOfSize:8];
     _labelVersion.textColor = [UIColor redColor];
     [_viewVideo addSubview:_labelVersion];
@@ -983,6 +983,19 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _player.SetParam(_player.hPlayer, QCPLAY_PID_PD_Save_Path, (void*)[docPathDir UTF8String]);
     int nProtocol = QC_IOPROTOCOL_HTTPPD;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Protocol, &nProtocol);
+}
+
+-(NSString*)getVersion
+{
+    QCM_Player player;
+    qcCreatePlayer(&player, NULL);
+    NSString* version = [NSString stringWithFormat:@"%d.%d.%d.%d",
+            (player.nVersion>>24) & 0xFF,
+            (player.nVersion>>16) & 0xFF,
+            (player.nVersion>>8) & 0xFF,
+            player.nVersion&0xFF];
+    qcDestroyPlayer(&player);
+    return version;
 }
 
 
