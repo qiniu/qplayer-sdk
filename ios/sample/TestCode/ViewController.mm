@@ -236,7 +236,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"http://100.100.32.24/pd/dump.flv"];
     [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
     [_urlList addObject:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
-    [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
+    [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear4/prog_index.m3u8"];
 #endif
