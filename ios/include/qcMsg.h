@@ -87,6 +87,9 @@
 #define QC_MSG_SNKV_NEW_FORMAT			0x15200003
 // m_llValue is timestamp
 #define QC_MSG_SNKV_RENDER				0x15200004
+// m_nValue is the rotate angle (90, 180, 270)
+#define QC_MSG_SNKV_ROTATE				0x15200005
+
 
 // define the play msg ID
 #define QC_MSG_PLAY_BASE				0x16000000
