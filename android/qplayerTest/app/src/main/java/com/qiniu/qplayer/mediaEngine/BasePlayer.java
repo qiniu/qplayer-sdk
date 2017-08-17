@@ -176,6 +176,7 @@ public interface BasePlayer {
 
 
 	public static final int 	QC_FLAG_Video_CaptureImage		= 0x00000010;
+	public static final int 	QC_FLAG_Video_SEIDATA			= 0x00000020;
 	public static final int 	QC_FLAG_Video_YUV420P			= 0x00000000;
 
 	// The event listener function
