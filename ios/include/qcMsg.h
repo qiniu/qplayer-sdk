@@ -117,6 +117,7 @@
 #define QC_MSG_BUFF_AFPS				0x18000005		//param: audio FPS
 #define QC_MSG_BUFF_VBITRATE			0x18000006		//param: video bitrate
 #define QC_MSG_BUFF_ABITRATE			0x18000007		//param: audio bitrate
+#define QC_MSG_BUFF_SEI_DATA			0x18000008		//param: param m_pInfo QC_DATA_BUFF pointer, pBuff is NALU, uSize is size
 
 #define QC_MSG_BUFF_NEWSTREAM			0x18000014		//param: 
 #define QC_MSG_BUFF_START_BUFFERING		0x18000016		//param: playing time
