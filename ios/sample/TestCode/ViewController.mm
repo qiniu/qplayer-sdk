@@ -49,7 +49,7 @@
 #pragma mark Player event callback
 void NotifyEvent (void * pUserData, int nID, void * pValue1)
 {
-    ViewController* vc = (ViewController*)pUserData;
+    ViewController* vc = (__bridge ViewController*)pUserData;
     [vc onPlayerEvent:nID withParam:pValue1];
 }
 
@@ -135,7 +135,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if(!_player.hPlayer)
         return;
     
-    _player.SetView(_player.hPlayer, (void*)view, drawRect);
+    _player.SetView(_player.hPlayer, (__bridge void*)view, drawRect);
 }
 
 -(void) createPlayer
@@ -144,11 +144,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         return;
     
     qcCreatePlayer(&_player, NULL);
-    _player.SetNotify(_player.hPlayer, NotifyEvent, self);
+    _player.SetNotify(_player.hPlayer, NotifyEvent, (__bridge void*)self);
     
     CGRect r = _viewVideo.bounds;
     RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
-    _player.SetView(_player.hPlayer, (void*)_viewVideo, &drawRect);
+    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
     
     if(_switchCache.on == YES)
     	[self enableFileCacheMode];
@@ -210,7 +210,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
                                                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                                                                [_tableViewURL reloadData];
                                                            }];
-                                                           [bodyString release];
+                                                           bodyString = nil;
+                                                           //[bodyString release];
                                                        }
                                                        else
                                                        {
@@ -231,6 +232,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _clipboardURL = nil;
     
 #if 0
+    [_urlList addObject:@"rtmp://play.vdn.cloudvdn.com/live_panda/6c0eb7fa5f20efdc10da17cff7338173?domain=pl-rtmp21.live.panda.tv"];
     [_urlList addObject:@"http://pili-media.meilihuli.com/recordings/z1.meili.product_239/app_product_239.mp4"];
     [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
     [_urlList addObject:@"http://100.100.32.24/pd/dump.flv"];
@@ -260,7 +262,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             [_urlList addObject:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName]];
     }
     
-    [self parseDemoLive];
+    //[self parseDemoLive];
 }
 
 -(void)setupUI
@@ -290,7 +292,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _viewVideo.backgroundColor = [UIColor blackColor];
     _viewVideo.contentMode =  UIViewContentModeScaleAspectFit;
     [self.view insertSubview:_viewVideo atIndex:0];
-    [_viewVideo release];
     
     // Position slider
     _sliderPosition = [[UISlider alloc] initWithFrame:CGRectMake(0, _rectSmallScreen.origin.y+_rectSmallScreen.size.height - 40, _rectSmallScreen.size.width, 20)];
@@ -300,7 +301,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _sliderPosition.maximumValue = 1.0;
     [_sliderPosition setThumbImage:[UIImage imageNamed:@"seekbar.png"] forState:UIControlStateNormal];
     [_viewVideo addSubview:_sliderPosition];
-    [_sliderPosition release];
     // layout contraits
     [_sliderPosition setTranslatesAutoresizingMaskIntoConstraints:NO];
     NSLayoutConstraint *contraint2 = [NSLayoutConstraint constraintWithItem:_sliderPosition attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeLeft multiplier:1.0 constant:5.0];
@@ -320,7 +320,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _labelPlayingTime.font = [UIFont systemFontOfSize:8];
     _labelPlayingTime.textColor = [UIColor redColor];
     [_viewVideo addSubview:_labelPlayingTime];
-    [_labelPlayingTime release];
     // layout contraits
     [_labelPlayingTime setTranslatesAutoresizingMaskIntoConstraints:NO];
     contraint3 = [NSLayoutConstraint constraintWithItem:_labelPlayingTime attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-30.0];
@@ -333,7 +332,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _switchCache = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width +20, _rectSmallScreen.origin.y + 90, width, 20)];
     _switchCache.on = NO;
     [_viewVideo addSubview:_switchCache];
-    [_switchCache release];
     
     width = 80;
     _labelCache = [[UILabel alloc] initWithFrame:CGRectMake(_switchCache.frame.origin.x - width, _switchCache.frame.origin.y, width, 20)];
@@ -341,14 +339,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _labelCache.font = [UIFont systemFontOfSize:15];
     _labelCache.textColor = [UIColor redColor];
     [_viewVideo addSubview:_labelCache];
-    [_labelCache release];
     
     //Switch HW and SW
     width = 80;
     _switchHW = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - _labelPlayingTime.frame.size.width - width, _rectSmallScreen.origin.y + 50, width, 20)];
     _switchHW.on = NO;
     [_viewVideo addSubview:_switchHW];
-    [_switchHW release];
     // layout contraits
     [_switchHW setTranslatesAutoresizingMaskIntoConstraints:NO];
 //    contraint2 = [NSLayoutConstraint constraintWithItem:_switchHW attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeLeft multiplier:1.0 constant:5.0];
@@ -364,7 +360,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _labelHW.font = [UIFont systemFontOfSize:15];
     _labelHW.textColor = [UIColor redColor];
     [_viewVideo addSubview:_labelHW];
-    [_labelHW release];
     // layout contraits
     [_labelHW setTranslatesAutoresizingMaskIntoConstraints:NO];
     contraint3 = [NSLayoutConstraint constraintWithItem:_labelHW attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeTop multiplier:1.0 constant:80.0];
@@ -379,7 +374,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _labelVersion.font = [UIFont systemFontOfSize:8];
     _labelVersion.textColor = [UIColor redColor];
     [_viewVideo addSubview:_labelVersion];
-    [_labelVersion release];
+    
     // layout contraits
     [_labelVersion setTranslatesAutoresizingMaskIntoConstraints:NO];
     contraint3 = [NSLayoutConstraint constraintWithItem:_labelVersion attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeTop multiplier:1.0 constant:30.0];
@@ -519,7 +514,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         _player.Open(_player.hPlayer, url, _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0);
         if(_clipboardURL)
         {
-            [_clipboardURL release];
             _clipboardURL = nil;
         }
         [_switchHW setHidden:YES];
@@ -648,7 +642,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             _viewVideo.frame = _isFullScreen?_rectFullScreen:_rectSmallScreen;
             CGRect r = _viewVideo.bounds;
             RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
-            _player.SetView(_player.hPlayer, _viewVideo, &drawRect);
+            _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
         }
         
 //    } completion:^(BOOL finished) {
@@ -756,7 +750,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             [_btnCancelSelectStream addTarget:self action:@selector(onSelectStreamEnd:) forControlEvents:UIControlEventTouchUpInside];
             [_btnCancelSelectStream setFrame:CGRectMake(10, view.frame.size.height/2, 80, 30)];
             [view addSubview:_btnCancelSelectStream];
-            [_btnCancelSelectStream release];
         }
         //[view.textLabel setText:[NSString stringWithFormat:@"Section: %ld",(long)section]];
         
@@ -875,9 +868,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     if (action == @selector(paste:))
     {
-        if(_clipboardURL)
-            [_clipboardURL release];
-        _clipboardURL = [[UIPasteboard generalPasteboard].string retain];
+        _clipboardURL = [NSString stringWithFormat:@"%@", [UIPasteboard generalPasteboard].string];
         if([self fastOpen:[_clipboardURL UTF8String]])
             return;
         
@@ -1009,9 +1000,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 -(void)dealloc
 {
     [self destroyPlayer];
-    [super dealloc];
     
-    [_urlList release];
     _urlList = nil;
 }
 
