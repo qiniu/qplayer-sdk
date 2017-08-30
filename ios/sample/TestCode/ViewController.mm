@@ -55,6 +55,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 - (void)onPlayerEvent:(int)nID withParam:(void*)pParam
 {
+    //NSLog(@"[EVT]Recv event, %x\n", nID);
     if (nID == QC_MSG_PLAY_OPEN_DONE)
     {
         NSLog(@"[EVT]Run\n");
@@ -79,8 +80,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     {
         NSLog(@"[EVT]Seek done\n");
     }
-    else if (nID == QC_MSG_HTTP_DISCONNECTED || nID == QC_MSG_HTTP_RECONNECT_FAILED
-             || nID == QC_MSG_RTMP_DISCONNECTED || nID == QC_MSG_RTMP_RECONNECT_FAILED)
+    else if (nID == QC_MSG_HTTP_DISCONNECTED || nID == QC_MSG_RTMP_DISCONNECTED)
     {
         if(_networkConnectionErrorTime == -1)
         {
@@ -91,21 +91,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
                 [self showMessage:@"Connection loss" duration:5.0];
             }];
         }
-        if(nID == QC_MSG_HTTP_RECONNECT_FAILED || nID == QC_MSG_RTMP_RECONNECT_FAILED)
-        	NSLog(@"[EVT]Reconnect fail, %x\n", nID);
-        
-        //
-        if(([self getSysTime]-_networkConnectionErrorTime) > 300*1000)
-        {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    [self showMessage:@"Stop player" duration:5.0];
-                }];
-
-                [self onStop: _btnStart];
-                _networkConnectionErrorTime = -1;
-            }];
-        }
+    }
+    else if(nID == QC_MSG_HTTP_RECONNECT_FAILED || nID == QC_MSG_RTMP_RECONNECT_FAILED)
+    {
+        NSLog(@"[EVT]Reconnect fail, %x\n", nID);
     }
     else if(nID == QC_MSG_RTMP_CONNECT_START || nID == QC_MSG_HTTP_CONNECT_START)
     {
@@ -232,8 +221,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _clipboardURL = nil;
     
 #if 0
-    [_urlList addObject:@"rtmp://play.vdn.cloudvdn.com/live_panda/6c0eb7fa5f20efdc10da17cff7338173?domain=pl-rtmp21.live.panda.tv"];
-    [_urlList addObject:@"http://pili-media.meilihuli.com/recordings/z1.meili.product_239/app_product_239.mp4"];
     [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
     [_urlList addObject:@"http://100.100.32.24/pd/dump.flv"];
     [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
@@ -262,7 +249,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             [_urlList addObject:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName]];
     }
     
-    //[self parseDemoLive];
+    [self parseDemoLive];
 }
 
 -(void)setupUI
