@@ -61,8 +61,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         NSLog(@"[EVT]Run\n");
         if(_player.hPlayer)
             _player.Run(_player.hPlayer);
-        _btnStart.enabled = ![self isLive];
-        _sliderPosition.enabled = ![self isLive];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            _btnStart.enabled = ![self isLive];
+            _sliderPosition.enabled = ![self isLive];
+        }];
     }
     else if(nID == QC_MSG_PLAY_OPEN_FAILED)
     {
@@ -221,7 +223,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _clipboardURL = nil;
     
 #if 0
-    [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
     [_urlList addObject:@"http://100.100.32.24/pd/dump.flv"];
     [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
     [_urlList addObject:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
