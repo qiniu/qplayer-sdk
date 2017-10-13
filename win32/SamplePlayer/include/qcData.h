@@ -302,6 +302,17 @@ typedef struct
     char *		pszRefer;			/*!< refer*/
 } QC_CLIENT_INFO;
 
+/**
+ * Color definition
+ */
+typedef struct
+{
+    float fRed;			/*!< value of red, 0.0 ~ 1.0 */
+    float fGreen;		/*!< value of green, 0.0 ~ 1.0 */
+    float fBlue;		/*!< value of blue, 0.0 ~ 1.0 */
+    float fAlpha;		/*!< value of alpha, 0.0 ~ 1.0 */
+} QC_COLOR;
+
 
 //#ifdef __cplusplus
 //} /* extern "C" */

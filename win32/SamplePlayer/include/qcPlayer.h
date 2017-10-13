@@ -152,6 +152,14 @@ typedef struct
 // This should be called before open.
 #define	QCPLAY_PID_PD_Save_Path		QC_PLAY_BASE + 0X61
 
+// Background color for video render. Param should  QC_COLOR *
+// This should be called before open. Default value is black, {0.0, 0.0, 0.0, 1.0}
+#define	QCPLAY_PID_BG_COLOR			QC_PLAY_BASE + 0X71
+
+// Set SDK ID. Param should be char*.
+// This should be called before open.
+#define	QCPLAY_PID_SDK_ID			QC_PLAY_BASE + 0X72
+    
 // Set ext audio render. Internal use.
 // The parameter should be CBaseAudioRnd *.
 #define	QCPLAY_PID_EXT_AudioRnd		QC_PLAY_BASE + 0X0100
