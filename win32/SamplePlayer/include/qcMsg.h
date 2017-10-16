@@ -87,6 +87,9 @@
 #define QC_MSG_SNKV_NEW_FORMAT			0x15200003
 // m_llValue is timestamp
 #define QC_MSG_SNKV_RENDER				0x15200004
+// m_nValue is the rotate angle (90, 180, 270)
+#define QC_MSG_SNKV_ROTATE				0x15200005
+
 
 // define the play msg ID
 #define QC_MSG_PLAY_BASE				0x16000000
@@ -114,6 +117,7 @@
 #define QC_MSG_BUFF_AFPS				0x18000005		//param: audio FPS
 #define QC_MSG_BUFF_VBITRATE			0x18000006		//param: video bitrate
 #define QC_MSG_BUFF_ABITRATE			0x18000007		//param: audio bitrate
+#define QC_MSG_BUFF_SEI_DATA			0x18000008		//param: param m_pInfo QC_DATA_BUFF pointer, pBuff is NALU, uSize is size
 
 #define QC_MSG_BUFF_NEWSTREAM			0x18000014		//param: 
 #define QC_MSG_BUFF_START_BUFFERING		0x18000016		//param: playing time
