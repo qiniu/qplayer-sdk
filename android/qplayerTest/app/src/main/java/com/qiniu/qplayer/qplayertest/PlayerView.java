@@ -96,7 +96,7 @@ public class PlayerView extends Activity
 				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_player_view);
-        
+
         initControls ();
 		
 		Uri uri = getIntent().getData();
@@ -119,16 +119,6 @@ public class PlayerView extends Activity
 		if (m_Player != null) 
 		{
 			m_Player.SetView(m_svVideo);
-
-			if (m_Player.GetDuration() <= 0)
-				m_Player.SetParam(BasePlayer.QCPLAY_PID_Disable_Video, 0, null);
-			else
-				m_Player.Play();
-
-			m_btnPause.setVisibility(View.VISIBLE);
-			m_btnPlay.setVisibility(View.INVISIBLE);
-			m_layButtons.setVisibility(View.VISIBLE);
-			m_btnStream.setVisibility(View.VISIBLE);
 			return;
 		}
 		
@@ -156,9 +146,12 @@ public class PlayerView extends Activity
 
 		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_AudioBuff, 0, null);
 		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_VideoBuff, 0, null);
+		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_Speed, 0x00010002, null);
 
 			m_nDuration = (int)m_Player.GetDuration();
 			m_Player.Play ();
+
+			m_Player.SetParam(BasePlayer.PARAM_PID_AUDIO_VOLUME, 80, null);
 		}
 		else if (nID == BasePlayer.QC_MSG_SNKV_NEW_FORMAT) {
 			if (nArg1 == 0 || nArg2 == 0)
@@ -190,8 +183,10 @@ public class PlayerView extends Activity
 			m_dlgOK.show();
 			m_dlgOK = null;
 		}
-		else if (nID == BasePlayer.QC_MSG_PLAY_COMPLETE)
-			Close ();
+		else if (nID == BasePlayer.QC_MSG_PLAY_COMPLETE) {
+			// Close();
+			m_Player.SetPos(0);
+		}
 		else if (nID == BasePlayer.QC_MSG_PLAY_SEEK_DONE || nID == BasePlayer.QC_MSG_PLAY_SEEK_FAILED) {
 			if (m_dlgWait != null) {
 				m_dlgWait.cancel();
@@ -201,6 +196,7 @@ public class PlayerView extends Activity
 		else if (nID == BasePlayer.QC_MSG_HTTP_DISCONNECTED) {
 			if (m_dlgOK != null)
 				return 0;
+			/*
 			m_dlgOK = new AlertDialog.Builder(this);
 			m_dlgOK.setTitle("Error");
 			m_dlgOK.setMessage("The network disconnected!");
@@ -214,10 +210,12 @@ public class PlayerView extends Activity
 				);
 			m_dlgOK.show();
 			m_dlgOK = null;
+			*/
 		}
 		else if (nID == BasePlayer.QC_MSG_HTTP_RECONNECT_FAILED) {
 			if (m_dlgOK != null)
 				return 0;
+			/*
 			m_dlgOK = new AlertDialog.Builder(this);
 			m_dlgOK.setTitle("Error");
 			m_dlgOK.setMessage("The network reconnect failed!");
@@ -231,6 +229,7 @@ public class PlayerView extends Activity
 				);
 			m_dlgOK.show();
 			m_dlgOK = null;
+			*/
 		}
 		else if (nID == BasePlayer.QC_MSG_HTTP_RECONNECT_SUCESS) {
 			return 0;
@@ -353,7 +352,36 @@ public class PlayerView extends Activity
 			}
 		}		
 	}
-	
+
+ 	protected void onRestart()
+	{
+		super.onRestart();
+		Log.v("PlayerView", "Player onRestart");
+	}
+
+	protected void onResume() {
+		super.onResume();
+		Log.v("PlayerView", "Player onResume");
+
+		if (m_Player != null) {
+			if (m_Player.GetDuration() <= 0)
+				m_Player.SetParam(BasePlayer.QCPLAY_PID_Disable_Video, 0, null);
+			else
+				m_Player.Play();
+
+			m_btnPause.setVisibility(View.VISIBLE);
+			m_btnPlay.setVisibility(View.INVISIBLE);
+			m_layButtons.setVisibility(View.VISIBLE);
+			m_btnStream.setVisibility(View.VISIBLE);
+		}
+	}
+
+	protected void onStop()
+	{
+		super.onStop();
+		Log.v("PlayerView", "Player onStop");
+	}
+
 	@Override
 	protected void onDestroy() {
 		hideControls ();
@@ -387,7 +415,7 @@ public class PlayerView extends Activity
 		m_Player.setEventListener(this);
 		//String 	strKeyText = "kdnljjlcn2iu2384";
 		//byte[]  byKeyText = {0x6b, 0x64, 0x6e, 0x6c, 0x6a, 0x6a, 0x6c, 0x63, 0x6e, 0x32, 0x69, 0x75, 0x32, 0x33, 0x38, 0x34 };
-		//m_Player.SetParam(BasePlayer.QCPLAY_PID_Speed, 0, byKeyText);
+		//m_Player.SetParam(BasePlayer.QCPLAY_PID_DRM_KeyText, 0, byKeyText);
 
 		if (nDownloadFile > 0) {
 			m_Player.SetParam(BasePlayer.QCPLAY_PID_Prefer_Protocol, BasePlayer.QC_IOPROTOCOL_HTTPPD, null);
