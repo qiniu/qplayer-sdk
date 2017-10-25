@@ -30,6 +30,8 @@ public interface BasePlayer {
 	public static final int 	PARAM_PID_EVENT_DONE		= 0X100;
 	// get: the param is null, set the param is 0 -100
 	public static final int 	PARAM_PID_AUDIO_VOLUME		= 0X101;
+	// get: the param is null, 0XXX.XX.XX.XX  V1.1.0.39
+	public static final int 	PARAM_PID_QPLAYER_VERSION	= 0X110;
 
 	// the param should be: 0X00010002 is 0.5 speed. 0X00040001 is 4 speed.
 	public static final	int 	QCPLAY_PID_Speed			= 0X11000002;
@@ -41,6 +43,9 @@ public interface BasePlayer {
 	public static final	int 	QCPLAY_PID_StreamPlay		= 0X11000006;
 	public static final	int 	QCPLAY_PID_StreamInfo		= 0X1100000F;
 	public static final int 	QCPLAY_PID_Clock_OffTime	= 0X11000020;
+
+	// the param shoud null
+	public static final	int 	QCPLAY_PID_Flush_Buffer		= 0X11000025;
 
 	// the param.
 	public static final int 	QCPLAY_PID_Reconnect		= 0X11000030;
@@ -106,8 +111,8 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_SNKV_FIRST_FRAME 		= 0x15200001;
 	// The video was render, the param is timestamp.
 	public static final int 	QC_MSG_SNKV_RENDER		 		= 0x15200004;
-    // The video was rotate, the param is rotate angle.
-    public static final int 	QC_MSG_SNKV_ROTATE		 		= 0x15200005;
+	// The video was rotate, the param is rotate angle.
+	public static final int 	QC_MSG_SNKV_ROTATE		 		= 0x15200005;
 	// The first frame audio was displayed.
 	public static final int 	QC_MSG_SNKA_FIRST_FRAME 		= 0x15100001;
 	// The audio was render, the param is timestamp.
