@@ -137,6 +137,9 @@ typedef struct
 // Set the seek mode. 0, key frame, 1 any pos. int *.
 #define	QCPLAY_PID_Seek_Mode		QC_PLAY_BASE + 0X21
 
+// Set. Flush the buffer.
+#define	QCPLAY_PID_Flush_Buffer		QC_PLAY_BASE + 0X25
+
 // Set to reconnect source.
 #define	QCPLAY_PID_Reconnect		QC_PLAY_BASE + 0X30
 
