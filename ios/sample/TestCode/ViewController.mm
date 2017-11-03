@@ -221,8 +221,13 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     _currURL = 0;
     _clipboardURL = nil;
+
+    [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
+    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     
 #if 0
+    [_urlList addObject:@"http://ali.m.l.cztv.com/channels/lantian/audio09/128k.m3u8"];
+    [_urlList addObject:@"http://live.banmabang.cn/cam_h3_tewz_a.m3u8"];
     [_urlList addObject:@"http://100.100.32.24/pd/dump.flv"];
     [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
     [_urlList addObject:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
@@ -453,7 +458,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         }
     }
 }
-
 
 - (void)viewDidLoad
 {
@@ -937,7 +941,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         if(status == QC_PLAY_Run)
         {
             const char* oldURL = [_urlList[_currURL] UTF8String];
-            char* end = strchr(oldURL, ':');
+			const char* end = strchr(oldURL, ':');
             if(end)
             {
                 if(!strncmp(newURL, oldURL, end-oldURL))
