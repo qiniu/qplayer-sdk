@@ -182,7 +182,7 @@ public class MediaPlayer implements BasePlayer {
 		SetParam (QCPLAY_PID_Clock_OffTime,  m_nBTOffset, null);
 	}
 
-	public void onVideoSizeChanged () {	
+	public void onVideoSizeChanged () {
 		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)m_SurfaceView.getLayoutParams();
 		DisplayMetrics dm = m_context.getResources().getDisplayMetrics();
 		if (m_nVideoWidth != 0 && m_nVideoHeight != 0)// && lp.width == LayoutParams.FILL_PARENT && lp.height == LayoutParams.FILL_PARENT)
@@ -214,8 +214,11 @@ public class MediaPlayer implements BasePlayer {
 		
 		if (what == QC_MSG_SNKV_NEW_FORMAT)
 		{
-			if (player.m_nVideoWidth == ext1 && player.m_nVideoHeight == ext2)
+			if (player.m_nVideoWidth == ext1 && player.m_nVideoHeight == ext2){
+				player.SetParam (PARAM_PID_EVENT_DONE, 0, null);
 				return;
+			}
+
 			player.m_nVideoWidth = ext1;
 			player.m_nVideoHeight = ext2;
 		}		
@@ -232,7 +235,7 @@ public class MediaPlayer implements BasePlayer {
 		}
 
 		Message msg = player.mHandle.obtainMessage(what, ext1, ext2, obj);
-		msg.sendToTarget();	
+		msg.sendToTarget();
 	}
 		
 	private static void audioDataFromNative(Object baselayer_ref, byte[] data, int size, long lTime)
@@ -253,13 +256,17 @@ public class MediaPlayer implements BasePlayer {
 	
 	private static void videoDataFromNative(Object baselayer_ref, byte[] data, int size, long lTime, int nFlag)
 	{
-		//Log.v("videoDataFromNative", String.format("Size %d  Time  %d, Flag   %d", size, lTime, nFlag));
+		Log.v("videoDataFromNative", String.format("Size %d  Time  %d, Flag   %x", size, lTime, nFlag));
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
 			return;
 		if (nFlag == QC_FLAG_Video_CaptureImage) {
 			// Save the jpeg buff to file.
 			player.m_EventListener.OnImage(data, size);
+		}
+		else if (nFlag == QC_FLAG_Video_SEIDATA) {
+			// handle the SEI DATA.
+			Log.v("videoDataFromNative SEI", String.format("Size %d  Time  %d, Flag   %d", size, lTime, nFlag));
 		}
 	}	
 
