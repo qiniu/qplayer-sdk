@@ -225,10 +225,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     
-#if 0
-    [_urlList addObject:@"http://ali.m.l.cztv.com/channels/lantian/audio09/128k.m3u8"];
-    [_urlList addObject:@"http://live.banmabang.cn/cam_h3_tewz_a.m3u8"];
-    [_urlList addObject:@"http://100.100.32.24/pd/dump.flv"];
+#if 1
+    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.59fbcdaea3d5ec7f14564584/179b5bd6ce990b8a8ebd141b091419ac.mp4"];
+    [_urlList addObject:@"http://114.55.127.142:80/g17614640s0t1510127320465SI1u4754539i1.flv"];
+    [_urlList addObject:@"rtmp://pili-publish.wangliangliang.qiniuts.com/wangliangliang-piliwork/57e2234275b62535c30003a7"];
     [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
     [_urlList addObject:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
     [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
@@ -459,11 +459,27 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
 }
 
+- (void)enableAudioSession:(BOOL)enable
+{
+    NSError *err = nil;
+    AVAudioSession* as = [AVAudioSession sharedInstance];
+    
+    if(NO == [as setActive:enable error:&err])
+        NSLog(@"%p setActive error : %d, %d", self, (int)err.code, enable);
+    
+    if(YES == enable)
+    {
+        if(NO == [as setCategory:AVAudioSessionCategoryPlayback error:&err])
+            NSLog(@"%p setCategory error : %d, %d", self, (int)err.code, enable);
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     //
+    [self enableAudioSession:YES];
     [self setupUI];
     [self prepareURL];
     
@@ -520,6 +536,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if(!_player.hPlayer)
         return;
 
+    int useTime = [self getSysTime];
     NSLog(@"+Stop");
     
     [((UIButton*)sender) setTitle:@"START" forState:UIControlStateNormal];
@@ -536,7 +553,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_sliderPosition setValue:0.0];
     [_tableViewStreamInfo removeFromSuperview];
     _tableViewStreamInfo = nil;
-    NSLog(@"-Stop");
+    NSLog(@"-Stop, %d", [self getSysTime]-useTime);
 }
 
 - (IBAction)onPositionChangeBegin:(id)sender
@@ -992,6 +1009,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 -(void)dealloc
 {
     [self destroyPlayer];
+    [self enableAudioSession:NO];
     
     _urlList = nil;
 }
