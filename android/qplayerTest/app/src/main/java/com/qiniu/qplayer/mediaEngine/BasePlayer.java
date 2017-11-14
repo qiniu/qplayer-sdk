@@ -62,6 +62,10 @@ public interface BasePlayer {
 	// This should be called before open.
 	public static final int 	QCPLAY_PID_Prefer_Format	= 0X11000050;
 
+	// GetParam. Return the timestamp value.
+	public static final int		QCPLAY_PID_RTMP_AUDIO_MSG_TIMESTAMP		= 0x11010073;
+	public static final int		QCPLAY_PID_RTMP_VIDEO_MSG_TIMESTAMP		= 0x11010074;
+
 	// Set to capture video image
 	// The parameter should be long long * (ms). capture time. 0 is immediatily.
 	public static final int 	QCPLAY_PID_Capture_Image	= 0X11000310;

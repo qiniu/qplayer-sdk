@@ -139,6 +139,7 @@ public class MediaPlayer implements BasePlayer {
 
 	public void Uninit() {
 		nativeUninit(m_NativeContext);
+		m_NativeContext = 0;
 	}
 
 	public int GetVideoWidth() {
@@ -275,6 +276,9 @@ public class MediaPlayer implements BasePlayer {
 		public void handleMessage(Message msg) 
 		{	
 			int nRC = 0;
+			if (m_NativeContext == 0)
+				return;
+
 			if (msg.what == QC_MSG_PLAY_OPEN_DONE) {
 				OnOpenComplete ();
 			}

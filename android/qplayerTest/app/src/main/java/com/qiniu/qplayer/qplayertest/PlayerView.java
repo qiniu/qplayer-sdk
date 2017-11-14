@@ -142,6 +142,9 @@ public class PlayerView extends Activity
 	}
 	// @Override
 	public int onEvent(int nID, int nArg1, int nArg2, Object obj) {
+    	if (m_Player == null)
+    		return 0;
+
 		if (nID == BasePlayer.QC_MSG_PLAY_OPEN_DONE) {
 
 		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_SendOut_AudioBuff, 0, null);
@@ -185,7 +188,9 @@ public class PlayerView extends Activity
 		}
 		else if (nID == BasePlayer.QC_MSG_PLAY_COMPLETE) {
 			// Close();
-			m_Player.SetPos(0);
+			// m_Player.SetPos(0);
+			//OpenFile ("http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4");
+			m_Player.Open ("http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4", 	0);
 		}
 		else if (nID == BasePlayer.QC_MSG_PLAY_SEEK_DONE || nID == BasePlayer.QC_MSG_PLAY_SEEK_FAILED) {
 			if (m_dlgWait != null) {
@@ -341,7 +346,7 @@ public class PlayerView extends Activity
 		Log.v("PlayerView", "Player onPause");		
 		if (m_Player != null) 
 		{
-			if (m_Player.GetDuration() <= 0) {
+			if (m_Player.GetDuration() >= 0) {
 				m_Player.SetParam(BasePlayer.QCPLAY_PID_Disable_Video, 1, null);
 			}  else {
 				m_Player.SetPos(m_Player.GetPos());
@@ -364,7 +369,7 @@ public class PlayerView extends Activity
 		Log.v("PlayerView", "Player onResume");
 
 		if (m_Player != null) {
-			if (m_Player.GetDuration() <= 0)
+			if (m_Player.GetDuration() >= 0)
 				m_Player.SetParam(BasePlayer.QCPLAY_PID_Disable_Video, 0, null);
 			else
 				m_Player.Play();
@@ -470,11 +475,12 @@ public class PlayerView extends Activity
 		
 		m_btnPause.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				//if (m_Player != null) {
+				if (m_Player != null) {
 				//	m_Player.Open(m_strFile, BasePlayer.QCPLAY_OPEN_SAME_SOURCE);
-				//  m_Player.SetParam (BasePlayer.QCPLAY_PID_Capture_Image, 0, null);
+				//  m_Player.SetParam (BasePlayer.QCPLAY_PID_Flush_Buffer, 0, null);
+				//	int nVer = m_Player.GetParam (BasePlayer.PARAM_PID_QPLAYER_VERSION, 0, null);
 				//	return;
-				//}
+				}
 				if (m_Player != null)
 					m_Player.Pause();
 				m_btnPause.setVisibility(View.INVISIBLE);
