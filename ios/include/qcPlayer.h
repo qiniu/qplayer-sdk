@@ -163,6 +163,14 @@ typedef struct
 // This should be called before open.
 #define	QCPLAY_PID_SDK_ID			QC_PLAY_BASE + 0X72
     
+// Get RTMP audio message timestamp
+// The parameter should be long long *.
+#define QCPLAY_PID_RTMP_AUDIO_MSG_TIMESTAMP     QC_PLAY_BASE + 0X73
+    
+// Get RTMP video message timestamp
+// The parameter should be long long *.
+#define QCPLAY_PID_RTMP_VIDEO_MSG_TIMESTAMP     QC_PLAY_BASE + 0X74
+    
 // Set ext audio render. Internal use.
 // The parameter should be CBaseAudioRnd *.
 #define	QCPLAY_PID_EXT_AudioRnd		QC_PLAY_BASE + 0X0100
