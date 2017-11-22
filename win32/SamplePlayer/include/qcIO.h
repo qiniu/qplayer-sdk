@@ -49,6 +49,15 @@ extern "C" {
 // Set the ext lib file name
 // The parameter should be char *. 
 #define	QCIO_PID_EXT_LibName			QC_MOD_IO_BASE + 0X02
+    
+// Get RTMP audio message timestamp
+// The parameter should be long long *.
+#define QCIO_PID_RTMP_AUDIO_MSG_TIMESTAMP     QC_MOD_IO_RTMP + 0X01
+    
+// Get RTMP video message timestamp
+// The parameter should be long long *.
+#define QCIO_PID_RTMP_VIDEO_MSG_TIMESTAMP     QC_MOD_IO_RTMP + 0X02
+
 
 // the IO source type
 typedef enum {
