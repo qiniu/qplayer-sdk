@@ -117,7 +117,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     else if(nID == QC_MSG_SNKV_FIRST_FRAME)
     {
-        NSLog(@"[EVT]First video frame rendered, %x\n", nID);
+        NSLog(@"[EVT]First video frame rendered\n");
     }
 }
 
@@ -224,9 +224,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
     [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+    [_urlList addObject:@"rtmp://183.146.213.65/live/hks?domain=live.hkstv.hk.lxdns.com"];
     
-#if 1
-    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.59fbcdaea3d5ec7f14564584/179b5bd6ce990b8a8ebd141b091419ac.mp4"];
+#if 0
+    [_urlList addObject:@"http://pili-live-hdl.duimian.cn/loovee/doll_top.flv"];
     [_urlList addObject:@"http://114.55.127.142:80/g17614640s0t1510127320465SI1u4754539i1.flv"];
     [_urlList addObject:@"rtmp://pili-publish.wangliangliang.qiniuts.com/wangliangliang-piliwork/57e2234275b62535c30003a7"];
     [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
@@ -537,7 +538,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         return;
 
     int useTime = [self getSysTime];
-    NSLog(@"+Stop");
+    NSLog(@"+Stop[KPI]");
     
     [((UIButton*)sender) setTitle:@"START" forState:UIControlStateNormal];
     
@@ -553,7 +554,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_sliderPosition setValue:0.0];
     [_tableViewStreamInfo removeFromSuperview];
     _tableViewStreamInfo = nil;
-    NSLog(@"-Stop, %d", [self getSysTime]-useTime);
+    NSLog(@"-Stop[KPI], %d\n\n", [self getSysTime]-useTime);
 }
 
 - (IBAction)onPositionChangeBegin:(id)sender
@@ -629,6 +630,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(IBAction)onFullScreen:(id)sender
 {
+    //return [self onStop:_btnStart];
     if(!_isFullScreen)
     {
         _isFullScreen = YES;
