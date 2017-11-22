@@ -108,6 +108,7 @@ public interface BasePlayer {
 	// Define id of event listener.
 	public static final int 	QC_MSG_PLAY_OPEN_DONE 			= 0x16000001;
 	public static final int 	QC_MSG_PLAY_OPEN_FAILED 		= 0x16000002;
+	// The nArg1 is 0 normal, 1 IO error
 	public static final int 	QC_MSG_PLAY_COMPLETE 			= 0x16000007;
 	public static final int 	QC_MSG_PLAY_SEEK_DONE 			= 0x16000005;
 	public static final int 	QC_MSG_PLAY_SEEK_FAILED 		= 0x16000006;
