@@ -82,6 +82,10 @@ public interface BasePlayer {
 	// The parameter should be String.
 	public static final int	QCPLAY_PID_HTTP_HeadReferer			= 0X11000205;
 
+	// Set the ext dns server
+	// The parameter should be String. "127.0.0.1" use local server.
+	public static final int	QCPLAY_PID_DNS_SERVER				= 0X11000208;
+	
 	// Set the max buffer time
 	// The parameter should be int (ms)
 	public static final int	QCPLAY_PID_PlayBuff_MaxTime			= 0X11000211;
