@@ -288,7 +288,7 @@ public class MediaPlayer implements BasePlayer {
 			}
 
 			if (msg.what == QC_MSG_SNKV_NEW_FORMAT && nRC == 0)
-				onVideoSizeChanged ();	
+			//	onVideoSizeChanged ();
 			if (msg.what == QC_MSG_SNKV_NEW_FORMAT)
 				SetParam (PARAM_PID_EVENT_DONE, 0, null);
 		}

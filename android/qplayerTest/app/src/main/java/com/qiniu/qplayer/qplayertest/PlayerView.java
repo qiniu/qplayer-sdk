@@ -152,9 +152,13 @@ public class PlayerView extends Activity
 		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_Speed, 0x00010002, null);
 
 			m_nDuration = (int)m_Player.GetDuration();
+		//	m_Player.SetPos (5000);
 			m_Player.Play ();
 
-			m_Player.SetParam(BasePlayer.PARAM_PID_AUDIO_VOLUME, 80, null);
+		//	int[] zmVideo = {40, 40, 200, 320};
+		//	m_Player.SetParam(BasePlayer.QCPLAY_PID_ZoomVideo, 0, zmVideo);
+
+			//m_Player.SetParam(BasePlayer.PARAM_PID_AUDIO_VOLUME, 80, null);
 		}
 		else if (nID == BasePlayer.QC_MSG_SNKV_NEW_FORMAT) {
 			if (nArg1 == 0 || nArg2 == 0)
@@ -188,9 +192,10 @@ public class PlayerView extends Activity
 		}
 		else if (nID == BasePlayer.QC_MSG_PLAY_COMPLETE) {
 			// Close();
-			// m_Player.SetPos(0);
+			//m_Player.SetPos(0);
 			//OpenFile ("http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4");
-			m_Player.Open ("http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4", 	0);
+			//m_Player.Open ("http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4", 	0);
+			m_Player.Open(m_strFile, 0);
 		}
 		else if (nID == BasePlayer.QC_MSG_PLAY_SEEK_DONE || nID == BasePlayer.QC_MSG_PLAY_SEEK_FAILED) {
 			if (m_dlgWait != null) {
@@ -428,6 +433,10 @@ public class PlayerView extends Activity
 			String strPDPath = file.getPath() + "/QPlayer/PDFile";
 			m_Player.SetParam(BasePlayer.QCPLAY_PID_PD_Save_Path, 0, strPDPath);
 		}
+
+		//String strDnsServer = "114.114.114.114";
+		String strDnsServer = "127.0.0.1";
+		//m_Player.SetParam(BasePlayer.QCPLAY_PID_DNS_SERVER, 0, strDnsServer);
 
 		nRet = m_Player.Open (strPath, 	0);
 		if (nRet != 0) {
