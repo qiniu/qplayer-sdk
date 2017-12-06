@@ -131,6 +131,10 @@ typedef struct
 // Get Stream info. The parameter should be QC_STREAM_FORMAT * 
 #define	QCPLAY_PID_StreamInfo		QC_PLAY_BASE + 0X0f
 
+// Set it to zoom video
+// The parameter should RECT *. The pos could be divided by 4 
+#define	QCPLAY_PID_Zoom_Video		QC_PLAY_BASE + 0X11
+
 // Set clock offset time. The parameter int *.
 #define	QCPLAY_PID_Clock_OffTime	QC_PLAY_BASE + 0X20
 
