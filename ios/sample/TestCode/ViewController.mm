@@ -75,7 +75,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else if (nID == QC_MSG_PLAY_COMPLETE)
     {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            [self onStop: _btnStart];
+			[self onStop: _btnStart];
         }];
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
@@ -118,6 +118,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else if(nID == QC_MSG_SNKV_FIRST_FRAME)
     {
         NSLog(@"[EVT]First video frame rendered\n");
+    }
+    else if(nID == QC_MSG_SNKA_FIRST_FRAME)
+    {
+        NSLog(@"[EVT]First audio frame rendered\n");
     }
 }
 
@@ -223,16 +227,24 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _clipboardURL = nil;
 
     [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
+    [_urlList addObject:@""];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+    [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://183.146.213.65/live/hks?domain=live.hkstv.hk.lxdns.com"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/bipbopall.m3u8"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://192.168.0.123/pd/hd.mp4"];
     
 #if 0
-    [_urlList addObject:@"http://pili-live-hdl.duimian.cn/loovee/doll_top.flv"];
-    [_urlList addObject:@"http://114.55.127.142:80/g17614640s0t1510127320465SI1u4754539i1.flv"];
-    [_urlList addObject:@"rtmp://pili-publish.wangliangliang.qiniuts.com/wangliangliang-piliwork/57e2234275b62535c30003a7"];
-    [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/1461562925fetch/111.mp4"];
-    [_urlList addObject:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
-    [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
+    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.m3u8"];
+    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.mp4"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"https://static.xingnl.tv/recordings/z1.xnlzb.67253/1509105606_1509114943.m3u8"];
+    [_urlList addObject:@"https://static.xingnl.tv/o_1bb6c4r3a1aqp1mo5187t1kqr1pagnr.mp4"];
+    [_urlList addObject:@"http://exam.xhbycm.net/test.flv"];
+    [_urlList addObject:@"https://blued-chatfiles.cn-bj.ufileos.com/2017/12/4/11/40/9341416_1512358851210.mp4"];
+    [_urlList addObject:@"http://pili-live-hdl.duimian.cn/loovee/doll_front.flv"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear4/prog_index.m3u8"];
 #endif
@@ -614,7 +626,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             _player.SetParam(_player.hPlayer, QCPLAY_PID_Disable_Video, &nVal);
         }
         else
-        	_player.Run(_player.hPlayer);
+        {
+            _player.Run(_player.hPlayer);
+        }
+        
     }
     else
     {
