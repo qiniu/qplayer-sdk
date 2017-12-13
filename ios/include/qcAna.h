@@ -31,8 +31,8 @@ typedef struct
 // General source info
 typedef struct
 {
-	char		szURL[4096];	/*!< the URL of current stream */
-    char		szFormat[16];	/*!< format of resource, m3u8, mp4 */
+	char*		pszURL;	/*!< the URL of current stream */
+    char*		pszFormat;	/*!< format of resource, m3u8, mp4 */
     long long	llDuration;		/*!< duration of resource, 0 is live stream */
     int			nVideoCodec;	/*!< video codec, refer to QCCodecID */
     int			nAudioCodec;	/*!< audio codec, refer to QCCodecID */
