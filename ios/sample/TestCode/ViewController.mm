@@ -41,6 +41,7 @@
     
     NSInteger		_networkConnectionErrorTime;
     NSString*		_clipboardURL;
+    BOOL			_loopPlayback;
 }
 @end
 
@@ -70,12 +71,14 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [self showMessage:@"Open fail" duration:2.0];
+            [self loopPlayback];
         }];
     }
     else if (nID == QC_MSG_PLAY_COMPLETE)
     {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-			[self onStop: _btnStart];
+            if(![self loopPlayback])
+                [self onStop: _btnStart];
         }];
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
@@ -187,6 +190,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(void)parseDemoLive
 {
+    //return;
     NSString *host = @"http://pili2-demo.qiniu.com";
     NSString *method = @"GET";
     
@@ -225,7 +229,19 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     _currURL = 0;
     _clipboardURL = nil;
+    
+    // use fast open for loop
+	if(_loopPlayback)
+    {
+        [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
+        [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
+        [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/05/31/02/234148590598897664.mp4"];
+        [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/06/29/09/244762267827998720.mp4"];
+        [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4"];
+        return;
+    }
 
+    [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
@@ -235,8 +251,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/bipbopall.m3u8"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://192.168.0.123/pd/hd.mp4"];
+    [_urlList addObject:@""];
     
 #if 0
+    [_urlList addObject:@"http://play.vdn.cloudvdn.com/live_panda/1b90e2611815ebf4a354c5d2064ecc0a.m3u8?domain=pl-hls21.live.panda.tv"];
+    [_urlList addObject:@""];
     [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.m3u8"];
     [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.mp4"];
     [_urlList addObject:@""];
@@ -492,6 +511,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [super viewDidLoad];
     
     //
+    _loopPlayback = NO;
     [self enableAudioSession:YES];
     [self setupUI];
     [self prepareURL];
@@ -1001,6 +1021,27 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     int nProtocol = QC_IOPROTOCOL_HTTPPD;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Protocol, &nProtocol);
 }
+
+-(bool)loopPlayback
+{
+    if(!_loopPlayback)
+        return false;
+    if([_urlList count] <= 0)
+        return false;
+    
+    _currURL++;
+    if(_currURL >= [_urlList count])
+        _currURL = 0;
+    
+    if([self fastOpen:[[_urlList objectAtIndex:_currURL] UTF8String]])
+        return true;
+    
+    [self onStop:_btnStart];
+    [self onStart:_btnStart];
+    
+    return true;
+}
+
 
 -(NSString*)getVersion
 {
