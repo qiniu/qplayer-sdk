@@ -90,6 +90,10 @@ public interface BasePlayer {
 	// Set the ext dns server
 	// The parameter should be String. "127.0.0.1" use local server.
 	public static final int	QCPLAY_PID_DNS_SERVER				= 0X11000208;
+	
+	// Detect the host to get best IP
+	// The parameter should be String. "www.qiniu.com".
+	public static final int	QCPLAY_PID_DNS_DETECT				= 0X11000209;
 
 	// Set the max buffer time
 	// The parameter should be int (ms)
