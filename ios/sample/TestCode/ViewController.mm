@@ -42,6 +42,7 @@
     NSInteger		_networkConnectionErrorTime;
     NSString*		_clipboardURL;
     BOOL			_loopPlayback;
+    int				_openStartTime;
 }
 @end
 
@@ -59,7 +60,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     //NSLog(@"[EVT]Recv event, %x\n", nID);
     if (nID == QC_MSG_PLAY_OPEN_DONE)
     {
-        NSLog(@"[EVT]Run\n");
+        NSLog(@"Open use time %d. %d", [self getSysTime]-_openStartTime, [self getSysTime]);
         if(_player.hPlayer)
             _player.Run(_player.hPlayer);
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -69,6 +70,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     else if(nID == QC_MSG_PLAY_OPEN_FAILED)
     {
+        NSLog(@"Open use time %d. %d", [self getSysTime]-_openStartTime, [self getSysTime]);
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [self showMessage:@"Open fail" duration:2.0];
             [self loopPlayback];
@@ -253,8 +255,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"http://192.168.0.123/pd/hd.mp4"];
     [_urlList addObject:@""];
     
-#if 0
-    [_urlList addObject:@"http://play.vdn.cloudvdn.com/live_panda/1b90e2611815ebf4a354c5d2064ecc0a.m3u8?domain=pl-hls21.live.panda.tv"];
+#if 1
+    [_urlList addObject:@"http://video.mb.moko.cc/2017-11-27/f10f19fe-64a8-4340-bc90-ab59bbafb857.mp4/be0fe625-6d3a-46e2-951d-8aa413df555d/AUTO.m3u8"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.m3u8"];
     [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.mp4"];
@@ -552,6 +554,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         if(_clipboardURL)
             url = [_clipboardURL UTF8String];
         //_player.SetParam(_player.hPlayer, QCPLAY_PID_DRM_KeyText, (void*)"XXXXXXXXXXXX");
+        _openStartTime = [self getSysTime];
+        NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
         _player.Open(_player.hPlayer, url, _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0);
         if(_clipboardURL)
         {
@@ -1002,6 +1006,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
                 {
                     NSLog(@"+Fast open, %s", newURL);
                     int flag = _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0;
+                    _openStartTime = [self getSysTime];
+                    NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
                     _player.Open(_player.hPlayer, newURL, (flag|QCPLAY_OPEN_SAME_SOURCE));
                     NSLog(@"-Fast open");
                     return YES;
