@@ -199,6 +199,10 @@ typedef struct
 // The parameter should be char *. "127.0.0.1" use local. "0.0.0.0" use default.
 #define	QCPLAY_PID_DNS_SERVER				QC_PLAY_BASE + 0X0208
 
+// detect the dns get best IP address
+// The parameter should be char *. "www.qiniu.com"
+#define	QCPLAY_PID_DNS_DETECT				QC_PLAY_BASE + 0X0209
+
 // Set / get the max buffer time
 // The parameter should be int *. (ms)
 #define	QCPLAY_PID_PlayBuff_MaxTime			QC_PLAY_BASE + 0X0211
