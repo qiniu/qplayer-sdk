@@ -46,6 +46,10 @@ extern "C" {
 // The parameter should be char *. 
 #define	QCIO_PID_HTTP_HeadHost			QC_MOD_IO_HTTP + 0X01
 
+// Get HTTP content type
+// The parameter should be char **.
+#define QCIO_PID_HTTP_CONTENT_TYPE		QC_MOD_IO_HTTP + 0X02
+
 // Set the ext lib file name
 // The parameter should be char *. 
 #define	QCIO_PID_EXT_LibName			QC_MOD_IO_BASE + 0X02
