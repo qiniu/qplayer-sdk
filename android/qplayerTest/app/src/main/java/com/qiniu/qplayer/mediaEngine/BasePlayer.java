@@ -19,6 +19,8 @@ public interface BasePlayer {
 	public static final int		QCPLAY_FORMAT_M3U8			= 1;
 	public static final int		QCPLAY_FORMAT_MP4			= 2;
 	public static final int		QCPLAY_FORMAT_FLV			= 3;
+	public static final int		QCPLAY_FORMAT_MP3			= 5;
+	public static final int		QCPLAY_FORMAT_AAC			= 6;
 
 	public static final int		QC_IOPROTOCOL_HTTPPD 		= 5;
 
