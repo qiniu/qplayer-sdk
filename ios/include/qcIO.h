@@ -62,6 +62,9 @@ extern "C" {
 // The parameter should be long long *.
 #define QCIO_PID_RTMP_VIDEO_MSG_TIMESTAMP     QC_MOD_IO_RTMP + 0X02
 
+// Set RTSP tcp or upd  0 UPD, 1 TCP
+// The parameter should be int *.
+#define QCIO_PID_RTSP_UDP_TCP_MODE			  QC_MOD_IO_RTSP + 0X01
 
 // the IO source type
 typedef enum {
@@ -70,6 +73,7 @@ typedef enum {
     QC_IOTYPE_HTTP_VOD,
     QC_IOTYPE_HTTP_LIVE,
     QC_IOTYPE_RTMP,
+	QC_IOTYPE_RTSP,
 	QC_IOTYPE_EXTLIB,
 	QC_IOTYPE_MAX		= 0X7FFFFFFF
 }QCIOType;
