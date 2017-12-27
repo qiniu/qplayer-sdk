@@ -22,7 +22,7 @@ public interface BasePlayer {
 	public static final int		QCPLAY_FORMAT_MP3			= 5;
 	public static final int		QCPLAY_FORMAT_AAC			= 6;
 
-	public static final int		QC_IOPROTOCOL_HTTPPD 		= 5;
+	public static final int		QC_IOPROTOCOL_HTTPPD 		= 6;
 
 	// define the flag for player
 	public static final int		QCPLAY_OPEN_VIDDEC_HW		= 0X01000000;
