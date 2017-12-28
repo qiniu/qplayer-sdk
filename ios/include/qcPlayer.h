@@ -174,7 +174,11 @@ typedef struct
 // Get RTMP video message timestamp
 // The parameter should be long long *.
 #define QCPLAY_PID_RTMP_VIDEO_MSG_TIMESTAMP     QC_PLAY_BASE + 0X74
-    
+
+// Get RTSP udp tcp mode. 0 UDP, 1 TCP
+// The parameter should be int *.
+#define QCPLAY_PID_RTSP_UDPTCP_MODE			    QC_PLAY_BASE + 0X81
+
 // Set ext audio render. Internal use.
 // The parameter should be CBaseAudioRnd *.
 #define	QCPLAY_PID_EXT_AudioRnd		QC_PLAY_BASE + 0X0100
