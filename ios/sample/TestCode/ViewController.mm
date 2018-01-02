@@ -62,7 +62,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     {
         NSLog(@"Open use time %d. %d", [self getSysTime]-_openStartTime, [self getSysTime]);
         if(_player.hPlayer)
+        {
             _player.Run(_player.hPlayer);
+        }
+        
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             _btnStart.enabled = ![self isLive];
             _sliderPosition.enabled = ![self isLive];
@@ -146,9 +149,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     qcCreatePlayer(&_player, NULL);
     _player.SetNotify(_player.hPlayer, NotifyEvent, (__bridge void*)self);
     
-    CGRect r = _viewVideo.bounds;
-    RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
-    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
+//    CGRect r = _viewVideo.bounds;
+//    RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
+//    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
+    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
     
     if(_switchCache.on == YES)
     	[self enableFileCacheMode];
@@ -243,7 +247,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         return;
     }
 
-    [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
@@ -251,13 +254,17 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"rtmp://183.146.213.65/live/hks?domain=live.hkstv.hk.lxdns.com"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/bipbopall.m3u8"];
+    [_urlList addObject:@"http://192.168.0.123/pd/1920x1080.flv"];
     [_urlList addObject:@""];
-    [_urlList addObject:@"http://192.168.0.123/pd/hd.mp4"];
+    [_urlList addObject:@"https://www.gtbluesky.com/test.mp3"];
     [_urlList addObject:@""];
     
-#if 1
-    [_urlList addObject:@"http://video.mb.moko.cc/2017-11-27/f10f19fe-64a8-4340-bc90-ab59bbafb857.mp4/be0fe625-6d3a-46e2-951d-8aa413df555d/AUTO.m3u8"];
-    [_urlList addObject:@""];
+#if 0
+    [_urlList addObject:@"https://media.wanmen.org/946a2f17582c2ffe3aa55215802736be_pc_high.m3u8"];
+    [_urlList addObject:@"-------------------------------------------------------------------------------"];
+    [_urlList addObject:@"http://180.153.100.199/bipbopall.m3u8?domain=ojpjb7lbl.bkt.clouddn.com"];
+    [_urlList addObject:@"https://oigovwije.qnssl.com/shfpahbclahjbdoa.mp4"];
+    [_urlList addObject:@"http://gslb.miaopai.com/stream/E26J9j~FuMDu0lX--GALbHiXg~LEH0wrGDyv4w__.mp4"];
     [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.m3u8"];
     [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.mp4"];
     [_urlList addObject:@""];
@@ -314,10 +321,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     _rectSmallScreen = self.view.bounds;
     _rectSmallScreen.size.height /= 3;
-    _rectSmallScreen.origin.y = 0;//[[UIApplication sharedApplication] statusBarFrame].size.height;
+    _rectSmallScreen.origin.y = 0;
     _viewVideo = [[UIView alloc] initWithFrame:_rectSmallScreen];
     _viewVideo.backgroundColor = [UIColor blackColor];
-    _viewVideo.contentMode =  UIViewContentModeScaleAspectFit;
+    _viewVideo.contentMode =  UIViewContentModeScaleAspectFit;//UIViewContentModeScaleAspectFill
     [self.view insertSubview:_viewVideo atIndex:0];
     
     // Position slider

@@ -251,6 +251,8 @@ typedef struct
 	QCVideoType			nType;			/*!< Video buffer type */
 	int					nWidth;			/*!< Video width*/
 	int					nHeight;		/*!< Video height*/
+	int					nRatioNum;		///< Numerator
+	int					nRatioDen;		///< Denominator
 } QC_VIDEO_BUFF;
 
 
