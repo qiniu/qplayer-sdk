@@ -159,6 +159,10 @@ typedef struct
 // This should be called before open.
 #define	QCPLAY_PID_PD_Save_Path		QC_PLAY_BASE + 0X61
 
+// Set the PD save file ext name. Param should char *
+// This should be called before open.
+#define	QCPLAY_PID_PD_Save_ExtName	QC_PLAY_BASE + 0X62
+
 // Background color for video render. Param should  QC_COLOR *
 // This should be called before open. Default value is black, {0.0, 0.0, 0.0, 1.0}
 #define	QCPLAY_PID_BG_COLOR			QC_PLAY_BASE + 0X71
@@ -174,7 +178,11 @@ typedef struct
 // Get RTMP video message timestamp
 // The parameter should be long long *.
 #define QCPLAY_PID_RTMP_VIDEO_MSG_TIMESTAMP     QC_PLAY_BASE + 0X74
-    
+
+// Get RTSP udp tcp mode. 0 UDP, 1 TCP
+// The parameter should be int *.
+#define QCPLAY_PID_RTSP_UDPTCP_MODE			    QC_PLAY_BASE + 0X81
+
 // Set ext audio render. Internal use.
 // The parameter should be CBaseAudioRnd *.
 #define	QCPLAY_PID_EXT_AudioRnd		QC_PLAY_BASE + 0X0100
