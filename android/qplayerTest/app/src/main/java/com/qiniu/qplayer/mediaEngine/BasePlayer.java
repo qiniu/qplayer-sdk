@@ -51,6 +51,9 @@ public interface BasePlayer {
 
 	public static final int 	QCPLAY_PID_Clock_OffTime	= 0X11000020;
 
+	// Set the seek mode. 0, key frame, 1 any pos. int.
+	public static final int		QCPLAY_PID_Seek_Mode		= 0X11000021;
+
 	// the param shoud null
 	public static final	int 	QCPLAY_PID_Flush_Buffer		= 0X11000025;
 
@@ -65,6 +68,10 @@ public interface BasePlayer {
 	// This should be called before open.
 	public static final int 	QCPLAY_PID_PD_Save_Path		= 0X11000061;
 
+	// Set the PD save ext name. Param should char *
+	// This should be called before open.
+	public static final int 	QCPLAY_PID_PD_Save_ExtName	= 0X11000062;
+	
 	// Set the perfer file format. Param should QCPLAY_FORMAT_* 
 	// This should be called before open.
 	public static final int 	QCPLAY_PID_Prefer_Format	= 0X11000050;
