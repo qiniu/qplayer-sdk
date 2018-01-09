@@ -132,7 +132,8 @@ typedef struct
 #define	QCPLAY_PID_StreamInfo		QC_PLAY_BASE + 0X0f
 
 // Set it to zoom video
-// The parameter should RECT *. The pos could be divided by 4 
+// The parameter should RECT *. The pos could be divided by 4
+// set {0, 0, 0, 0} to disable this feature
 #define	QCPLAY_PID_Zoom_Video		QC_PLAY_BASE + 0X11
 
 // Set clock offset time. The parameter int *.
@@ -238,6 +239,10 @@ typedef struct
 // Set to call back Audio buffer. It should be set after open before run.
 // The parameter should be function: QCPlayerOutAVData
 #define	QCPLAY_PID_SendOut_AudioBuff		QC_PLAY_BASE + 0X0331
+
+// Set the playback loop or not
+// The parameter should be int *. 0, no loop, 1 loop
+#define	QCPLAY_PID_Playback_Loop			QC_PLAY_BASE + 0X0340
 
 // the video aspect ratio. 
 typedef struct {
