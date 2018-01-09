@@ -71,7 +71,7 @@ public interface BasePlayer {
 	// Set the PD save ext name. Param should char *
 	// This should be called before open.
 	public static final int 	QCPLAY_PID_PD_Save_ExtName	= 0X11000062;
-	
+
 	// Set the perfer file format. Param should QCPLAY_FORMAT_* 
 	// This should be called before open.
 	public static final int 	QCPLAY_PID_Prefer_Format	= 0X11000050;
@@ -99,7 +99,7 @@ public interface BasePlayer {
 	// Set the ext dns server
 	// The parameter should be String. "127.0.0.1" use local server.
 	public static final int	QCPLAY_PID_DNS_SERVER				= 0X11000208;
-	
+
 	// Detect the host to get best IP
 	// The parameter should be String. "www.qiniu.com".
 	public static final int	QCPLAY_PID_DNS_DETECT				= 0X11000209;
@@ -126,6 +126,10 @@ public interface BasePlayer {
 	// Set to call back Audio buffer. It should be set after open before run.
 	// The parameter is 1, it will render outside, 0 render internal
 	public static final int	QCPLAY_PID_SendOut_AudioBuff		= 0X11000331;
+
+	// Set to playback or not.
+	// The parameter should be int. 0 not loop, 1 loop.
+	public static final int	QCPLAY_PID_Playback_Loop			= 0X11000340;
 
 	// Define id of event listener.
 	public static final int 	QC_MSG_PLAY_OPEN_DONE 			= 0x16000001;

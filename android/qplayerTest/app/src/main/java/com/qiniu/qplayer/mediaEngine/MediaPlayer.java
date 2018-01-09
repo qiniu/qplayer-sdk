@@ -50,6 +50,8 @@ public class MediaPlayer implements BasePlayer {
 	private int m_nChannels = 0;
 	private int m_nBTOffset = 0;
 
+	private AudioRender			m_AudioRender = null;
+
 	private File 				m_dbgFile = null;
 	private FileOutputStream	m_dbgStream = null;
 
@@ -139,6 +141,9 @@ public class MediaPlayer implements BasePlayer {
 
 	public void Uninit() {
 		nativeUninit(m_NativeContext);
+		if (m_AudioRender != null)
+			m_AudioRender.closeTrack();
+		m_AudioRender = null;
 		m_NativeContext = 0;
 	}
 
@@ -188,8 +193,13 @@ public class MediaPlayer implements BasePlayer {
 		DisplayMetrics dm = m_context.getResources().getDisplayMetrics();
 		if (m_nVideoWidth != 0 && m_nVideoHeight != 0)// && lp.width == LayoutParams.FILL_PARENT && lp.height == LayoutParams.FILL_PARENT)
 		{
-			int nMaxOutW = dm.widthPixels;
-			int nMaxOutH = dm.heightPixels;
+			int nMaxOutW = lp.width;
+			if (nMaxOutW <= 0)
+				nMaxOutW = dm.widthPixels;
+			int nMaxOutH = lp.height;
+			if (nMaxOutH <= 0)
+				nMaxOutH = dm.heightPixels;
+
 			if (nMaxOutW * m_nVideoHeight > m_nVideoWidth * nMaxOutH) {
 				lp.height = nMaxOutH;
 				lp.width  = m_nVideoWidth * nMaxOutH / m_nVideoHeight;
@@ -227,6 +237,10 @@ public class MediaPlayer implements BasePlayer {
 		{
 			player.m_nSampleRate = ext1;
 			player.m_nChannels = ext2;
+
+			if (player.m_AudioRender == null)
+				player.m_AudioRender = new AudioRender(player.m_context, player);
+			player.m_AudioRender.openTrack (player.m_nSampleRate, player.m_nChannels);
 			return;
 		}
 		else if (what == QC_MSG_RTMP_METADATA) {
@@ -245,14 +259,8 @@ public class MediaPlayer implements BasePlayer {
 		MediaPlayer player = (MediaPlayer)((WeakReference)baselayer_ref).get();
 		if (player == null) 
 			return;
-		if (player.m_dbgStream != null) {
-			try {
-				player.m_dbgStream.write(data, 0, size);
-				player.m_dbgStream.flush();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		if (player.m_AudioRender != null)
+			player.m_AudioRender.writeData(data,  size);
 	}
 	
 	private static void videoDataFromNative(Object baselayer_ref, byte[] data, int size, long lTime, int nFlag)
@@ -271,7 +279,7 @@ public class MediaPlayer implements BasePlayer {
 		}
 	}	
 
-	private Handler mHandle = new Handler()  
+	private Handler mHandle = new Handler()
 	{
 		public void handleMessage(Message msg) 
 		{	
@@ -286,11 +294,10 @@ public class MediaPlayer implements BasePlayer {
 			if (m_EventListener != null) {
 				nRC = m_EventListener.onEvent(msg.what, msg.arg1, msg.arg2, msg.obj);
 			}
-
-			if (msg.what == QC_MSG_SNKV_NEW_FORMAT && nRC == 0)
-			//	onVideoSizeChanged ();
-			if (msg.what == QC_MSG_SNKV_NEW_FORMAT)
-				SetParam (PARAM_PID_EVENT_DONE, 0, null);
+			if (msg.what == QC_MSG_SNKV_NEW_FORMAT) {
+				//onVideoSizeChanged ();
+				SetParam(PARAM_PID_EVENT_DONE, 0, null);
+			}
 		}
 	};
 	
