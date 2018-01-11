@@ -238,6 +238,12 @@ public class MediaPlayer implements BasePlayer {
 			player.m_nSampleRate = ext1;
 			player.m_nChannels = ext2;
 
+			if (player.m_nSampleRate == 0 && player.m_nChannels == 0){
+				if (player.m_AudioRender != null)
+					player.m_AudioRender.closeTrack();
+				return;
+			}
+
 			if (player.m_AudioRender == null)
 				player.m_AudioRender = new AudioRender(player.m_context, player);
 			player.m_AudioRender.openTrack (player.m_nSampleRate, player.m_nChannels);

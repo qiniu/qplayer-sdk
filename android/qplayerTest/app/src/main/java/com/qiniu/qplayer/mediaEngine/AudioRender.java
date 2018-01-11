@@ -47,10 +47,10 @@ public class AudioRender {
 		if (nMinBufSize == AudioTrack.ERROR_BAD_VALUE || nMinBufSize == AudioTrack.ERROR)
 			return -1;
 
-		nMinBufSize = nMinBufSize * 1;
+		nMinBufSize = nMinBufSize * 2;
 
-		if (nMinBufSize < 2048)
-			nMinBufSize = 2048;
+		if (nMinBufSize < 8192)
+			nMinBufSize = 8192;
 		Log.v (TAG, "Audio track, nMinBufSize  " + nMinBufSize);		
 		
 		mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,
