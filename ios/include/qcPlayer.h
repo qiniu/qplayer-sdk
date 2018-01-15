@@ -69,7 +69,7 @@ typedef struct
 	long long		(* GetDur)		(void * hPlayer);
 	long long		(* GetPos)		(void * hPlayer);
 	long long		(* SetPos)		(void * hPlayer, long long llPos);
-	// The volume should be 0 - 100. 
+	// The volume 100 is orignal volume. 0-99 is low, > 100 is loud.
 	int				(* SetVolume)	(void * hPlayer, int nVolume);
 	int				(* GetVolume)	(void * hPlayer);
 	// for extend function later.
