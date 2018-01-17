@@ -186,6 +186,10 @@ public interface BasePlayer {
 
 	// The nArg1 is the value.
 	public static final int 	QC_MSG_RTMP_DOWNLOAD_SPEED		= 0x11010004;
+	
+	// Param: int, 0, None, 1 File, 2 Http, 
+	public static final int		QC_MSG_IO_SEEK_SOURCE_TYPE		= 0x11020002;
+		
 	public static final int 	QC_MSG_BUFF_VBUFFTIME			= 0x18000001;
 	public static final int 	QC_MSG_BUFF_ABUFFTIME			= 0x18000002;
 
@@ -210,8 +214,7 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_SNKV_NEW_FORMAT 			= 0x15200003;
 	// The audio format was changed.
 	public static final int 	QC_MSG_SNKA_NEW_FORMAT 			= 0x15100003;
-
-
+	
 	public static final int 	QC_FLAG_Video_CaptureImage		= 0x00000010;
 	public static final int 	QC_FLAG_Video_SEIDATA			= 0x00000020;
 	public static final int 	QC_FLAG_Video_YUV420P			= 0x00000000;
