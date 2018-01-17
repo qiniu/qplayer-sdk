@@ -27,6 +27,11 @@ extern "C" {
 // The parameter should be int. 1 exit, 0 no.
 #define	QCPARSER_PID_ExitRead		QC_PARSER_BASE + 0X02
 
+
+// Get the seek io pos
+// The parameter should be long long *
+#define	QCPARSER_PID_SEEK_IO_POS	QC_PARSER_BASE + 0X03
+
 /**
  * the qc parser interface 
  */

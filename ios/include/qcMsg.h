@@ -50,6 +50,7 @@
 
 
 #define QC_MSG_IO_FIRST_BYTE_DONE		0x11020001		// Param:
+#define QC_MSG_IO_SEEK_SOURCE_TYPE		0x11020002		// Param: int * 0, None, 1 File, 2 Http, 
 
 
 // define the parser msg ID
