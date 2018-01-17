@@ -65,6 +65,7 @@ typedef struct tagQCANA_EVT_BASE
     int			nEventID;			/*!< event ID */
     int			nErrCode;			/*!< error code, refer to QC_ERR_XXX */
     char		szSessionID[37];	/*!< playback session ID */
+    QCANA_SOURCE_INFO*    pSrcInfo;
 } QCANA_EVT_BASE;
 
 // Close event
@@ -102,7 +103,6 @@ typedef struct tagQCANA_EVT_DLD : QCANA_EVT_BASE
 typedef struct tagQCANA_EVENT_INFO
 {
     QCANA_DEVICE_INFO*	pDevInfo;
-    QCANA_SOURCE_INFO*	pSrcInfo;
     QCANA_EVT_BASE*		pEvtInfo;
 }QCANA_EVENT_INFO;
 
