@@ -244,7 +244,8 @@ typedef struct
 // The parameter should be int *. 0, no loop, 1 loop
 #define	QCPLAY_PID_Playback_Loop			QC_PLAY_BASE + 0X0340
 
-// the video aspect ratio. 
+
+// the video aspect ratio.
 typedef struct {
 	int		nWidth;
 	int		nHeight;
