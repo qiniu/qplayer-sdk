@@ -42,6 +42,10 @@ extern "C" {
 
 #define	QCIO_MAX_CONTENT_LEN	0X7FFFFFFFFFFFFFFF
 
+// Get the IO source type at special pos 
+// The parameter is pos, it should be long long *. 
+#define	QCIO_PID_SourceType				QC_MOD_IO_BASE + 0X01
+
 // Set the http host header 
 // The parameter should be char *. 
 #define	QCIO_PID_HTTP_HeadHost			QC_MOD_IO_HTTP + 0X01
