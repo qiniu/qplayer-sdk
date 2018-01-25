@@ -218,6 +218,18 @@ public interface BasePlayer {
 	public static final int 	QC_FLAG_Video_CaptureImage		= 0x00000010;
 	public static final int 	QC_FLAG_Video_SEIDATA			= 0x00000020;
 	public static final int 	QC_FLAG_Video_YUV420P			= 0x00000000;
+	
+	public static final int 	QC_ERR_FAILED					= 0x80000001;
+	public static final int 	QC_ERR_MEMORY					= 0x80000002;
+	public static final int 	QC_ERR_IMPLEMENT				= 0x80000003;
+	public static final int 	QC_ERR_ARG						= 0x80000004;
+	public static final int 	QC_ERR_TIMEOUT					= 0x80000005;
+	public static final int 	QC_ERR_STATUS					= 0x80000008;
+	public static final int 	QC_ERR_PARAMID					= 0x80000009;
+	public static final int 	QC_ERR_UNSUPPORT				= 0x8000000b;
+	public static final int 	QC_ERR_FORCECLOSE				= 0x8000000c;
+	public static final int 	QC_ERR_FORMAT					= 0x8000000d;
+	public static final int 	QC_ERR_IO_FAILED				= 0x80000010;
 
 	// The event listener function
 	public interface onEventListener{
