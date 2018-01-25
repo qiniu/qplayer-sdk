@@ -81,10 +81,12 @@ typedef struct
 // The following message for advance user
 // Set the video aspect ratio. 
 // The parameter should be QCPLAY_ARInfo *.
+// This should be called after open done event.
 #define	QCPLAY_PID_AspectRatio		QC_PLAY_BASE + 0X01
 
 // Set the play speed.
 // The parameter should be double *. it is 0.2 - 32.0
+// This should be called after open done event.
 #define	QCPLAY_PID_Speed			QC_PLAY_BASE + 0X02
 
 // Set it to disable video. Playback audio only.
@@ -140,6 +142,7 @@ typedef struct
 #define	QCPLAY_PID_Clock_OffTime	QC_PLAY_BASE + 0X20
 
 // Set the seek mode. 0, key frame, 1 any pos. int *.
+// This should be called after open done event.
 #define	QCPLAY_PID_Seek_Mode		QC_PLAY_BASE + 0X21
 
 // Set. Flush the buffer.
@@ -226,6 +229,7 @@ typedef struct
 
 // Set to capture video image
 // The parameter should be long long * (ms). capture time. 0 is immediatily.
+// This should be called after open done event.
 #define	QCPLAY_PID_Capture_Image			QC_PLAY_BASE + 0X0310
 
 // Set the log out level
