@@ -26,7 +26,7 @@
 #define QC_ERR_MEMORY					0x80000002
 #define QC_ERR_IMPLEMENT				0x80000003
 #define QC_ERR_ARG						0x80000004
-#define QC_ERR_TIMEOUT					0x8000000d
+#define QC_ERR_TIMEOUT					0x80000005
 #define QC_ERR_STATUS					0x80000008
 #define QC_ERR_PARAMID					0x80000009
 #define QC_ERR_LICENSE					0x8000000a
@@ -35,6 +35,7 @@
 #define QC_ERR_FORMAT					0x8000000d
 #define QC_ERR_Overflow					0x8000000e
 #define QC_ERR_EMPTYPOINTOR				0x8000000f
+#define QC_ERR_IO_FAILED				0x80000010
 
 // define the IO error ID
 #define QC_ERR_IO_BASE					0x81000000
