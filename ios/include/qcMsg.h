@@ -131,6 +131,7 @@
 #define QC_MSG_RENDER_VIDEO_FPS			0x19000001		//param: FPS of video render
 #define QC_MSG_RENDER_AUDIO_FPS			0x19000002		//param: FPS of audio render
 
+#define QC_MSG_THREAD_EXIT				0x20000001		//param: exit the work thread
 
 
 #endif // __QCMSG_H__

@@ -1,3 +1,4 @@
+
 //
 //  ViewController.m
 //  TestCode
@@ -30,8 +31,8 @@
     UILabel*        _labelPlayingTime;
     UISwitch*       _switchHW;
     UILabel*        _labelHW;
-    UISwitch*       _switchCache;
-    UILabel*        _labelCache;
+    UISwitch*       _switchSameSource;
+    UILabel*        _labelSameSource;
     UILabel*        _labelVersion;
     UIButton*       _btnCancelSelectStream;
     
@@ -81,6 +82,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     else if (nID == QC_MSG_PLAY_COMPLETE)
     {
+        int status = *(int*)pParam;
+        NSLog(@"EOS status %d", status);
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if(![self loopPlayback])
                 [self onStop: _btnStart];
@@ -131,6 +134,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     {
         NSLog(@"[EVT]First audio frame rendered\n");
     }
+    else if(nID == QC_MSG_SNKV_NEW_FORMAT)
+    {
+        [self updateVideoSize:(QC_VIDEO_FORMAT *)pParam];
+    }
 }
 
 -(void)setVideoView:(UIView*)view rect:(RECT*)drawRect
@@ -154,8 +161,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 //    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
     _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
     
-    if(_switchCache.on == YES)
-    	[self enableFileCacheMode];
+//    char* val = "127.0.0.1";
+//    _player.SetParam(_player.hPlayer, QCPLAY_PID_DNS_SERVER, (void*)val);
+    
+//    int nProtocol = QC_PARSER_M3U8;
+//    _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Format, &nProtocol);
+
+//    int val = 1;
+//    _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &val);
+    
+//    [self enableFileCacheMode];
 }
 
 -(void) destroyPlayer
@@ -235,33 +250,36 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     _currURL = 0;
     _clipboardURL = nil;
-    
-    // use fast open for loop
-	if(_loopPlayback)
-    {
-        [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
-        [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
-        [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/05/31/02/234148590598897664.mp4"];
-        [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/06/29/09/244762267827998720.mp4"];
-        [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4"];
-        return;
-    }
 
+    [_urlList addObject:@"http://down.ttdtweb.com/test/Horrible.mp4"];
+    [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://192.168.0.123/pd/dump.mp4"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://183.146.213.65/live/hks?domain=live.hkstv.hk.lxdns.com"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/bipbopall.m3u8"];
-    [_urlList addObject:@"http://192.168.0.123/pd/1920x1080.flv"];
     [_urlList addObject:@""];
     [_urlList addObject:@"https://www.gtbluesky.com/test.mp3"];
     [_urlList addObject:@""];
+    [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"rtmp://www.scbtv.cn/live/new"];
+    [_urlList addObject:@""];
     
-#if 0
-    [_urlList addObject:@"https://media.wanmen.org/946a2f17582c2ffe3aa55215802736be_pc_high.m3u8"];
+#if 1
+    [_urlList addObject:@"http://pili-live-hls.tv.xue5678.com/xydonline/xue_live_d4c1c094a16045a0b7363e730eb56ce1.m3u8"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
+    [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
+    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
+    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/05/31/02/234148590598897664.mp4"];
+    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/06/29/09/244762267827998720.mp4"];
+    [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4"];
     [_urlList addObject:@"http://180.153.100.199/bipbopall.m3u8?domain=ojpjb7lbl.bkt.clouddn.com"];
     [_urlList addObject:@"https://oigovwije.qnssl.com/shfpahbclahjbdoa.mp4"];
     [_urlList addObject:@"http://gslb.miaopai.com/stream/E26J9j~FuMDu0lX--GALbHiXg~LEH0wrGDyv4w__.mp4"];
@@ -271,7 +289,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"https://static.xingnl.tv/recordings/z1.xnlzb.67253/1509105606_1509114943.m3u8"];
     [_urlList addObject:@"https://static.xingnl.tv/o_1bb6c4r3a1aqp1mo5187t1kqr1pagnr.mp4"];
     [_urlList addObject:@"http://exam.xhbycm.net/test.flv"];
-    [_urlList addObject:@"https://blued-chatfiles.cn-bj.ufileos.com/2017/12/4/11/40/9341416_1512358851210.mp4"];
     [_urlList addObject:@"http://pili-live-hdl.duimian.cn/loovee/doll_front.flv"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear4/prog_index.m3u8"];
@@ -283,7 +300,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     for (NSString *fileName in fileList)
     {
-        if ([fileName hasSuffix:@".txt"])
+        if ([fileName hasSuffix:@".txt"] || [fileName hasSuffix:@".url"])
         {
             NSArray* URLs = [[NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName] encoding:NSUTF8StringEncoding error:nil] componentsSeparatedByString:@"\n"];
             
@@ -363,16 +380,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     // Cache for MP4
     width = 80;
-    _switchCache = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width +20, _rectSmallScreen.origin.y + 90, width, 20)];
-    _switchCache.on = NO;
-    [_viewVideo addSubview:_switchCache];
+    _switchSameSource = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width +20, _rectSmallScreen.origin.y + 90, width, 20)];
+    _switchSameSource.on = NO;
+    [_viewVideo addSubview:_switchSameSource];
     
     width = 80;
-    _labelCache = [[UILabel alloc] initWithFrame:CGRectMake(_switchCache.frame.origin.x - width, _switchCache.frame.origin.y, width, 20)];
-    _labelCache.text = @"Cache:";
-    _labelCache.font = [UIFont systemFontOfSize:15];
-    _labelCache.textColor = [UIColor redColor];
-    [_viewVideo addSubview:_labelCache];
+    _labelSameSource = [[UILabel alloc] initWithFrame:CGRectMake(_switchSameSource.frame.origin.x - width, _switchSameSource.frame.origin.y, width, 20)];
+    _labelSameSource.text = @"Same SRC:";
+    _labelSameSource.font = [UIFont systemFontOfSize:15];
+    _labelSameSource.textColor = [UIColor redColor];
+    [_viewVideo addSubview:_labelSameSource];
     
     //Switch HW and SW
     width = 80;
@@ -588,8 +605,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_timer invalidate];
     _timer = nil;
     _player.Stop(_player.hPlayer);
-    _player.Close(_player.hPlayer);
-    [self destroyPlayer];
+//    _player.Close(_player.hPlayer);
+//    [self destroyPlayer];
     
     //
     [_switchHW setHidden:NO];
@@ -627,7 +644,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if(!_isDragSlider)
     {
         if(dur <= 0)
-            _sliderPosition.value = 1.0;
+            _sliderPosition.value = 0.0;
         else
             _sliderPosition.value = (float)pos/(float)dur;
     }
@@ -999,26 +1016,24 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(BOOL)fastOpen:(const char*)newURL
 {
-    return NO;
+    if(NO == _switchSameSource.on)
+    	return NO;
+    
     if(_player.hPlayer)
     {
-        QCPLAY_STATUS status = _player.GetStatus(_player.hPlayer);
-        if(status == QC_PLAY_Run)
+        const char* oldURL = [_urlList[_currURL] UTF8String];
+        const char* end = strchr(oldURL, ':');
+        if(end)
         {
-            const char* oldURL = [_urlList[_currURL] UTF8String];
-			const char* end = strchr(oldURL, ':');
-            if(end)
+            if(!strncmp(newURL, oldURL, end-oldURL))
             {
-                if(!strncmp(newURL, oldURL, end-oldURL))
-                {
-                    NSLog(@"+Fast open, %s", newURL);
-                    int flag = _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0;
-                    _openStartTime = [self getSysTime];
-                    NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
-                    _player.Open(_player.hPlayer, newURL, (flag|QCPLAY_OPEN_SAME_SOURCE));
-                    NSLog(@"-Fast open");
-                    return YES;
-                }
+                NSLog(@"+Fast open, %s", newURL);
+                int flag = _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0;
+                _openStartTime = [self getSysTime];
+                NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
+                _player.Open(_player.hPlayer, newURL, (flag|QCPLAY_OPEN_SAME_SOURCE));
+                NSLog(@"-Fast open");
+                return YES;
             }
         }
     }
@@ -1054,6 +1069,42 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     return true;
 }
+
+-(bool)updateVideoSize:(QC_VIDEO_FORMAT*)pFmt
+{
+    if (!pFmt || pFmt->nWidth == 0 || pFmt->nHeight == 0)
+        return false;
+    
+    RECT rcVideo = {0, 0, pFmt->nWidth, pFmt->nHeight};
+    
+    int nRndW = rcVideo.right - rcVideo.left;
+    int nRndH = rcVideo.bottom - rcVideo.top;
+    
+    int nWidth = pFmt->nWidth;
+    int nHeight = pFmt->nHeight;
+    if ((pFmt->nNum == 0 || pFmt->nNum == 1) &&
+        (pFmt->nDen == 1 || pFmt->nDen == 0))
+    {
+        if (nWidth * nRndH >= nHeight * nRndW)
+            nRndH = nRndW * nHeight / nWidth;
+        else
+            nRndW = nRndH * nWidth / nHeight;
+    }
+    else
+    {
+        if (pFmt->nDen == 0)
+            pFmt->nDen = 1;
+        nWidth = nWidth * pFmt->nNum / pFmt->nDen;
+        if (nWidth * nRndH >= nHeight * nRndW)
+            nRndH = nRndW * nHeight / nWidth;
+        else
+            nRndW = nRndH * nWidth / nHeight;
+    }
+    
+    NSLog(@"[V]Video size (%d x %d) -> (%d x %d)", pFmt->nWidth, pFmt->nHeight, nRndW, nRndH);
+    return true;
+}
+
 
 
 -(NSString*)getVersion
