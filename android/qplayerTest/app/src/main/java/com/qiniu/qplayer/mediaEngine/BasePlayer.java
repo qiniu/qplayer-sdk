@@ -180,7 +180,8 @@ public interface BasePlayer {
 
 	public static final int		QC_MSG_HTTP_RETURN_CODE			= 0x11000023;
 	public static final int		QC_MSG_HTTP_DOWNLOAD_FINISH		= 0x11000060;
-
+	public static final int		QC_MSG_HTTP_DOWNLOAD_PERCENT	= 0x11000061;
+	
 	// The obj is the string value
 	public static final int		QC_MSG_RTMP_METADATA			= 0x11010006;
 
