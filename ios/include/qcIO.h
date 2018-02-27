@@ -54,6 +54,10 @@ extern "C" {
 // The parameter should be char **.
 #define QCIO_PID_HTTP_CONTENT_TYPE		QC_MOD_IO_HTTP + 0X02
 
+// Set HTTP notify download percent
+// The parameter should be int *.
+#define QCIO_PID_HTTP_NOTIFYDL_PERCENT	QC_MOD_IO_HTTP + 0X03
+
 // Set the ext lib file name
 // The parameter should be char *. 
 #define	QCIO_PID_EXT_LibName			QC_MOD_IO_BASE + 0X02
