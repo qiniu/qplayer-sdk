@@ -64,7 +64,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         NSLog(@"Open use time %d. %d", [self getSysTime]-_openStartTime, [self getSysTime]);
         if(_player.hPlayer)
         {
+//            int val = 1;
+//            _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &val);
             _player.Run(_player.hPlayer);
+            //_player.SetVolume(_player.hPlayer, 2000);
         }
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -83,7 +86,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else if (nID == QC_MSG_PLAY_COMPLETE)
     {
         int status = *(int*)pParam;
-        NSLog(@"EOS status %d", status);
+        NSLog(@"EOS status %d, %lld", status, _player.GetPos(_player.hPlayer));
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if(![self loopPlayback])
                 [self onStop: _btnStart];
@@ -148,30 +151,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _player.SetView(_player.hPlayer, (__bridge void*)view, drawRect);
 }
 
--(void) createPlayer
-{
-    if(_player.hPlayer)
-        return;
-    
-    qcCreatePlayer(&_player, NULL);
-    _player.SetNotify(_player.hPlayer, NotifyEvent, (__bridge void*)self);
-    
-//    CGRect r = _viewVideo.bounds;
-//    RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
-//    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
-    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
-    
-//    char* val = "127.0.0.1";
-//    _player.SetParam(_player.hPlayer, QCPLAY_PID_DNS_SERVER, (void*)val);
-    
-//    int nProtocol = QC_PARSER_M3U8;
-//    _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Format, &nProtocol);
-
-//    int val = 1;
-//    _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &val);
-    
-//    [self enableFileCacheMode];
-}
 
 -(void) destroyPlayer
 {
@@ -241,6 +220,32 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [task resume];
 }
 
+-(void) createPlayer
+{
+    if(_player.hPlayer)
+        return;
+    
+    qcCreatePlayer(&_player, NULL);
+    _player.SetNotify(_player.hPlayer, NotifyEvent, (__bridge void*)self);
+    
+    //    CGRect r = _viewVideo.bounds;
+    //    RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
+    //    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
+    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
+    
+//    char* val = "127.0.0.1";
+//    _player.SetParam(_player.hPlayer, QCPLAY_PID_DNS_SERVER, (void*)val);
+    
+    //    int nProtocol = QC_PARSER_M3U8;
+    //    _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Format, &nProtocol);
+    
+//    int loop = 1;
+//    _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &loop);
+    
+
+//    [self enableFileCacheMode];
+}
+
 -(void)prepareURL
 {
     if(_urlList)
@@ -273,7 +278,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@""];
     
 #if 1
-    [_urlList addObject:@"http://pili-live-hls.tv.xue5678.com/xydonline/xue_live_d4c1c094a16045a0b7363e730eb56ce1.m3u8"];
+    [_urlList addObject:@"rtmp://pili-live-rtmp.live-dev.edusoho.cn/live-dev-live/55bae139b4324a4b60554c17581c4724"];
+    [_urlList addObject:@"http://vlivehls.people.com.cn/2010/lh2018/hls/live_600.m3u8"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
     [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
@@ -571,7 +577,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else
     {
         [btn setTitle:@"PAUSE" forState:UIControlStateNormal];
-        _timer = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:100.0/100.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
         
         _networkConnectionErrorTime = -1;
         const char* url = [_urlList[_currURL] UTF8String];
