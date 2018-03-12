@@ -59,7 +59,12 @@ public interface BasePlayer {
 
 	// the param.
 	public static final int 	QCPLAY_PID_Reconnect		= 0X11000030;
-
+	
+	// Set / Get downloading pause or run. The default is run
+	// The param sould be int. 0 run, 1 pause.
+	// This should be called when downloading.
+	public static final int 	QCPLAY_PID_Download_Pause	= 0X11000031;
+	
 	// Set the perfer io protocol. Param should QC_IOPROTOCOL_HTTPPD 
 	// This should be called before open.
 	public static final int 	QCPLAY_PID_Prefer_Protocol	= 0X11000060;
@@ -181,7 +186,9 @@ public interface BasePlayer {
 	public static final int		QC_MSG_HTTP_RETURN_CODE			= 0x11000023;
 	public static final int		QC_MSG_HTTP_DOWNLOAD_FINISH		= 0x11000060;
 	public static final int		QC_MSG_HTTP_DOWNLOAD_PERCENT	= 0x11000061;
-	
+	// Param: long long bytes
+	public static final int		QC_MSG_HTTP_CONTENT_SIZE		= 0x11000062;
+		
 	// The obj is the string value
 	public static final int		QC_MSG_RTMP_METADATA			= 0x11010006;
 
