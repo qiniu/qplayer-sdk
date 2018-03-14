@@ -151,6 +151,11 @@ typedef struct
 // Set to reconnect source.
 #define	QCPLAY_PID_Reconnect		QC_PLAY_BASE + 0X30
 
+// Set / Get downloading pause or run. The default is run 
+// The param sould be int * . 0 run, 1 pause.
+// This should be called when downloading. 
+#define	QCPLAY_PID_Download_Pause	QC_PLAY_BASE + 0X31
+
 // Set the perfer file format. Param should QCParserFormat *
 // This should be called before open.
 #define	QCPLAY_PID_Prefer_Format	QC_PLAY_BASE + 0X50
