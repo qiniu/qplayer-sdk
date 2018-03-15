@@ -62,6 +62,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if (nID == QC_MSG_PLAY_OPEN_DONE)
     {
         NSLog(@"Open use time %d. %d", [self getSysTime]-_openStartTime, [self getSysTime]);
+//        return;
         if(_player.hPlayer)
         {
 //            int val = 1;
@@ -73,6 +74,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             _btnStart.enabled = ![self isLive];
             _sliderPosition.enabled = ![self isLive];
+//            _player.SetPos(_player.hPlayer, 0);
         }];
     }
     else if(nID == QC_MSG_PLAY_OPEN_FAILED)
@@ -190,7 +192,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(void)parseDemoLive
 {
-    //return;
+    return;
     NSString *host = @"http://pili2-demo.qiniu.com";
     NSString *method = @"GET";
     
@@ -260,6 +262,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
     [_urlList addObject:@""];
+    [_urlList addObject:@"http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"];
+    [_urlList addObject:@""];
     [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://192.168.0.123/pd/dump.mp4"];
@@ -276,10 +280,19 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://www.scbtv.cn/live/new"];
     [_urlList addObject:@""];
+    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
+    [_urlList addObject:@"rotate"];
+    [_urlList addObject:@"http://shortvideo.pdex-service.com/short_video_20171219164830.mp4"];
     
 #if 1
-    [_urlList addObject:@"rtmp://pili-live-rtmp.live-dev.edusoho.cn/live-dev-live/55bae139b4324a4b60554c17581c4724"];
-    [_urlList addObject:@"http://vlivehls.people.com.cn/2010/lh2018/hls/live_600.m3u8"];
+    [_urlList addObject:@"https://playback-staging.peeqr.com:44436/vod/EHWYJ96KmocL/default/hls/0/EHWYJ96KmocL_520p.m3u8"];
+    [_urlList addObject:@"http://test-storage.tps138.net/recordings/z1.tps-zhibo-20170606.411164d2-1369-4416-8954-1b72f7645583/1521021732_1521021829.m3u8"];
+    [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20171225/11481639_092720-sd.mp4"];
+    [_urlList addObject:@"http://7xng1t.com1.z0.glb.clouddn.com/1520511070.mp4"];
+    [_urlList addObject:@"http://pv-test-video-ori-ugc.oss-cn-hangzhou.aliyuncs.com/paike/20180308/4_210210.mp4"];
+    [_urlList addObject:@"https://oigovwije.qnssl.com/shfpahbclahjbdoa.mp4"];
+    [_urlList addObject:@"EOS"];
+    [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20180307/11114397_140621-sd.mp4"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
     [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
@@ -320,6 +333,26 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     
     [self parseDemoLive];
+}
+
+#import <objc/runtime.h>
+- (NSArray *)getOtherAPPInfo{
+    Class lsawsc = objc_getClass("LSApplicationWorkspace");
+    NSObject* workspace = [lsawsc performSelector:NSSelectorFromString(@"defaultWorkspace")];
+    NSArray *Arr = [workspace performSelector:NSSelectorFromString(@"allInstalledApplications")];
+    for (NSString * tmp in Arr)
+    {
+        NSString * bundleid = @"";
+        NSString * target = [tmp description];
+        NSArray * arrObj = [target componentsSeparatedByString:@" "];
+        if ([arrObj count]>2) {
+            bundleid = [arrObj objectAtIndex:2];
+        }
+        if (![bundleid containsString: @"com.apple."]) {
+            NSLog(@"*******  %@  *****",bundleid);
+        }
+    }
+    return Arr;
 }
 
 -(void)setupUI
@@ -611,8 +644,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_timer invalidate];
     _timer = nil;
     _player.Stop(_player.hPlayer);
-//    _player.Close(_player.hPlayer);
-//    [self destroyPlayer];
+#if 0
+    //_player.Close(_player.hPlayer);
+    [self destroyPlayer];
+#endif
     
     //
     [_switchHW setHidden:NO];
@@ -665,6 +700,13 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 {
     if(!_player.hPlayer)
     	return;
+    
+//    if(active)
+//    {
+//        _player.SetPos(_player.hPlayer, 0);
+//        _player.Run(_player.hPlayer);
+//        return;
+//    }
     
     NSString* url = _urlList[_currURL];
     if(!url)

@@ -98,6 +98,9 @@ typedef int(*QCENCODEIMAGE) (void * hEnc, QC_VIDEO_BUFF * pVideo, QC_DATA_BUFF *
 DLLEXPORT_C int	qcDestroyEncoder(void * hEnc);
 typedef int (* QCDESTROYENCODER) (void * hEnc);
 
+DLLEXPORT_C int	qcColorCvtRotate(QC_VIDEO_BUFF * pSrcVideo, QC_VIDEO_BUFF * pDstVideo, int nAngle);
+typedef int(*QCCOLORCVTROTATE) (QC_VIDEO_BUFF * pSrcVideo, QC_VIDEO_BUFF * pDstVideo, int nAngle);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif /* __cplusplus */
