@@ -58,6 +58,18 @@ extern "C" {
 // The parameter should be int *.
 #define QCIO_PID_HTTP_NOTIFYDL_PERCENT	QC_MOD_IO_HTTP + 0X03
 
+// Get HTTP buffer size
+// The parameter not used. return buffer size
+#define QCIO_PID_HTTP_BUFF_SIZE			QC_MOD_IO_HTTP + 0X04
+
+// Set HTTP Stop pos
+// The parameter should be long long *.
+#define QCIO_PID_HTTP_STOP_POS			QC_MOD_IO_HTTP + 0X05
+
+// Set HTTP need sleep when downloading
+// The parameter should be int *.
+#define QCIO_PID_HTTP_NEED_SLEEP		QC_MOD_IO_HTTP + 0X06
+
 // Set the ext lib file name
 // The parameter should be char *. 
 #define	QCIO_PID_EXT_LibName			QC_MOD_IO_BASE + 0X02

@@ -38,6 +38,7 @@
 #define QC_MSG_HTTP_DOWNLOAD_FINISH		0x11000060		// Param:
 #define QC_MSG_HTTP_DOWNLOAD_PERCENT	0x11000061		// Param: int 0 -100 %
 #define QC_MSG_HTTP_CONTENT_SIZE		0x11000062		// Param: long long bytes
+#define QC_MSG_HTTP_BUFFER_SIZE			0x11000063		// Param: long long bytes
 
 #define QC_MSG_RTMP_CONNECT_START		0x11010001		// Param: URL.
 #define QC_MSG_RTMP_CONNECT_FAILED		0x11010002		// Param:
