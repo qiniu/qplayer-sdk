@@ -188,7 +188,8 @@ public interface BasePlayer {
 	public static final int		QC_MSG_HTTP_DOWNLOAD_PERCENT	= 0x11000061;
 	// Param: long long bytes
 	public static final int		QC_MSG_HTTP_CONTENT_SIZE		= 0x11000062;
-		
+	public static final int		QC_MSG_HTTP_BUFFER_SIZE			= 0x11000063;	
+	
 	// The obj is the string value
 	public static final int		QC_MSG_RTMP_METADATA			= 0x11010006;
 

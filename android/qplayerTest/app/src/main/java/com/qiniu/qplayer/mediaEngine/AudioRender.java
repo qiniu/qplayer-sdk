@@ -20,8 +20,6 @@ import android.util.Log;
 public class AudioRender {
 	private static final String TAG = "YYLOGAudioRender";
 	
-	public static final int PARAM_PID_AUDIO_OFFSEST		= 0X300;
-		
 	private BasePlayer		mPlayer = null;
 	private AudioTrack 		mAudioTrack = null;
 	private int				mOffset = 0;
@@ -62,7 +60,7 @@ public class AudioRender {
 		if(mPlayer!=null) {
 			if (mOffset > 0)
 				param = param | 0X80000000;
-			mPlayer.SetParam (PARAM_PID_AUDIO_OFFSEST,  param, null);	
+			mPlayer.SetParam (mPlayer.QCPLAY_PID_Clock_OffTime,  param, null);	
 		}
 
 		mAudioTrack.play();
