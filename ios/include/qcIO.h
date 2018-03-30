@@ -26,10 +26,10 @@ extern "C" {
 #define	QCIO_FLAG_URL			8                                   /**< connect with URL  */
 
 
-#define QCIO_SEEK_SIZE			1
-#define QCIO_SEEK_BEGIN			2
-#define QCIO_SEEK_CUR			3
-#define QCIO_SEEK_END			4
+#define QCIO_SEEK_SIZE			0X1000
+#define QCIO_SEEK_BEGIN			0X2000
+#define QCIO_SEEK_CUR			0X3000
+#define QCIO_SEEK_END			0X4000
 
 #define QCIO_READ_DATA			0X0100
 #define QCIO_READ_HEAD			0X0200
