@@ -29,7 +29,7 @@
     UITableView*    _tableViewStreamInfo;
     UISlider*       _sliderPosition;
     UILabel*        _labelPlayingTime;
-    UISwitch*       _switchHW;
+    UISwitch*       _switchCache;
     UILabel*        _labelHW;
     UISwitch*       _switchSameSource;
     UILabel*        _labelSameSource;
@@ -65,8 +65,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 //        return;
         if(_player.hPlayer)
         {
-//            int val = 1;
-//            _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &val);
+#if 0
+            int val = 1;
+            _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &val);
+#endif
             _player.Run(_player.hPlayer);
             //_player.SetVolume(_player.hPlayer, 2000);
         }
@@ -92,6 +94,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if(![self loopPlayback])
                 [self onStop: _btnStart];
+//            _player.SetPos(_player.hPlayer, 0);
         }];
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
@@ -143,6 +146,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     {
         [self updateVideoSize:(QC_VIDEO_FORMAT *)pParam];
     }
+    else if(nID == QC_MSG_HTTP_BUFFER_SIZE)
+    {
+        NSLog(@"[EVT]Buffer size %lld\n", *(long long*)pParam);
+    }
 }
 
 -(void)setVideoView:(UIView*)view rect:(RECT*)drawRect
@@ -192,7 +199,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(void)parseDemoLive
 {
-    return;
+    //return;
     NSString *host = @"http://pili2-demo.qiniu.com";
     NSString *method = @"GET";
     
@@ -258,6 +265,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _currURL = 0;
     _clipboardURL = nil;
 
+    [_urlList addObject:@"http://video.qiniu.3tong.com/720_201883248781950976.mp4"];
+    [_urlList addObject:@"http://video.qiniu.3tong.com/720_182584969019785216.mp4"];
+    [_urlList addObject:@"http://video.qiniu.3tong.com/720_179737636708024320.mp4"];
+    [_urlList addObject:@"http://video.qiniu.3tong.com/720_188810429944823808.mp4"];
+    [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
+    [_urlList addObject:@"http://hcluploadffiles.oss-cn-hangzhou.aliyuncs.com/%E7%8E%AF%E4%BF%9D%E5%B0%8F%E8%A7%86%E9%A2%91.mp4"];
     [_urlList addObject:@"http://down.ttdtweb.com/test/Horrible.mp4"];
     [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
@@ -279,20 +292,13 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
     [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://www.scbtv.cn/live/new"];
-    [_urlList addObject:@""];
+    [_urlList addObject:@"HD"];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
-    [_urlList addObject:@"rotate"];
-    [_urlList addObject:@"http://shortvideo.pdex-service.com/short_video_20171219164830.mp4"];
+    [_urlList addObject:@"long duration"];
+    [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
     
 #if 1
-    [_urlList addObject:@"https://playback-staging.peeqr.com:44436/vod/EHWYJ96KmocL/default/hls/0/EHWYJ96KmocL_520p.m3u8"];
-    [_urlList addObject:@"http://test-storage.tps138.net/recordings/z1.tps-zhibo-20170606.411164d2-1369-4416-8954-1b72f7645583/1521021732_1521021829.m3u8"];
-    [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20171225/11481639_092720-sd.mp4"];
-    [_urlList addObject:@"http://7xng1t.com1.z0.glb.clouddn.com/1520511070.mp4"];
-    [_urlList addObject:@"http://pv-test-video-ori-ugc.oss-cn-hangzhou.aliyuncs.com/paike/20180308/4_210210.mp4"];
-    [_urlList addObject:@"https://oigovwije.qnssl.com/shfpahbclahjbdoa.mp4"];
-    [_urlList addObject:@"EOS"];
-    [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20180307/11114397_140621-sd.mp4"];
+    [_urlList addObject:@"http://down.ttdtweb.com/test/MTV.mp4"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
     [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
@@ -432,21 +438,21 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     //Switch HW and SW
     width = 80;
-    _switchHW = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - _labelPlayingTime.frame.size.width - width, _rectSmallScreen.origin.y + 50, width, 20)];
-    _switchHW.on = NO;
-    [_viewVideo addSubview:_switchHW];
+    _switchCache = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - _labelPlayingTime.frame.size.width - width, _rectSmallScreen.origin.y + 50, width, 20)];
+    _switchCache.on = NO;
+    [_viewVideo addSubview:_switchCache];
     // layout contraits
-    [_switchHW setTranslatesAutoresizingMaskIntoConstraints:NO];
-//    contraint2 = [NSLayoutConstraint constraintWithItem:_switchHW attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeLeft multiplier:1.0 constant:5.0];
-    contraint3 = [NSLayoutConstraint constraintWithItem:_switchHW attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeTop multiplier:1.0 constant:80.0];
-    contraint4 = [NSLayoutConstraint constraintWithItem:_switchHW attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeRight multiplier:1.0 constant:-10.0];
+    [_switchCache setTranslatesAutoresizingMaskIntoConstraints:NO];
+//    contraint2 = [NSLayoutConstraint constraintWithItem:_switchCache attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeLeft multiplier:1.0 constant:5.0];
+    contraint3 = [NSLayoutConstraint constraintWithItem:_switchCache attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeTop multiplier:1.0 constant:80.0];
+    contraint4 = [NSLayoutConstraint constraintWithItem:_switchCache attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeRight multiplier:1.0 constant:-10.0];
     array = [NSArray arrayWithObjects:contraint3, contraint4, nil, nil, nil, nil];
     [_viewVideo addConstraints:array];
     
     //Lable HW
     width = 80;
     _labelHW = [[UILabel alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width, _rectSmallScreen.origin.y+_rectSmallScreen.size.height + 50, width, 20)];
-    _labelHW.text = @"HW Enable:";
+    _labelHW.text = @"Cache:";
     _labelHW.font = [UIFont systemFontOfSize:15];
     _labelHW.textColor = [UIColor redColor];
     [_viewVideo addSubview:_labelHW];
@@ -595,14 +601,14 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     if(status == QC_PLAY_Pause)
     {
-        [_switchHW setHidden:YES];
+        [_switchCache setHidden:YES];
         [_labelHW setHidden:YES];
         [btn setTitle:@"PAUSE" forState:UIControlStateNormal];
         _player.Run(_player.hPlayer);
     }
     else if(status == QC_PLAY_Run)
     {
-        [_switchHW setHidden:NO];
+        [_switchCache setHidden:NO];
         [_labelHW setHidden:NO];
         [btn setTitle:@"START" forState:UIControlStateNormal];
         _player.Pause(_player.hPlayer);
@@ -617,14 +623,17 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         if(_clipboardURL)
             url = [_clipboardURL UTF8String];
         //_player.SetParam(_player.hPlayer, QCPLAY_PID_DRM_KeyText, (void*)"XXXXXXXXXXXX");
+        if(_switchCache.on)
+            [self enableFileCacheMode];
         _openStartTime = [self getSysTime];
         NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
-        _player.Open(_player.hPlayer, url, _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0);
+        _player.Open(_player.hPlayer, url, 0);
+        //_player.Open(_player.hPlayer, url, _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0);
         if(_clipboardURL)
         {
             _clipboardURL = nil;
         }
-        [_switchHW setHidden:YES];
+        [_switchCache setHidden:YES];
         [_labelHW setHidden:YES];
     }
     
@@ -645,12 +654,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _timer = nil;
     _player.Stop(_player.hPlayer);
 #if 0
-    //_player.Close(_player.hPlayer);
+    _player.Close(_player.hPlayer);
     [self destroyPlayer];
 #endif
     
     //
-    [_switchHW setHidden:NO];
+    [_switchCache setHidden:NO];
     [_labelHW setHidden:NO];
     [_sliderPosition setValue:0.0];
     [_tableViewStreamInfo removeFromSuperview];
@@ -731,7 +740,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     {
         if(isLive)
         {
-            int nVal = _switchHW.enabled?QC_PLAY_VideoDisable_Decoder|QC_PLAY_VideoDisable_Render:QC_PLAY_VideoDisable_Render;
+            int nVal = NO?QC_PLAY_VideoDisable_Decoder|QC_PLAY_VideoDisable_Render:QC_PLAY_VideoDisable_Render;
             _player.SetParam(_player.hPlayer, QCPLAY_PID_Disable_Video, &nVal);
         }
         else
@@ -1076,7 +1085,9 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             if(!strncmp(newURL, oldURL, end-oldURL))
             {
                 NSLog(@"+Fast open, %s", newURL);
-                int flag = _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0;
+                int flag = 0;//_switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0;
+                if(_switchCache.on)
+                    [self enableFileCacheMode];
                 _openStartTime = [self getSysTime];
                 NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
                 _player.Open(_player.hPlayer, newURL, (flag|QCPLAY_OPEN_SAME_SOURCE));
