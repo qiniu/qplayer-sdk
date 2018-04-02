@@ -237,22 +237,30 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     qcCreatePlayer(&_player, NULL);
     _player.SetNotify(_player.hPlayer, NotifyEvent, (__bridge void*)self);
     
-    //    CGRect r = _viewVideo.bounds;
-    //    RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
-    //    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
+#if 0
+    CGRect r = _viewVideo.bounds;
+    RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
+    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
+#else
     _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
-    
-//    char* val = "127.0.0.1";
-//    _player.SetParam(_player.hPlayer, QCPLAY_PID_DNS_SERVER, (void*)val);
-    
-    //    int nProtocol = QC_PARSER_M3U8;
-    //    _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Format, &nProtocol);
-    
-//    int loop = 1;
-//    _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &loop);
-    
+#endif
 
-//    [self enableFileCacheMode];
+#if 0
+    char* val = "127.0.0.1";
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_DNS_SERVER, (void*)val);
+#endif
+    
+#if 0
+    int nProtocol = QC_PARSER_M3U8;
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Format, &nProtocol);
+#endif
+    
+#if 1
+    int loop = 1;
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &loop);
+#endif
+    
+    [self enableFileCacheMode];
 }
 
 -(void)prepareURL
@@ -299,6 +307,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
 #if 1
     [_urlList addObject:@"http://down.ttdtweb.com/test/MTV.mp4"];
+    [_urlList addObject:@"rtmp://pili-live-rtmp.qiniu.tinberfm.com/live-yuanyu/maentao"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
     [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
@@ -627,8 +636,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             [self enableFileCacheMode];
         _openStartTime = [self getSysTime];
         NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
+#if 1
         _player.Open(_player.hPlayer, url, 0);
-        //_player.Open(_player.hPlayer, url, _switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0);
+#else
+        _player.Open(_player.hPlayer, url, QCPLAY_OPEN_VIDDEC_HW);
+#endif
         if(_clipboardURL)
         {
             _clipboardURL = nil;
@@ -788,6 +800,18 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(IBAction)onSelectStream:(id)sender
 {
+#if 0
+    if(_player.hPlayer)
+    {
+        _viewVideo.frame = CGRectMake(_rectSmallScreen.origin.x, _rectSmallScreen.origin.y,
+                                      _rectSmallScreen.size.width, _rectSmallScreen.size.height + 100);
+        CGRect r = _viewVideo.bounds;
+        RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
+        _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
+    }
+    return;
+#endif
+
     QCPLAY_STATUS status = _player.GetStatus(_player.hPlayer);
     
     if(status == QC_PLAY_Run)
