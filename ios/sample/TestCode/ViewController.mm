@@ -259,8 +259,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     int loop = 1;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &loop);
 #endif
-    
-    [self enableFileCacheMode];
 }
 
 -(void)prepareURL
