@@ -151,6 +151,11 @@ typedef struct
 // Set to reconnect source.
 #define	QCPLAY_PID_Reconnect		QC_PLAY_BASE + 0X30
 
+// Set / Get downloading pause or run. The default is run 
+// The param sould be int * . 0 run, 1 pause.
+// This should be called when downloading. 
+#define	QCPLAY_PID_Download_Pause	QC_PLAY_BASE + 0X31
+
 // Set the perfer file format. Param should QCParserFormat *
 // This should be called before open.
 #define	QCPLAY_PID_Prefer_Format	QC_PLAY_BASE + 0X50
@@ -247,6 +252,15 @@ typedef struct
 // Set the playback loop or not
 // The parameter should be int *. 0, no loop, 1 loop
 #define	QCPLAY_PID_Playback_Loop			QC_PLAY_BASE + 0X0340
+
+// Set the mp4 preload time
+// The parameter should be int *. it is ms to preload
+#define	QCPLAY_PID_MP4_PRELOAD				QC_PLAY_BASE + 0X0341
+
+// Set the ai tracking or not
+// The parameter should be int *. 0, disable, 1 enable
+#define	QCPLAY_PID_EXT_AITracking			QC_PLAY_BASE + 0X0350
+
 
 
 // the video aspect ratio.

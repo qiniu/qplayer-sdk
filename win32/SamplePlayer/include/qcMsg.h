@@ -36,6 +36,9 @@
 #define QC_MSG_HTTP_RECONNECT_FAILED	0x11000051		// Param: 
 #define QC_MSG_HTTP_RECONNECT_SUCESS	0x11000052		// Param:
 #define QC_MSG_HTTP_DOWNLOAD_FINISH		0x11000060		// Param:
+#define QC_MSG_HTTP_DOWNLOAD_PERCENT	0x11000061		// Param: int 0 -100 %
+#define QC_MSG_HTTP_CONTENT_SIZE		0x11000062		// Param: long long bytes
+#define QC_MSG_HTTP_BUFFER_SIZE			0x11000063		// Param: long long bytes
 
 #define QC_MSG_RTMP_CONNECT_START		0x11010001		// Param: URL.
 #define QC_MSG_RTMP_CONNECT_FAILED		0x11010002		// Param:
@@ -131,6 +134,7 @@
 #define QC_MSG_RENDER_VIDEO_FPS			0x19000001		//param: FPS of video render
 #define QC_MSG_RENDER_AUDIO_FPS			0x19000002		//param: FPS of audio render
 
+#define QC_MSG_THREAD_EXIT				0x20000001		//param: exit the work thread
 
 
 #endif // __QCMSG_H__

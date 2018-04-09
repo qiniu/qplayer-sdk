@@ -26,10 +26,10 @@ extern "C" {
 #define	QCIO_FLAG_URL			8                                   /**< connect with URL  */
 
 
-#define QCIO_SEEK_SIZE			1
-#define QCIO_SEEK_BEGIN			2
-#define QCIO_SEEK_CUR			3
-#define QCIO_SEEK_END			4
+#define QCIO_SEEK_SIZE			0X1000
+#define QCIO_SEEK_BEGIN			0X2000
+#define QCIO_SEEK_CUR			0X3000
+#define QCIO_SEEK_END			0X4000
 
 #define QCIO_READ_DATA			0X0100
 #define QCIO_READ_HEAD			0X0200
@@ -46,6 +46,10 @@ extern "C" {
 // The parameter is pos, it should be long long *. 
 #define	QCIO_PID_SourceType				QC_MOD_IO_BASE + 0X01
 
+// Set the IO Exit read if not ready
+// The parameter is int *.
+#define	QCIO_PID_EXIT_READ				QC_MOD_IO_BASE + 0X02
+
 // Set the http host header 
 // The parameter should be char *. 
 #define	QCIO_PID_HTTP_HeadHost			QC_MOD_IO_HTTP + 0X01
@@ -53,6 +57,22 @@ extern "C" {
 // Get HTTP content type
 // The parameter should be char **.
 #define QCIO_PID_HTTP_CONTENT_TYPE		QC_MOD_IO_HTTP + 0X02
+
+// Set HTTP notify download percent
+// The parameter should be int *.
+#define QCIO_PID_HTTP_NOTIFYDL_PERCENT	QC_MOD_IO_HTTP + 0X03
+
+// Get HTTP buffer size
+// The parameter not used. return buffer size
+#define QCIO_PID_HTTP_BUFF_SIZE			QC_MOD_IO_HTTP + 0X04
+
+// Set HTTP Stop pos
+// The parameter should be long long *.
+#define QCIO_PID_HTTP_STOP_POS			QC_MOD_IO_HTTP + 0X05
+
+// Set HTTP need sleep when downloading
+// The parameter should be int *.
+#define QCIO_PID_HTTP_NEED_SLEEP		QC_MOD_IO_HTTP + 0X06
 
 // Set the ext lib file name
 // The parameter should be char *. 
