@@ -30,9 +30,11 @@
     UISlider*       _sliderPosition;
     UILabel*        _labelPlayingTime;
     UISwitch*       _switchCache;
-    UILabel*        _labelHW;
+    UILabel*        _labelCache;
     UISwitch*       _switchSameSource;
     UILabel*        _labelSameSource;
+    UISwitch*       _switchLoop;
+    UILabel*        _labelLoop;
     UILabel*        _labelVersion;
     UIButton*       _btnCancelSelectStream;
     
@@ -44,6 +46,7 @@
     NSString*		_clipboardURL;
     BOOL			_loopPlayback;
     int				_openStartTime;
+    QC_VIDEO_FORMAT _fmtVideo;
 }
 @end
 
@@ -92,9 +95,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         int status = *(int*)pParam;
         NSLog(@"EOS status %d, %lld", status, _player.GetPos(_player.hPlayer));
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+#if 1
             if(![self loopPlayback])
                 [self onStop: _btnStart];
-//            _player.SetPos(_player.hPlayer, 0);
+#else
+            _player.SetPos(_player.hPlayer, 0);
+#endif
         }];
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
@@ -144,11 +150,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     else if(nID == QC_MSG_SNKV_NEW_FORMAT)
     {
+        memcpy(&_fmtVideo, pParam, sizeof(QC_VIDEO_FORMAT));
         [self updateVideoSize:(QC_VIDEO_FORMAT *)pParam];
     }
     else if(nID == QC_MSG_HTTP_BUFFER_SIZE)
     {
-        NSLog(@"[EVT]Buffer size %lld\n", *(long long*)pParam);
+        //NSLog(@"[EVT]Buffer size %lld\n", *(long long*)pParam);
     }
 }
 
@@ -255,9 +262,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Format, &nProtocol);
 #endif
     
-#if 1
-    int loop = 1;
-    _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &loop);
+#if 0
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_DNS_DETECT, (void*)"live.hkstv.hk.lxdns.com");
 #endif
 }
 
@@ -271,6 +277,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _currURL = 0;
     _clipboardURL = nil;
 
+    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5ac02bd3a3d5ec2abf7ca078/9cda9fa7b694be77598aec352e7b0928.mp4"];
+    [_urlList addObject:@"http://47.97.192.26:80/g519s0t1523515432807SI2u7i10.audio.flv"];
+    [_urlList addObject:@"http://shortvideo.ku6.com/lsdMlVlQC5oPpvowW9Xf4ZqnDJI2"];
+    [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/test.mp4"];
+    [_urlList addObject:@"-------------------------------------------------------------------------------"];
+/*
     [_urlList addObject:@"http://video.qiniu.3tong.com/720_201883248781950976.mp4"];
     [_urlList addObject:@"http://video.qiniu.3tong.com/720_182584969019785216.mp4"];
     [_urlList addObject:@"http://video.qiniu.3tong.com/720_179737636708024320.mp4"];
@@ -278,6 +290,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
     [_urlList addObject:@"http://hcluploadffiles.oss-cn-hangzhou.aliyuncs.com/%E7%8E%AF%E4%BF%9D%E5%B0%8F%E8%A7%86%E9%A2%91.mp4"];
     [_urlList addObject:@"http://down.ttdtweb.com/test/Horrible.mp4"];
+ */
     [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
     [_urlList addObject:@""];
@@ -290,6 +303,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://183.146.213.65/live/hks?domain=live.hkstv.hk.lxdns.com"];
+    [_urlList addObject:@"rtmp://::2001:2:0:1baa:0:0/live/hks?domain=live.hkstv.hk.lxdns.com"];
+    
     [_urlList addObject:@""];
     [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/bipbopall.m3u8"];
     [_urlList addObject:@""];
@@ -298,14 +313,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
     [_urlList addObject:@""];
     [_urlList addObject:@"rtmp://www.scbtv.cn/live/new"];
+    [_urlList addObject:@"Supper HD"];
+    [_urlList addObject:@"http://down.ttdtweb.com/test/MTV.mp4"];
     [_urlList addObject:@"HD"];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
-    [_urlList addObject:@"long duration"];
+    [_urlList addObject:@"2 hours"];
     [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
+    [_urlList addObject:@"pure video"];
+    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/snowday.mp4"];
     
 #if 1
-    [_urlList addObject:@"http://down.ttdtweb.com/test/MTV.mp4"];
-    [_urlList addObject:@"rtmp://pili-live-rtmp.qiniu.tinberfm.com/live-yuanyu/maentao"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
     [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
@@ -430,9 +447,9 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     array = [NSArray arrayWithObjects:contraint3, contraint4, nil, nil, nil, nil];
     [_viewVideo addConstraints:array];
     
-    // Cache for MP4
+    // Fast open
     width = 80;
-    _switchSameSource = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width +20, _rectSmallScreen.origin.y + 90, width, 20)];
+    _switchSameSource = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width +20, _rectSmallScreen.origin.y + 100, width, 20)];
     _switchSameSource.on = NO;
     [_viewVideo addSubview:_switchSameSource];
     
@@ -443,32 +460,46 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _labelSameSource.textColor = [UIColor redColor];
     [_viewVideo addSubview:_labelSameSource];
     
-    //Switch HW and SW
+    //Switch Cache
     width = 80;
-    _switchCache = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - _labelPlayingTime.frame.size.width - width, _rectSmallScreen.origin.y + 50, width, 20)];
+    _switchCache = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - _labelPlayingTime.frame.size.width - width, _rectSmallScreen.origin.y + 60, width, 20)];
     _switchCache.on = NO;
     [_viewVideo addSubview:_switchCache];
     // layout contraits
     [_switchCache setTranslatesAutoresizingMaskIntoConstraints:NO];
 //    contraint2 = [NSLayoutConstraint constraintWithItem:_switchCache attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeLeft multiplier:1.0 constant:5.0];
-    contraint3 = [NSLayoutConstraint constraintWithItem:_switchCache attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeTop multiplier:1.0 constant:80.0];
+    contraint3 = [NSLayoutConstraint constraintWithItem:_switchCache attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeTop multiplier:1.0 constant:90.0];
     contraint4 = [NSLayoutConstraint constraintWithItem:_switchCache attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeRight multiplier:1.0 constant:-10.0];
     array = [NSArray arrayWithObjects:contraint3, contraint4, nil, nil, nil, nil];
     [_viewVideo addConstraints:array];
     
-    //Lable HW
+    //Lable Cache
     width = 80;
-    _labelHW = [[UILabel alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width, _rectSmallScreen.origin.y+_rectSmallScreen.size.height + 50, width, 20)];
-    _labelHW.text = @"Cache:";
-    _labelHW.font = [UIFont systemFontOfSize:15];
-    _labelHW.textColor = [UIColor redColor];
-    [_viewVideo addSubview:_labelHW];
+    _labelCache = [[UILabel alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width, _switchCache.frame.origin.y, width, 20)];
+    _labelCache.text = @"Cache:";
+    _labelCache.font = [UIFont systemFontOfSize:15];
+    _labelCache.textColor = [UIColor redColor];
+    [_viewVideo addSubview:_labelCache];
     // layout contraits
-    [_labelHW setTranslatesAutoresizingMaskIntoConstraints:NO];
-    contraint3 = [NSLayoutConstraint constraintWithItem:_labelHW attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeTop multiplier:1.0 constant:80.0];
-    contraint4 = [NSLayoutConstraint constraintWithItem:_labelHW attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeRight multiplier:1.0 constant:-80.0];
+    [_labelCache setTranslatesAutoresizingMaskIntoConstraints:NO];
+    contraint3 = [NSLayoutConstraint constraintWithItem:_labelCache attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeTop multiplier:1.0 constant:80.0];
+    contraint4 = [NSLayoutConstraint constraintWithItem:_labelCache attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeRight multiplier:1.0 constant:-80.0];
     array = [NSArray arrayWithObjects:contraint3, contraint4, nil, nil, nil, nil];
     [_viewVideo addConstraints:array];
+
+    // Loop
+    width = 80;
+    _switchLoop = [[UISwitch alloc] initWithFrame:CGRectMake(_rectSmallScreen.size.width - width +20, _rectSmallScreen.origin.y + 20, width, 20)];
+    _switchLoop.on = NO;
+    [_viewVideo addSubview:_switchLoop];
+    
+    width = 80;
+    _labelLoop = [[UILabel alloc] initWithFrame:CGRectMake(_switchSameSource.frame.origin.x - width, _switchLoop.frame.origin.y, width, 20)];
+    _labelLoop.text = @"Loop:";
+    _labelLoop.font = [UIFont systemFontOfSize:15];
+    _labelLoop.textColor = [UIColor redColor];
+    [_viewVideo addSubview:_labelLoop];
+
 
     //Lable version
     width = 80;
@@ -609,14 +640,14 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if(status == QC_PLAY_Pause)
     {
         [_switchCache setHidden:YES];
-        [_labelHW setHidden:YES];
+        [_labelCache setHidden:YES];
         [btn setTitle:@"PAUSE" forState:UIControlStateNormal];
         _player.Run(_player.hPlayer);
     }
     else if(status == QC_PLAY_Run)
     {
         [_switchCache setHidden:NO];
-        [_labelHW setHidden:NO];
+        [_labelCache setHidden:NO];
         [btn setTitle:@"START" forState:UIControlStateNormal];
         _player.Pause(_player.hPlayer);
     }
@@ -629,9 +660,15 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         const char* url = [_urlList[_currURL] UTF8String];
         if(_clipboardURL)
             url = [_clipboardURL UTF8String];
+        
+        // update options
         //_player.SetParam(_player.hPlayer, QCPLAY_PID_DRM_KeyText, (void*)"XXXXXXXXXXXX");
         if(_switchCache.on)
             [self enableFileCacheMode];
+        int loop = _switchLoop.on?1:0;
+        _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &loop);
+        
+        memset(&_fmtVideo, 0, sizeof(QC_VIDEO_FORMAT));
         _openStartTime = [self getSysTime];
         NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
 #if 1
@@ -644,7 +681,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             _clipboardURL = nil;
         }
         [_switchCache setHidden:YES];
-        [_labelHW setHidden:YES];
+        [_labelCache setHidden:YES];
     }
     
     NSLog(@"-Start");
@@ -670,7 +707,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     //
     [_switchCache setHidden:NO];
-    [_labelHW setHidden:NO];
+    [_labelCache setHidden:NO];
     [_sliderPosition setValue:0.0];
     [_tableViewStreamInfo removeFromSuperview];
     _tableViewStreamInfo = nil;
@@ -712,7 +749,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     NSString* strPos = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", pos / 3600, pos % 3600 / 60, pos % 3600 % 60];
     NSString* strDur = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", dur / 3600, dur % 3600 / 60, dur % 3600 % 60];
 
-    _labelPlayingTime.text = [NSString stringWithFormat: @"%@%@%@", strPos, @" / " , strDur];
+    _labelPlayingTime.text = [NSString stringWithFormat: @"%dx%d   %@%@%@", _fmtVideo.nWidth, _fmtVideo.nHeight, strPos, @" / " , strDur];
 }
 
 -(void)onAppActive:(BOOL)active
