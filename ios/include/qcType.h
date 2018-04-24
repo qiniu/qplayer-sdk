@@ -22,6 +22,7 @@ extern "C" {
 #elif defined __QC_OS_NDK__ || defined __QC_OS_IOS__
 #include <stddef.h>
 #include <string.h>
+#include <stdbool.h>
 #endif // __QC_OS_WIN32__
 
 #ifdef __QC_OS_WIN32__
