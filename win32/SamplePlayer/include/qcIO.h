@@ -25,7 +25,6 @@ extern "C" {
 #define QCIO_FLAG_READ_WRITE	(QCIO_FLAG_READ | QCIO_FLAG_WRITE)	/**< read-write pseudo flag */
 #define	QCIO_FLAG_URL			8                                   /**< connect with URL  */
 
-
 #define QCIO_SEEK_SIZE			0X1000
 #define QCIO_SEEK_BEGIN			0X2000
 #define QCIO_SEEK_CUR			0X3000
@@ -41,6 +40,12 @@ extern "C" {
 #define QCIO_OPEN_CONTENT		0X0200
 
 #define	QCIO_MAX_CONTENT_LEN	0X7FFFFFFFFFFFFFFF
+
+typedef struct
+{
+	long long	llPos;
+	int			nSize;
+} QCIO_READ_INFO;
 
 // Get the IO source type at special pos 
 // The parameter is pos, it should be long long *. 
@@ -73,6 +78,14 @@ extern "C" {
 // Set HTTP need sleep when downloading
 // The parameter should be int *.
 #define QCIO_PID_HTTP_NEED_SLEEP		QC_MOD_IO_HTTP + 0X06
+
+// Get HTTP had down or not
+// The parameter should be QCIO_READ_INFO *.
+#define QCIO_PID_HTTP_HAD_DOWNLOAD		QC_MOD_IO_HTTP + 0X07
+
+// Set HTTP PD delete the cache file
+// The parameter should be int * . 1 delete ,0 not
+#define QCIO_PID_HTTP_DEL_FILE			QC_MOD_IO_HTTP + 0X08
 
 // Set the ext lib file name
 // The parameter should be char *. 
