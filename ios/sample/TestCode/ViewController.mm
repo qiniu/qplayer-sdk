@@ -47,6 +47,8 @@
     BOOL			_loopPlayback;
     int				_openStartTime;
     QC_VIDEO_FORMAT _fmtVideo;
+    long long		_lastPlaybackPos;
+    BOOL			_playbackFromLastPos;
 }
 @end
 
@@ -68,18 +70,25 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 //        return;
         if(_player.hPlayer)
         {
-#if 0
+#if 1
             int val = 1;
             _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &val);
 #endif
-            _player.Run(_player.hPlayer);
-            //_player.SetVolume(_player.hPlayer, 2000);
+#if 0
+            int nVal = QC_PLAY_VideoDisable_Render;
+            _player.SetParam(_player.hPlayer, QCPLAY_PID_Disable_Video, &nVal);
+#endif
+            //_lastPlaybackPos = 20000;
+            if(_playbackFromLastPos && _lastPlaybackPos > 0)
+                _player.SetPos(_player.hPlayer, _lastPlaybackPos);
+            else
+                _player.Run(_player.hPlayer);
         }
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             _btnStart.enabled = ![self isLive];
             _sliderPosition.enabled = ![self isLive];
-//            _player.SetPos(_player.hPlayer, 0);
+//            _player.SetPos(_player.hPlayer, 60000);
         }];
     }
     else if(nID == QC_MSG_PLAY_OPEN_FAILED)
@@ -89,6 +98,14 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             [self showMessage:@"Open fail" duration:2.0];
             [self loopPlayback];
         }];
+    }
+    else if (nID == QC_MSG_PLAY_SEEK_DONE)
+    {
+        if(_playbackFromLastPos && _lastPlaybackPos > 0)
+        {
+            _player.Run(_player.hPlayer);
+            _lastPlaybackPos = -1;
+        }
     }
     else if (nID == QC_MSG_PLAY_COMPLETE)
     {
@@ -156,6 +173,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else if(nID == QC_MSG_HTTP_BUFFER_SIZE)
     {
         //NSLog(@"[EVT]Buffer size %lld\n", *(long long*)pParam);
+    }
+    else if(nID == QC_MSG_PLAY_CAPTURE_IMAGE)
+    {
+        NSLog(@"Capture data ready\n");
     }
 }
 
@@ -265,6 +286,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 #if 0
     _player.SetParam(_player.hPlayer, QCPLAY_PID_DNS_DETECT, (void*)"live.hkstv.hk.lxdns.com");
 #endif
+
+#if 0
+    int log = 5;
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_Log_Level, (void*)&log);
+#endif
+
 }
 
 -(void)prepareURL
@@ -277,10 +304,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _currURL = 0;
     _clipboardURL = nil;
 
-    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5ac02bd3a3d5ec2abf7ca078/9cda9fa7b694be77598aec352e7b0928.mp4"];
-    [_urlList addObject:@"http://47.97.192.26:80/g519s0t1523515432807SI2u7i10.audio.flv"];
-    [_urlList addObject:@"http://shortvideo.ku6.com/lsdMlVlQC5oPpvowW9Xf4ZqnDJI2"];
-    [_urlList addObject:@"https://ofmw8vyd3.qnssl.com/test.mp4"];
+    [_urlList addObject:@"http://public-img.51easymaster.com/ykyReplayPlainB141C681R4748?e=1525342661&token=oOGh_I-WMVoVcTRM2l4fwkJbQb91dK6_YKiYqNrE:NUdB7Phjs_QmuoJxAIbjDdxBqkQ="];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
 /*
     [_urlList addObject:@"http://video.qiniu.3tong.com/720_201883248781950976.mp4"];
@@ -321,6 +345,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
     [_urlList addObject:@"pure video"];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/snowday.mp4"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/apple.mp4"];
     
 #if 1
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
@@ -362,7 +388,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             [_urlList addObject:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName]];
     }
     
-    [self parseDemoLive];
+    //[self parseDemoLive];
 }
 
 #import <objc/runtime.h>
@@ -428,7 +454,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     NSLayoutConstraint *contraint4 = [NSLayoutConstraint constraintWithItem:_sliderPosition attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_viewVideo attribute:NSLayoutAttributeRight multiplier:1.0 constant:-5.0];
     NSArray* array = [NSArray arrayWithObjects:contraint2, contraint3, contraint4, nil, nil, nil];
     [_viewVideo addConstraints:array];
-    
+
     _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionTapGesture:)];
     [_sliderPosition addGestureRecognizer:_tapGesture];
     
@@ -620,6 +646,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [super viewDidLoad];
     
     //
+    _lastPlaybackPos = -1;
+    _playbackFromLastPos = YES;
     _loopPlayback = NO;
     [self enableAudioSession:YES];
     [self setupUI];
@@ -727,6 +755,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _isDragSlider = false;
     UISlider* slider = (UISlider *)sender;
     NSLog(@"Set pos %lld", (long long)((float)_player.GetDur(_player.hPlayer)*slider.value));
+    //_player.SetPos(_player.hPlayer, 2*60*60*1000+8*60*1000);
     _player.SetPos(_player.hPlayer, (long long)((float)_player.GetDur(_player.hPlayer)*slider.value));
 }
 
@@ -745,11 +774,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         else
             _sliderPosition.value = (float)pos/(float)dur;
     }
-    
+    //pos = 7741252/1000;
     NSString* strPos = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", pos / 3600, pos % 3600 / 60, pos % 3600 % 60];
     NSString* strDur = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", dur / 3600, dur % 3600 / 60, dur % 3600 % 60];
 
-    _labelPlayingTime.text = [NSString stringWithFormat: @"%dx%d   %@%@%@", _fmtVideo.nWidth, _fmtVideo.nHeight, strPos, @" / " , strDur];
+    _labelPlayingTime.text = [NSString stringWithFormat: @"%dx%d - %@%@%@", _fmtVideo.nWidth, _fmtVideo.nHeight, strPos, @" / " , strDur];
 }
 
 -(void)onAppActive:(BOOL)active
@@ -779,7 +808,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         }
         else
         {
-            _player.Run(_player.hPlayer);
+            //_player.Run(_player.hPlayer);
+            _player.Open(_player.hPlayer, [_urlList[_currURL] UTF8String], 0);
         }
         
     }
@@ -791,13 +821,20 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             _player.SetParam(_player.hPlayer, QCPLAY_PID_Disable_Video, &nVal);
         }
         else
-        	_player.Pause(_player.hPlayer);
+        {
+            _lastPlaybackPos = _player.GetPos(_player.hPlayer);
+            //_player.Pause(_player.hPlayer);
+            _player.Stop(_player.hPlayer);
+        }
     }
 }
 
 -(IBAction)onFullScreen:(id)sender
 {
-    //return [self onStop:_btnStart];
+//    long long n = 0;
+//    _player.SetParam(_player.hPlayer, QCPLAY_PID_Capture_Image, &n);
+//    return;
+
     if(!_isFullScreen)
     {
         _isFullScreen = YES;

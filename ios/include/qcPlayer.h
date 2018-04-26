@@ -238,7 +238,7 @@ typedef struct
 #define	QCPLAY_PID_Capture_Image			QC_PLAY_BASE + 0X0310
 
 // Set the log out level
-// The parameter should be int *. 0, None, 1 error, 2 warning, 3 info, 4 debug.
+// The parameter should be int *. 0, None, 1 error, 2 warning, 3 info, 4 debug, 5 dump.
 #define	QCPLAY_PID_Log_Level				QC_PLAY_BASE + 0X0320
 
 // Set to call back video buffer. It should be set after open before run.
