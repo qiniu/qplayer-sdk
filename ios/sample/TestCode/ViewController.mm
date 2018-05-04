@@ -47,12 +47,111 @@
     BOOL			_loopPlayback;
     int				_openStartTime;
     QC_VIDEO_FORMAT _fmtVideo;
-    long long		_lastPlaybackPos;
-    BOOL			_playbackFromLastPos;
 }
 @end
 
 @implementation ViewController
+-(void)prepareURL
+{
+    if(_urlList)
+        [_urlList removeAllObjects];
+    else
+        _urlList = [[NSMutableArray alloc] init];
+    
+    _currURL = 0;
+    _clipboardURL = nil;
+    
+//    [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/h265/2000k/265_test.m3u8 "];
+        [_urlList addObject:@"http://v.cdn.ibeiliao.com/recordings/z1.ibeiliao-test-tv.ibeiliaovideo9c133506ee8544009b8b420176aeee57/0_1525253004.mp4"];
+    //    [_urlList addObject:@"https://oigovwije.qnssl.com/IMG_1273.MP4"];
+    //    [_urlList addObject:@"http://video.pearvideo.com/mp4/short/20180502/cont-1335588-11989735_pkg-sd.mp4"];
+    //    [_urlList addObject:@"http://video.pearvideo.com/mp4/short/20180502/cont-1335437-11704643-160823_pkg-sd.mp4"];
+    [_urlList addObject:@"-------------------------------------------------------------------------------"];
+    /*
+     [_urlList addObject:@"http://video.qiniu.3tong.com/720_201883248781950976.mp4"];
+     [_urlList addObject:@"http://video.qiniu.3tong.com/720_182584969019785216.mp4"];
+     [_urlList addObject:@"http://video.qiniu.3tong.com/720_179737636708024320.mp4"];
+     [_urlList addObject:@"http://video.qiniu.3tong.com/720_188810429944823808.mp4"];
+     [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
+     [_urlList addObject:@"http://hcluploadffiles.oss-cn-hangzhou.aliyuncs.com/%E7%8E%AF%E4%BF%9D%E5%B0%8F%E8%A7%86%E9%A2%91.mp4"];
+     [_urlList addObject:@"http://down.ttdtweb.com/test/Horrible.mp4"];
+     */
+    [_urlList addObject:@""];
+    [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://192.168.0.123/pd/dump.mp4"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"rtmp://183.146.213.65/live/hks?domain=live.hkstv.hk.lxdns.com"];
+    [_urlList addObject:@"rtmp://::2001:2:0:1baa:0:0/live/hks?domain=live.hkstv.hk.lxdns.com"];
+    
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/bipbopall.m3u8"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"https://www.gtbluesky.com/test.mp3"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"rtmp://www.scbtv.cn/live/new"];
+    [_urlList addObject:@"Supper HD"];
+    [_urlList addObject:@"http://down.ttdtweb.com/test/MTV.mp4"];
+    [_urlList addObject:@"HD"];
+    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
+    [_urlList addObject:@"2 hours"];
+    [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
+    [_urlList addObject:@"pure video"];
+    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/snowday.mp4"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/apple.mp4"];
+    
+#if 1
+    [_urlList addObject:@"-------------------------------------------------------------------------------"];
+    [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
+    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
+    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/05/31/02/234148590598897664.mp4"];
+    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/06/29/09/244762267827998720.mp4"];
+    [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4"];
+    [_urlList addObject:@"http://180.153.100.199/bipbopall.m3u8?domain=ojpjb7lbl.bkt.clouddn.com"];
+    [_urlList addObject:@"https://oigovwije.qnssl.com/shfpahbclahjbdoa.mp4"];
+    [_urlList addObject:@"http://gslb.miaopai.com/stream/E26J9j~FuMDu0lX--GALbHiXg~LEH0wrGDyv4w__.mp4"];
+    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.m3u8"];
+    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.mp4"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"https://static.xingnl.tv/recordings/z1.xnlzb.67253/1509105606_1509114943.m3u8"];
+    [_urlList addObject:@"https://static.xingnl.tv/o_1bb6c4r3a1aqp1mo5187t1kqr1pagnr.mp4"];
+    [_urlList addObject:@"http://exam.xhbycm.net/test.flv"];
+    [_urlList addObject:@"http://pili-live-hdl.duimian.cn/loovee/doll_front.flv"];
+    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear4/prog_index.m3u8"];
+#endif
+    
+    NSString* docPathDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSLog(@"%@", docPathDir);
+    NSArray* fileList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:docPathDir error:nil];
+    
+    for (NSString *fileName in fileList)
+    {
+        if ([fileName hasSuffix:@".txt"] || [fileName hasSuffix:@".url"])
+        {
+            NSArray* URLs = [[NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName] encoding:NSUTF8StringEncoding error:nil] componentsSeparatedByString:@"\n"];
+            
+            for(NSString* url in URLs)
+            {
+                [_urlList addObject:[url stringByReplacingOccurrencesOfString:@"\r" withString:@""]];
+            }
+        }
+        else if(![fileName hasSuffix:@".log"])
+            [_urlList addObject:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName]];
+    }
+    
+    //[self parseDemoLive];
+}
+
 
 #pragma mark Player event callback
 void NotifyEvent (void * pUserData, int nID, void * pValue1)
@@ -70,7 +169,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 //        return;
         if(_player.hPlayer)
         {
-#if 1
+#if 0
             int val = 1;
             _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &val);
 #endif
@@ -78,11 +177,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             int nVal = QC_PLAY_VideoDisable_Render;
             _player.SetParam(_player.hPlayer, QCPLAY_PID_Disable_Video, &nVal);
 #endif
-            //_lastPlaybackPos = 20000;
-            if(_playbackFromLastPos && _lastPlaybackPos > 0)
-                _player.SetPos(_player.hPlayer, _lastPlaybackPos);
-            else
-                _player.Run(_player.hPlayer);
+            _player.Run(_player.hPlayer);
         }
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -101,11 +196,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
     {
-        if(_playbackFromLastPos && _lastPlaybackPos > 0)
-        {
-            _player.Run(_player.hPlayer);
-            _lastPlaybackPos = -1;
-        }
     }
     else if (nID == QC_MSG_PLAY_COMPLETE)
     {
@@ -291,125 +381,14 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     int log = 5;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_Log_Level, (void*)&log);
 #endif
-
-}
-
--(void)prepareURL
-{
-    if(_urlList)
-    	[_urlList removeAllObjects];
-    else
-    	_urlList = [[NSMutableArray alloc] init];
     
-    _currURL = 0;
-    _clipboardURL = nil;
-
-    [_urlList addObject:@"http://public-img.51easymaster.com/ykyReplayPlainB141C681R4748?e=1525342661&token=oOGh_I-WMVoVcTRM2l4fwkJbQb91dK6_YKiYqNrE:NUdB7Phjs_QmuoJxAIbjDdxBqkQ="];
-    [_urlList addObject:@"-------------------------------------------------------------------------------"];
-/*
-    [_urlList addObject:@"http://video.qiniu.3tong.com/720_201883248781950976.mp4"];
-    [_urlList addObject:@"http://video.qiniu.3tong.com/720_182584969019785216.mp4"];
-    [_urlList addObject:@"http://video.qiniu.3tong.com/720_179737636708024320.mp4"];
-    [_urlList addObject:@"http://video.qiniu.3tong.com/720_188810429944823808.mp4"];
-    [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
-    [_urlList addObject:@"http://hcluploadffiles.oss-cn-hangzhou.aliyuncs.com/%E7%8E%AF%E4%BF%9D%E5%B0%8F%E8%A7%86%E9%A2%91.mp4"];
-    [_urlList addObject:@"http://down.ttdtweb.com/test/Horrible.mp4"];
- */
-    [_urlList addObject:@""];
-    [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://192.168.0.123/pd/dump.mp4"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"rtmp://183.146.213.65/live/hks?domain=live.hkstv.hk.lxdns.com"];
-    [_urlList addObject:@"rtmp://::2001:2:0:1baa:0:0/live/hks?domain=live.hkstv.hk.lxdns.com"];
-    
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/bipbopall.m3u8"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"https://www.gtbluesky.com/test.mp3"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"rtmp://www.scbtv.cn/live/new"];
-    [_urlList addObject:@"Supper HD"];
-    [_urlList addObject:@"http://down.ttdtweb.com/test/MTV.mp4"];
-    [_urlList addObject:@"HD"];
-    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
-    [_urlList addObject:@"2 hours"];
-    [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
-    [_urlList addObject:@"pure video"];
-    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/snowday.mp4"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/apple.mp4"];
-    
-#if 1
-    [_urlList addObject:@"-------------------------------------------------------------------------------"];
-    [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
-    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
-    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/05/31/02/234148590598897664.mp4"];
-    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/06/29/09/244762267827998720.mp4"];
-    [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4"];
-    [_urlList addObject:@"http://180.153.100.199/bipbopall.m3u8?domain=ojpjb7lbl.bkt.clouddn.com"];
-    [_urlList addObject:@"https://oigovwije.qnssl.com/shfpahbclahjbdoa.mp4"];
-    [_urlList addObject:@"http://gslb.miaopai.com/stream/E26J9j~FuMDu0lX--GALbHiXg~LEH0wrGDyv4w__.mp4"];
-    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.m3u8"];
-    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.mp4"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"https://static.xingnl.tv/recordings/z1.xnlzb.67253/1509105606_1509114943.m3u8"];
-    [_urlList addObject:@"https://static.xingnl.tv/o_1bb6c4r3a1aqp1mo5187t1kqr1pagnr.mp4"];
-    [_urlList addObject:@"http://exam.xhbycm.net/test.flv"];
-    [_urlList addObject:@"http://pili-live-hdl.duimian.cn/loovee/doll_front.flv"];
-    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear4/prog_index.m3u8"];
+#if 0
+    int preLoadTime = 8000*10000;
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_MP4_PRELOAD, &preLoadTime);
 #endif
-    
-    NSString* docPathDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSLog(@"%@", docPathDir);
-    NSArray* fileList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:docPathDir error:nil];
-    
-    for (NSString *fileName in fileList)
-    {
-        if ([fileName hasSuffix:@".txt"] || [fileName hasSuffix:@".url"])
-        {
-            NSArray* URLs = [[NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName] encoding:NSUTF8StringEncoding error:nil] componentsSeparatedByString:@"\n"];
-            
-            for(NSString* url in URLs)
-            {
-                [_urlList addObject:[url stringByReplacingOccurrencesOfString:@"\r" withString:@""]];
-            }
-        }
-        else if(![fileName hasSuffix:@".log"])
-            [_urlList addObject:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName]];
-    }
-    
-    //[self parseDemoLive];
+
 }
 
-#import <objc/runtime.h>
-- (NSArray *)getOtherAPPInfo{
-    Class lsawsc = objc_getClass("LSApplicationWorkspace");
-    NSObject* workspace = [lsawsc performSelector:NSSelectorFromString(@"defaultWorkspace")];
-    NSArray *Arr = [workspace performSelector:NSSelectorFromString(@"allInstalledApplications")];
-    for (NSString * tmp in Arr)
-    {
-        NSString * bundleid = @"";
-        NSString * target = [tmp description];
-        NSArray * arrObj = [target componentsSeparatedByString:@" "];
-        if ([arrObj count]>2) {
-            bundleid = [arrObj objectAtIndex:2];
-        }
-        if (![bundleid containsString: @"com.apple."]) {
-            NSLog(@"*******  %@  *****",bundleid);
-        }
-    }
-    return Arr;
-}
 
 -(void)setupUI
 {
@@ -481,7 +460,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     width = 80;
     _labelSameSource = [[UILabel alloc] initWithFrame:CGRectMake(_switchSameSource.frame.origin.x - width, _switchSameSource.frame.origin.y, width, 20)];
-    _labelSameSource.text = @"Same SRC:";
+    _labelSameSource.text = @"Fast Mode:";
     _labelSameSource.font = [UIFont systemFontOfSize:15];
     _labelSameSource.textColor = [UIColor redColor];
     [_viewVideo addSubview:_labelSameSource];
@@ -646,8 +625,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [super viewDidLoad];
     
     //
-    _lastPlaybackPos = -1;
-    _playbackFromLastPos = YES;
     _loopPlayback = NO;
     [self enableAudioSession:YES];
     [self setupUI];
@@ -695,6 +672,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             [self enableFileCacheMode];
         int loop = _switchLoop.on?1:0;
         _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &loop);
+        
+        [self enablePlaybackFromPosition];
         
         memset(&_fmtVideo, 0, sizeof(QC_VIDEO_FORMAT));
         _openStartTime = [self getSysTime];
@@ -785,14 +764,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 {
     if(!_player.hPlayer)
     	return;
-    
-//    if(active)
-//    {
-//        _player.SetPos(_player.hPlayer, 0);
-//        _player.Run(_player.hPlayer);
-//        return;
-//    }
-    
+        
     NSString* url = _urlList[_currURL];
     if(!url)
         return;
@@ -808,8 +780,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         }
         else
         {
-            //_player.Run(_player.hPlayer);
-            _player.Open(_player.hPlayer, [_urlList[_currURL] UTF8String], 0);
+            _player.Run(_player.hPlayer);
         }
         
     }
@@ -822,9 +793,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         }
         else
         {
-            _lastPlaybackPos = _player.GetPos(_player.hPlayer);
-            //_player.Pause(_player.hPlayer);
-            _player.Stop(_player.hPlayer);
+            _player.Pause(_player.hPlayer);
         }
     }
 }
@@ -1186,6 +1155,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
                     [self enableFileCacheMode];
                 _openStartTime = [self getSysTime];
                 NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
+                [self enablePlaybackFromPosition];
                 _player.Open(_player.hPlayer, newURL, (flag|QCPLAY_OPEN_SAME_SOURCE));
                 NSLog(@"-Fast open");
                 return YES;
@@ -1258,6 +1228,17 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     NSLog(@"[V]Video size (%d x %d) -> (%d x %d)", pFmt->nWidth, pFmt->nHeight, nRndW, nRndH);
     return true;
+}
+
+- (void)enablePlaybackFromPosition
+{
+#if 1
+    int mode = 1;
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &mode);
+    
+    long long pos = 8000;
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_START_POS, &pos);
+#endif
 }
 
 
