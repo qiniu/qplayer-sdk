@@ -53,6 +53,9 @@ public interface BasePlayer {
 
 	// Set the seek mode. 0, key frame, 1 any pos. int.
 	public static final int		QCPLAY_PID_Seek_Mode		= 0X11000021;
+	
+	// Set the start position before play. xxx ms. int.
+	public static final int		QCPLAY_PID_START_POS		= 0X11000022;
 
 	// the param shoud null
 	public static final	int 	QCPLAY_PID_Flush_Buffer		= 0X11000025;

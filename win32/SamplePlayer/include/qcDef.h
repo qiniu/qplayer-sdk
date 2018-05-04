@@ -96,6 +96,8 @@ typedef struct tagRECT
 
 #define QC_MAX_NUM32	0XFFFFFFFF
 #define QC_MAX_NUM64	0XFFFFFFFFFFFFFFFF
+#define QC_MAX_NUM32_S	0X7FFFFFFF
+#define QC_MAX_NUM64_S	0X7FFFFFFFFFFFFFFF
 
 #ifdef __QC_OS_WIN32__
 #pragma warning (disable : 4996)

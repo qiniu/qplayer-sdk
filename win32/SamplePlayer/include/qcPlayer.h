@@ -145,6 +145,10 @@ typedef struct
 // This should be called after open done event.
 #define	QCPLAY_PID_Seek_Mode		QC_PLAY_BASE + 0X21
 
+// Set the start pos before play. long long *
+// This should be called before open.
+#define	QCPLAY_PID_START_POS		QC_PLAY_BASE + 0X22
+
 // Set. Flush the buffer.
 #define	QCPLAY_PID_Flush_Buffer		QC_PLAY_BASE + 0X25
 
