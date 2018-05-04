@@ -161,6 +161,7 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_PLAY_RUN					= 0x1600000C;
 	public static final int 	QC_MSG_PLAY_PAUSE				= 0x1600000D;
 	public static final int 	QC_MSG_PLAY_STOP				= 0x1600000E;
+	public static final int 	QC_MSG_PLAY_LOOP_TIMES			= 0x16000011;
 
 
 	// http protocol messaage id
