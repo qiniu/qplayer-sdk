@@ -142,7 +142,7 @@ typedef struct
 #define	QCPLAY_PID_Clock_OffTime	QC_PLAY_BASE + 0X20
 
 // Set the seek mode. 0, key frame, 1 any pos. int *.
-// This should be called after open done event.
+// This should be called before open if QCPLAY_PID_START_POS enabled.
 #define	QCPLAY_PID_Seek_Mode		QC_PLAY_BASE + 0X21
 
 // Set the start pos before play. long long *
