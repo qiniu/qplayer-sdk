@@ -47,6 +47,8 @@
     BOOL			_loopPlayback;
     int				_openStartTime;
     QC_VIDEO_FORMAT _fmtVideo;
+    long long		_lastPlaybackPos;
+    BOOL			_playbackFromLastPos;
 }
 @end
 
@@ -60,10 +62,14 @@
     
     _currURL = 0;
     _clipboardURL = nil;
-    
-//    [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/h265/2000k/265_test.m3u8 "];
-        [_urlList addObject:@"http://v.cdn.ibeiliao.com/recordings/z1.ibeiliao-test-tv.ibeiliaovideo9c133506ee8544009b8b420176aeee57/0_1525253004.mp4"];
-    //    [_urlList addObject:@"https://oigovwije.qnssl.com/IMG_1273.MP4"];
+
+    [_urlList addObject:@"https://oigovwije.qnssl.com/IMG_6437.MOV"];
+    [_urlList addObject:@"http://privatevideo.actuive.com/c04b83817e7dc5a4400cbb4f783089ce_0.m3u8"];
+    [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20180508/cont-1339392-10037108-062303-sd.mp4"];
+    [_urlList addObject:@"http://video.pearvideo.com/hls/live-cut/pearvideo/1338423-1525662659-sd.m3u8"];
+//    [_urlList addObject:@"http://public-img.51easymaster.com/ykyReplayPlainB141C681R4748?e=1525342661&token=oOGh_I-WMVoVcTRM2l4fwkJbQb91dK6_YKiYqNrE:NUdB7Phjs_QmuoJxAIbjDdxBqkQ="];
+//    [_urlList addObject:@"http://shortvideo.pdex-service.com/short_video_20180504162656.mp4"];
+//    [_urlList addObject:@"https://oigovwije.qnssl.com/IMG_1273.MP4"];
     //    [_urlList addObject:@"http://video.pearvideo.com/mp4/short/20180502/cont-1335588-11989735_pkg-sd.mp4"];
     //    [_urlList addObject:@"http://video.pearvideo.com/mp4/short/20180502/cont-1335437-11704643-160823_pkg-sd.mp4"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
@@ -108,6 +114,8 @@
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/snowday.mp4"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/apple.mp4"];
+    [_urlList addObject:@""];
+    [_urlList addObject:@"http://video.pearvideo.com/mp4/short/20180502/cont-1335588-11989735_pkg-sd.mp4"];
     
 #if 1
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
@@ -172,12 +180,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 #if 0
             int val = 1;
             _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &val);
+            _lastPlaybackPos = rand() % _player.GetDur(_player.hPlayer);
 #endif
 #if 0
             int nVal = QC_PLAY_VideoDisable_Render;
             _player.SetParam(_player.hPlayer, QCPLAY_PID_Disable_Video, &nVal);
 #endif
-            _player.Run(_player.hPlayer);
+            if(_playbackFromLastPos && _lastPlaybackPos > 0)
+                _player.SetPos(_player.hPlayer, _lastPlaybackPos);
+            else
+                _player.Run(_player.hPlayer);
         }
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -196,18 +208,20 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
     {
+        if(_playbackFromLastPos && _lastPlaybackPos > 0)
+        {
+            _player.Run(_player.hPlayer);
+            _lastPlaybackPos = -1;
+        }
     }
     else if (nID == QC_MSG_PLAY_COMPLETE)
     {
         int status = *(int*)pParam;
         NSLog(@"EOS status %d, %lld", status, _player.GetPos(_player.hPlayer));
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-#if 1
-            if(![self loopPlayback])
-                [self onStop: _btnStart];
-#else
-            _player.SetPos(_player.hPlayer, 0);
-#endif
+
+        if(![self loopPlayback])
+            [self onStop: _btnStart];
         }];
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
@@ -267,6 +281,14 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else if(nID == QC_MSG_PLAY_CAPTURE_IMAGE)
     {
         NSLog(@"Capture data ready\n");
+    }
+    else if (nID == QC_MSG_BUFF_START_BUFFERING)
+    {
+        NSLog(@"START_BUFFERING\n");
+    }
+    else if (nID == QC_MSG_BUFF_END_BUFFERING)
+    {
+        NSLog(@"END_BUFFERING\n");
     }
 }
 
@@ -386,7 +408,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     int preLoadTime = 8000*10000;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_MP4_PRELOAD, &preLoadTime);
 #endif
-
+    
+#if 0
+    int mode = 1;
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &mode);
+#endif
+    
+#if 0
+    unsigned char key[16] = {0x64,0x48,0x38,0x6a,0x71,0x53,0x68,0x78,0x57,0x43,0x4a,0x4e,0x70,0x77,0x6c,0x78};
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_DRM_KeyText, (void*)key);
+#endif
 }
 
 
@@ -421,7 +452,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     // Position slider
     _sliderPosition = [[UISlider alloc] initWithFrame:CGRectMake(0, _rectSmallScreen.origin.y+_rectSmallScreen.size.height - 40, _rectSmallScreen.size.width, 20)];
     [_sliderPosition addTarget:self action:@selector(onPositionChange:) forControlEvents:UIControlEventTouchUpInside];
+    //[_sliderPosition addTarget:self action:@selector(onPositionChange:) forControlEvents:UIControlEventTouchUpOutside];
     [_sliderPosition addTarget:self action:@selector(onPositionChangeBegin:) forControlEvents:UIControlEventTouchDown];
+//    [_sliderPosition addTarget:self action:@selector(onPositionChangeBegin:) forControlEvents:UIControlEventTouchDragInside];
+//    [_sliderPosition addTarget:self action:@selector(onPositionChangeBegin:) forControlEvents:UIControlEventTouchDragOutside];
+    
+    
     _sliderPosition.minimumValue = 0.0;
     _sliderPosition.maximumValue = 1.0;
     [_sliderPosition setThumbImage:[UIImage imageNamed:@"seekbar.png"] forState:UIControlStateNormal];
@@ -625,6 +661,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [super viewDidLoad];
     
     //
+    _lastPlaybackPos = -1;
+    _playbackFromLastPos = YES;
     _loopPlayback = NO;
     [self enableAudioSession:YES];
     [self setupUI];
@@ -659,7 +697,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else
     {
         [btn setTitle:@"PAUSE" forState:UIControlStateNormal];
-        _timer = [NSTimer scheduledTimerWithTimeInterval:100.0/100.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:10.0/100.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
         
         _networkConnectionErrorTime = -1;
         const char* url = [_urlList[_currURL] UTF8String];
@@ -667,7 +705,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             url = [_clipboardURL UTF8String];
         
         // update options
-        //_player.SetParam(_player.hPlayer, QCPLAY_PID_DRM_KeyText, (void*)"XXXXXXXXXXXX");
         if(_switchCache.on)
             [self enableFileCacheMode];
         int loop = _switchLoop.on?1:0;
@@ -733,9 +770,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     _isDragSlider = false;
     UISlider* slider = (UISlider *)sender;
-    NSLog(@"Set pos %lld", (long long)((float)_player.GetDur(_player.hPlayer)*slider.value));
+    long long newPos = (long long)((float)_player.GetDur(_player.hPlayer)*slider.value);
+    NSLog(@"Set pos %lld, playing time %lld", newPos, _player.GetPos(_player.hPlayer));
     //_player.SetPos(_player.hPlayer, 2*60*60*1000+8*60*1000);
-    _player.SetPos(_player.hPlayer, (long long)((float)_player.GetDur(_player.hPlayer)*slider.value));
+    _player.SetPos(_player.hPlayer, newPos);
 }
 
 - (IBAction)onTimer:(id)sender
@@ -745,7 +783,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     long long pos = _player.GetPos(_player.hPlayer) / 1000;
     long long dur = _player.GetDur(_player.hPlayer) / 1000;
-    //NSLog(@"Pos %lld, duration %lld", _player.GetPos(_player.hPlayer), _player.GetDur(_player.hPlayer));
+    static long long lastPos = 0;
+    if(lastPos == 0)
+        lastPos = _player.GetPos(_player.hPlayer);
+    NSLog(@"Pos %lld, duration %lld, interval %lld", _player.GetPos(_player.hPlayer), _player.GetDur(_player.hPlayer), _player.GetPos(_player.hPlayer)-lastPos);
+    lastPos = _player.GetPos(_player.hPlayer);;
     if(!_isDragSlider)
     {
         if(dur <= 0)
@@ -764,7 +806,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 {
     if(!_player.hPlayer)
     	return;
-        
+    
     NSString* url = _urlList[_currURL];
     if(!url)
         return;
@@ -1232,11 +1274,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 - (void)enablePlaybackFromPosition
 {
-#if 1
+#if 0
     int mode = 1;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &mode);
     
-    long long pos = 8000;
+    long long pos = 190*1000;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_START_POS, &pos);
 #endif
 }
