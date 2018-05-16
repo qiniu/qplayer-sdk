@@ -225,6 +225,10 @@ typedef struct
 // The parameter should be char *. "www.qiniu.com"
 #define	QCPLAY_PID_DNS_DETECT				QC_PLAY_BASE + 0X0209
 
+// detect the net work type had changed
+// The parameter none
+#define	QCPLAY_PID_NET_CHANGED				QC_PLAY_BASE + 0X020A
+
 // Set / get the max buffer time
 // The parameter should be int *. (ms)
 #define	QCPLAY_PID_PlayBuff_MaxTime			QC_PLAY_BASE + 0X0211
