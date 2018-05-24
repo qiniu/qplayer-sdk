@@ -63,8 +63,10 @@
     _currURL = 0;
     _clipboardURL = nil;
 
-    [_urlList addObject:@"https://oigovwije.qnssl.com/IMG_6437.MOV"];
-    [_urlList addObject:@"http://privatevideo.actuive.com/c04b83817e7dc5a4400cbb4f783089ce_0.m3u8"];
+    [_urlList addObject:@"http://video.hoozha.cn/video_H556226_1526349904646"];
+    [_urlList addObject:@"http://dev-video-touchtv.oss-cn-shenzhen.aliyuncs.com/video/20180516/ad51cb0dfbe4cf2b1526436711__sd---.mp4"];
+    [_urlList addObject:@"http://dev.storage.singworld.net/3/34/83215_LOW_20180324124008_0.aac"];
+    [_urlList addObject:@"http://video.mb.moko.cc/2017-11-27/f10f19fe-64a8-4340-bc90-ab59bbafb857.mp4/be0fe625-6d3a-46e2-951d-8aa413df555d/AUTO.m3u8"];
     [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20180508/cont-1339392-10037108-062303-sd.mp4"];
     [_urlList addObject:@"http://video.pearvideo.com/hls/live-cut/pearvideo/1338423-1525662659-sd.m3u8"];
 //    [_urlList addObject:@"http://public-img.51easymaster.com/ykyReplayPlainB141C681R4748?e=1525342661&token=oOGh_I-WMVoVcTRM2l4fwkJbQb91dK6_YKiYqNrE:NUdB7Phjs_QmuoJxAIbjDdxBqkQ="];
@@ -110,12 +112,16 @@
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
     [_urlList addObject:@"2 hours"];
     [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
+    [_urlList addObject:@"http://video.pearvideo.com/hls/live-cut/pearvideo/1338423-1525662659-sd.m3u8"];
+    [_urlList addObject:@"http://video.hoozha.cn/video_H556226_1526349904646"];
     [_urlList addObject:@"pure video"];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/snowday.mp4"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/apple.mp4"];
     [_urlList addObject:@""];
     [_urlList addObject:@"http://video.pearvideo.com/mp4/short/20180502/cont-1335588-11989735_pkg-sd.mp4"];
+    [_urlList addObject:@"H265"];
+    [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/h265/2000k/265_test.m3u8"];
     
 #if 1
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
@@ -157,7 +163,7 @@
             [_urlList addObject:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName]];
     }
     
-    //[self parseDemoLive];
+    [self parseDemoLive];
 }
 
 
@@ -339,7 +345,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(void)parseDemoLive
 {
-    //return;
+    return;
     NSString *host = @"http://pili2-demo.qiniu.com";
     NSString *method = @"GET";
     
@@ -697,7 +703,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else
     {
         [btn setTitle:@"PAUSE" forState:UIControlStateNormal];
-        _timer = [NSTimer scheduledTimerWithTimeInterval:10.0/100.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:100.0/100.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
         
         _networkConnectionErrorTime = -1;
         const char* url = [_urlList[_currURL] UTF8String];
@@ -786,7 +792,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     static long long lastPos = 0;
     if(lastPos == 0)
         lastPos = _player.GetPos(_player.hPlayer);
-    NSLog(@"Pos %lld, duration %lld, interval %lld", _player.GetPos(_player.hPlayer), _player.GetDur(_player.hPlayer), _player.GetPos(_player.hPlayer)-lastPos);
+    //NSLog(@"Pos %lld, duration %lld, interval %lld", _player.GetPos(_player.hPlayer), _player.GetDur(_player.hPlayer), _player.GetPos(_player.hPlayer)-lastPos);
     lastPos = _player.GetPos(_player.hPlayer);;
     if(!_isDragSlider)
     {
@@ -842,9 +848,16 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(IBAction)onFullScreen:(id)sender
 {
-//    long long n = 0;
-//    _player.SetParam(_player.hPlayer, QCPLAY_PID_Capture_Image, &n);
-//    return;
+#if 0
+    [self onStop:nil];
+    return;
+#endif
+    
+#if 0
+    long long n = 0;
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_Capture_Image, &n);
+    return;
+#endif
 
     if(!_isFullScreen)
     {
