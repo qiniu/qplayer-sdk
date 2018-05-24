@@ -55,6 +55,14 @@ typedef struct
 // The parameter is int *.
 #define	QCIO_PID_EXIT_READ				QC_MOD_IO_BASE + 0X02
 
+// Set the ext lib file name
+// The parameter should be char *. 
+#define	QCIO_PID_EXT_LibName			QC_MOD_IO_BASE + 0X03
+
+// Set the file key
+// The parameter is char *.
+#define	QCIO_PID_FILE_KEY				QC_MOD_IO_FILE + 0X01
+
 // Set the http host header 
 // The parameter should be char *. 
 #define	QCIO_PID_HTTP_HeadHost			QC_MOD_IO_HTTP + 0X01
@@ -87,9 +95,9 @@ typedef struct
 // The parameter should be int * . 1 delete ,0 not
 #define QCIO_PID_HTTP_DEL_FILE			QC_MOD_IO_HTTP + 0X08
 
-// Set the ext lib file name
-// The parameter should be char *. 
-#define	QCIO_PID_EXT_LibName			QC_MOD_IO_BASE + 0X02
+// Get HTTP PD save file size
+// The parameter should be long long *
+#define QCIO_PID_HTTP_SAVE_SIZE			QC_MOD_IO_HTTP + 0X09
     
 // Get RTMP audio message timestamp
 // The parameter should be long long *.

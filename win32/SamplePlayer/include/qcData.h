@@ -48,6 +48,7 @@ typedef enum {
     QC_PARSER_MP3,
     QC_PARSER_AAC,
 	QC_PARSER_RTSP,
+	QC_PARSER_FFCAT,
 	QC_PARSER_MAX = 0X7FFFFFFF
 }QCParserFormat;
 

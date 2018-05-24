@@ -142,7 +142,8 @@ typedef struct
 #define	QCPLAY_PID_Clock_OffTime	QC_PLAY_BASE + 0X20
 
 // Set the seek mode. 0, key frame, 1 any pos. int *.
-// This should be called after open done event.
+// This can be called anytime
+// But it must be called before open if QCPLAY_PID_START_POS enabled.
 #define	QCPLAY_PID_Seek_Mode		QC_PLAY_BASE + 0X21
 
 // Set the start pos before play. long long *
@@ -224,6 +225,10 @@ typedef struct
 // The parameter should be char *. "www.qiniu.com"
 #define	QCPLAY_PID_DNS_DETECT				QC_PLAY_BASE + 0X0209
 
+// detect the net work type had changed
+// The parameter none
+#define	QCPLAY_PID_NET_CHANGED				QC_PLAY_BASE + 0X020A
+
 // Set / get the max buffer time
 // The parameter should be int *. (ms)
 #define	QCPLAY_PID_PlayBuff_MaxTime			QC_PLAY_BASE + 0X0211
@@ -235,6 +240,10 @@ typedef struct
 // Set the DRM key 
 // The parameter should be char *.
 #define	QCPLAY_PID_DRM_KeyText				QC_PLAY_BASE + 0X0301
+
+// Set the file key 
+// The parameter should be char *.
+#define	QCPLAY_PID_FILE_KeyText				QC_PLAY_BASE + 0X0302
 
 // Set to capture video image
 // The parameter should be long long * (ms). capture time. 0 is immediatily.
