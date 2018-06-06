@@ -37,6 +37,7 @@
     UILabel*        _labelLoop;
     UILabel*        _labelVersion;
     UIButton*       _btnCancelSelectStream;
+    UIActivityIndicatorView* _waitView;
     
     NSTimer*        _timer;
     
@@ -46,6 +47,7 @@
     NSString*		_clipboardURL;
     BOOL			_loopPlayback;
     int				_openStartTime;
+    int				_firstFrameTime;
     QC_VIDEO_FORMAT _fmtVideo;
     long long		_lastPlaybackPos;
     BOOL			_playbackFromLastPos;
@@ -63,86 +65,22 @@
     _currURL = 0;
     _clipboardURL = nil;
 
-    [_urlList addObject:@"http://video.hoozha.cn/video_H556226_1526349904646"];
-    [_urlList addObject:@"http://dev-video-touchtv.oss-cn-shenzhen.aliyuncs.com/video/20180516/ad51cb0dfbe4cf2b1526436711__sd---.mp4"];
-    [_urlList addObject:@"http://dev.storage.singworld.net/3/34/83215_LOW_20180324124008_0.aac"];
-    [_urlList addObject:@"http://video.mb.moko.cc/2017-11-27/f10f19fe-64a8-4340-bc90-ab59bbafb857.mp4/be0fe625-6d3a-46e2-951d-8aa413df555d/AUTO.m3u8"];
-    [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20180508/cont-1339392-10037108-062303-sd.mp4"];
-    [_urlList addObject:@"http://video.pearvideo.com/hls/live-cut/pearvideo/1338423-1525662659-sd.m3u8"];
-//    [_urlList addObject:@"http://public-img.51easymaster.com/ykyReplayPlainB141C681R4748?e=1525342661&token=oOGh_I-WMVoVcTRM2l4fwkJbQb91dK6_YKiYqNrE:NUdB7Phjs_QmuoJxAIbjDdxBqkQ="];
-//    [_urlList addObject:@"http://shortvideo.pdex-service.com/short_video_20180504162656.mp4"];
-//    [_urlList addObject:@"https://oigovwije.qnssl.com/IMG_1273.MP4"];
-    //    [_urlList addObject:@"http://video.pearvideo.com/mp4/short/20180502/cont-1335588-11989735_pkg-sd.mp4"];
-    //    [_urlList addObject:@"http://video.pearvideo.com/mp4/short/20180502/cont-1335437-11704643-160823_pkg-sd.mp4"];
+    [_urlList addObject:@"http://nclive.grtn.cn/zjpd/playlist.m3u8?_upt=6eac0a671527759000&token=c739022aba5e40029ebbc71047bb9510"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
-    /*
-     [_urlList addObject:@"http://video.qiniu.3tong.com/720_201883248781950976.mp4"];
-     [_urlList addObject:@"http://video.qiniu.3tong.com/720_182584969019785216.mp4"];
-     [_urlList addObject:@"http://video.qiniu.3tong.com/720_179737636708024320.mp4"];
-     [_urlList addObject:@"http://video.qiniu.3tong.com/720_188810429944823808.mp4"];
-     [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
-     [_urlList addObject:@"http://hcluploadffiles.oss-cn-hangzhou.aliyuncs.com/%E7%8E%AF%E4%BF%9D%E5%B0%8F%E8%A7%86%E9%A2%91.mp4"];
-     [_urlList addObject:@"http://down.ttdtweb.com/test/Horrible.mp4"];
-     */
-    [_urlList addObject:@""];
-    [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://192.168.0.123/pd/058-EminemiPodAd.mp4"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://192.168.0.123/pd/dump.mp4"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"rtmp://183.146.213.65/live/hks?domain=live.hkstv.hk.lxdns.com"];
-    [_urlList addObject:@"rtmp://::2001:2:0:1baa:0:0/live/hks?domain=live.hkstv.hk.lxdns.com"];
-    
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/bipbopall.m3u8"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"https://www.gtbluesky.com/test.mp3"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"rtmp://ftv.sun0769.com/dgrtv1/mp4:b1"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"rtmp://www.scbtv.cn/live/new"];
-    [_urlList addObject:@"Supper HD"];
-    [_urlList addObject:@"http://down.ttdtweb.com/test/MTV.mp4"];
-    [_urlList addObject:@"HD"];
+    [_urlList addObject:@"MP4"];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
-    [_urlList addObject:@"2 hours"];
-    [_urlList addObject:@"http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"];
-    [_urlList addObject:@"http://video.pearvideo.com/hls/live-cut/pearvideo/1338423-1525662659-sd.m3u8"];
-    [_urlList addObject:@"http://video.hoozha.cn/video_H556226_1526349904646"];
-    [_urlList addObject:@"pure video"];
-    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/snowday.mp4"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/apple.mp4"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"http://video.pearvideo.com/mp4/short/20180502/cont-1335588-11989735_pkg-sd.mp4"];
-    [_urlList addObject:@"H265"];
-    [_urlList addObject:@"http://ojpjb7lbl.bkt.clouddn.com/h265/2000k/265_test.m3u8"];
-    
-#if 1
-    [_urlList addObject:@"-------------------------------------------------------------------------------"];
-    [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/06/14/247382630843777024.mp4"];
-    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/07/05/04/246872853734834176.mp4"];
-    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/05/31/02/234148590598897664.mp4"];
-    [_urlList addObject:@"http://musically.muscdn.com/reg02/2017/06/29/09/244762267827998720.mp4"];
-    [_urlList addObject:@"http://mus-oss.muscdn.com/reg02/2017/07/02/00/245712223036194816.mp4"];
-    [_urlList addObject:@"http://180.153.100.199/bipbopall.m3u8?domain=ojpjb7lbl.bkt.clouddn.com"];
-    [_urlList addObject:@"https://oigovwije.qnssl.com/shfpahbclahjbdoa.mp4"];
-    [_urlList addObject:@"http://gslb.miaopai.com/stream/E26J9j~FuMDu0lX--GALbHiXg~LEH0wrGDyv4w__.mp4"];
-    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.m3u8"];
-    [_urlList addObject:@"http://live1-cloud.itouchtv.cn/recordings/z1.touchtv-1.5a24a42fa3d5ec71d6325275@1200k_720p/beea9941d443106ade1518fae7b8b3d6.mp4"];
-    [_urlList addObject:@""];
-    [_urlList addObject:@"https://static.xingnl.tv/recordings/z1.xnlzb.67253/1509105606_1509114943.m3u8"];
-    [_urlList addObject:@"https://static.xingnl.tv/o_1bb6c4r3a1aqp1mo5187t1kqr1pagnr.mp4"];
-    [_urlList addObject:@"http://exam.xhbycm.net/test.flv"];
-    [_urlList addObject:@"http://pili-live-hdl.duimian.cn/loovee/doll_front.flv"];
+    [_urlList addObject:@"HKS"];
+    [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
+    [_urlList addObject:@"http://fms.cntv.lxdns.com/live/flv/channel84.flv"];
+    [_urlList addObject:@"http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"];
+    [_urlList addObject:@"http://zhibo.hkstv.tv/livestream/mutfysrq/playlist.m3u8"];
+    [_urlList addObject:@"rtmp://183.146.213.65/live/hks?domain=live.hkstv.hk.lxdns.com"];
+    [_urlList addObject:@"HD Live"];
+    [_urlList addObject:@"http://stream1.hnntv.cn/lywsgq/sd/live.m3u8"];
+    [_urlList addObject:@"http://skydvn-nowtv-atv-prod.skydvn.com/atv/skynews/1404/live/07.m3u8"];
+    [_urlList addObject:@"HLS"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear4/prog_index.m3u8"];
-#endif
+    [_urlList addObject:@""];
     
     NSString* docPathDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSLog(@"%@", docPathDir);
@@ -163,7 +101,7 @@
             [_urlList addObject:[NSString stringWithFormat:@"%@/%@", docPathDir, fileName]];
     }
     
-    [self parseDemoLive];
+    //[self parseDemoLive];
 }
 
 
@@ -187,10 +125,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             int val = 1;
             _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &val);
             _lastPlaybackPos = rand() % _player.GetDur(_player.hPlayer);
-#endif
-#if 0
-            int nVal = QC_PLAY_VideoDisable_Render;
-            _player.SetParam(_player.hPlayer, QCPLAY_PID_Disable_Video, &nVal);
 #endif
             if(_playbackFromLastPos && _lastPlaybackPos > 0)
                 _player.SetPos(_player.hPlayer, _lastPlaybackPos);
@@ -227,7 +161,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
 
         if(![self loopPlayback])
-            [self onStop: _btnStart];
+            //[self onStop: _btnStart];
+            _player.Run(_player.hPlayer);
         }];
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
@@ -270,6 +205,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else if(nID == QC_MSG_SNKV_FIRST_FRAME)
     {
         NSLog(@"[EVT]First video frame rendered\n");
+        if(pParam)
+        	_firstFrameTime = *(int*)pParam;
     }
     else if(nID == QC_MSG_SNKA_FIRST_FRAME)
     {
@@ -291,10 +228,14 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else if (nID == QC_MSG_BUFF_START_BUFFERING)
     {
         NSLog(@"START_BUFFERING\n");
+        if(_waitView)
+            [_waitView startAnimating];
     }
     else if (nID == QC_MSG_BUFF_END_BUFFERING)
     {
         NSLog(@"END_BUFFERING\n");
+        if(_waitView)
+            [_waitView stopAnimating];
     }
 }
 
@@ -421,7 +362,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 #endif
     
 #if 0
-    unsigned char key[16] = {0x64,0x48,0x38,0x6a,0x71,0x53,0x68,0x78,0x57,0x43,0x4a,0x4e,0x70,0x77,0x6c,0x78};
+    //unsigned char key[16] = {0x64,0x48,0x38,0x6a,0x71,0x53,0x68,0x78,0x57,0x43,0x4a,0x4e,0x70,0x77,0x6c,0x78};
+    char* key = (char*)"dH8jqShxWCJNpwlx";
     _player.SetParam(_player.hPlayer, QCPLAY_PID_DRM_KeyText, (void*)key);
 #endif
 }
@@ -458,11 +400,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     // Position slider
     _sliderPosition = [[UISlider alloc] initWithFrame:CGRectMake(0, _rectSmallScreen.origin.y+_rectSmallScreen.size.height - 40, _rectSmallScreen.size.width, 20)];
     [_sliderPosition addTarget:self action:@selector(onPositionChange:) forControlEvents:UIControlEventTouchUpInside];
-    //[_sliderPosition addTarget:self action:@selector(onPositionChange:) forControlEvents:UIControlEventTouchUpOutside];
     [_sliderPosition addTarget:self action:@selector(onPositionChangeBegin:) forControlEvents:UIControlEventTouchDown];
-//    [_sliderPosition addTarget:self action:@selector(onPositionChangeBegin:) forControlEvents:UIControlEventTouchDragInside];
-//    [_sliderPosition addTarget:self action:@selector(onPositionChangeBegin:) forControlEvents:UIControlEventTouchDragOutside];
-    
     
     _sliderPosition.minimumValue = 0.0;
     _sliderPosition.maximumValue = 1.0;
@@ -580,6 +518,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshClick:) forControlEvents:UIControlEventValueChanged];
     [_tableViewURL addSubview:refreshControl];
+    
+    //
+    _waitView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    _waitView.center = CGPointMake(CGRectGetMidX(_rectSmallScreen), CGRectGetMidY(_rectSmallScreen));
+    [_viewVideo addSubview:_waitView];
+    //[_waitView startAnimating];
 }
 
 - (void)refreshClick:(UIRefreshControl *)refreshControl
@@ -670,6 +614,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _lastPlaybackPos = -1;
     _playbackFromLastPos = YES;
     _loopPlayback = NO;
+    _firstFrameTime = -1;
     [self enableAudioSession:YES];
     [self setupUI];
     [self prepareURL];
@@ -720,6 +665,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         
         memset(&_fmtVideo, 0, sizeof(QC_VIDEO_FORMAT));
         _openStartTime = [self getSysTime];
+        _firstFrameTime = -1;
         NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
 #if 1
         _player.Open(_player.hPlayer, url, 0);
@@ -777,8 +723,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _isDragSlider = false;
     UISlider* slider = (UISlider *)sender;
     long long newPos = (long long)((float)_player.GetDur(_player.hPlayer)*slider.value);
+    newPos = 0x24c610;
     NSLog(@"Set pos %lld, playing time %lld", newPos, _player.GetPos(_player.hPlayer));
-    //_player.SetPos(_player.hPlayer, 2*60*60*1000+8*60*1000);
     _player.SetPos(_player.hPlayer, newPos);
 }
 
@@ -805,7 +751,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     NSString* strPos = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", pos / 3600, pos % 3600 / 60, pos % 3600 % 60];
     NSString* strDur = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", dur / 3600, dur % 3600 / 60, dur % 3600 % 60];
 
-    _labelPlayingTime.text = [NSString stringWithFormat: @"%dx%d - %@%@%@", _fmtVideo.nWidth, _fmtVideo.nHeight, strPos, @" / " , strDur];
+    _labelPlayingTime.text = [NSString stringWithFormat: @"%d - %dx%d - %@%@%@", _firstFrameTime, _fmtVideo.nWidth, _fmtVideo.nHeight, strPos, @" / " , strDur];
 }
 
 -(void)onAppActive:(BOOL)active
@@ -848,17 +794,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(IBAction)onFullScreen:(id)sender
 {
-#if 0
-    [self onStop:nil];
-    return;
-#endif
-    
-#if 0
-    long long n = 0;
-    _player.SetParam(_player.hPlayer, QCPLAY_PID_Capture_Image, &n);
-    return;
-#endif
-
     if(!_isFullScreen)
     {
         _isFullScreen = YES;
@@ -1291,7 +1226,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     int mode = 1;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_Seek_Mode, &mode);
     
-    long long pos = 190*1000;
+    long long pos = 0x24c610;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_START_POS, &pos);
 #endif
 }
