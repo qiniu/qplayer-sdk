@@ -723,7 +723,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _isDragSlider = false;
     UISlider* slider = (UISlider *)sender;
     long long newPos = (long long)((float)_player.GetDur(_player.hPlayer)*slider.value);
-    newPos = 0x24c610;
     NSLog(@"Set pos %lld, playing time %lld", newPos, _player.GetPos(_player.hPlayer));
     _player.SetPos(_player.hPlayer, newPos);
 }
