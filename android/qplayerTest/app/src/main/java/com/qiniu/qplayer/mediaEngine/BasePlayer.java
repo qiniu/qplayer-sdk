@@ -138,7 +138,11 @@ public interface BasePlayer {
 	// Set to playback or not.
 	// The parameter should be int. 0 not loop, 1 loop.
 	public static final int	QCPLAY_PID_Playback_Loop			= 0X11000340;
-
+	
+	// Set the mp4 preload time
+	// The parameter should be int *. it is ms to preload
+	public static final int	QCPLAY_PID_MP4_PRELOAD				= 0X00000341;
+	
 	// Define id of event listener.
 	public static final int 	QC_MSG_PLAY_OPEN_DONE 			= 0x16000001;
 	public static final int 	QC_MSG_PLAY_OPEN_FAILED 		= 0x16000002;

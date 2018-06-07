@@ -34,7 +34,6 @@ import java.io.UnsupportedEncodingException;
 public class MediaPlayer implements BasePlayer {
 	private static final String TAG = "QCLOGMediaPlayer";
 
-	private int 		m_nInitFlag = 0;
 	private Context 	m_context = null;
 	private long 		m_NativeContext = 0;
 	private Surface 	m_NativeSurface = null;
@@ -50,40 +49,31 @@ public class MediaPlayer implements BasePlayer {
 	private int m_nChannels = 0;
 	private int m_nBTOffset = 0;
 
+	private Object				m_pObjPlayer = null;
+	private String				m_strApkPath = null;
+	private String				m_strURL = null;
 	private AudioRender			m_AudioRender = null;
-
-	private File 				m_dbgFile = null;
-	private FileOutputStream	m_dbgStream = null;
-
-	private onEventListener m_EventListener = null;
+	private onEventListener 	m_EventListener = null;
+	private msgHandler 			m_hHandler = null;
 
 	static {
 		System.loadLibrary("QPlayer");
 	}
 
 	public int Init(Context context, String apkPath, int nFlag) {
+		m_hHandler = new msgHandler();
 		m_context = context;
-		m_nInitFlag = nFlag;
 		AudioManager am = (AudioManager)context.getSystemService(context.AUDIO_SERVICE);
 		if (am != null && am.isBluetoothA2dpOn())
 			m_nBTOffset = 250;
-		m_NativeContext = nativeInit(new WeakReference<MediaPlayer>(this), apkPath, nFlag);
+		m_strApkPath = apkPath;
+		m_pObjPlayer = new WeakReference<MediaPlayer>(this);
+		m_NativeContext = nativeInit(m_pObjPlayer, apkPath, nFlag);
 		if (m_NativeContext == 0)
 			return -1;
 		if (m_NativeSurface != null)
 			nativeSetView(m_NativeContext, m_NativeSurface);
-/*
-		try{
-			File parent_path = Environment.getExternalStorageDirectory();
-			File dir = new File(parent_path.getAbsoluteFile(), "CaptureVideo");
-			dir.mkdir();
-			m_dbgFile = new File(dir.getAbsoluteFile(), "test.pcm");
-			m_dbgFile.createNewFile();
-			m_dbgStream = new FileOutputStream(m_dbgFile);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-*/
+
 		return 0;
 	}
 
@@ -104,6 +94,7 @@ public class MediaPlayer implements BasePlayer {
 	}
 
 	public int Open(String strPath, int nFlag) {
+		m_strURL = strPath;
 		return nativeOpen(m_NativeContext, strPath, nFlag);
 	}
 
@@ -165,7 +156,7 @@ public class MediaPlayer implements BasePlayer {
 		return m_nStreamNum;
 
 	}
-	public int	SetStreamPlay (int nStream) {
+	public int SetStreamPlay (int nStream) {
 		if (nStream == m_nStreamPlay)
 			return nStream;
 		m_nStreamPlay = nStream;
@@ -255,7 +246,7 @@ public class MediaPlayer implements BasePlayer {
 			return;
 		}
 
-		Message msg = player.mHandle.obtainMessage(what, ext1, ext2, obj);
+		Message msg = player.m_hHandler.obtainMessage(what, ext1, ext2, obj);
 		msg.sendToTarget();
 	}
 		
@@ -281,32 +272,38 @@ public class MediaPlayer implements BasePlayer {
 		}
 		else if (nFlag == QC_FLAG_Video_SEIDATA) {
 			// handle the SEI DATA.
-			Log.v("videoDataFromNative SEI", String.format("Size %d  Time  %d, Flag   %d", size, lTime, nFlag));
+			Log.v("videoDataFromNative SEI", String.format("Size %d  Time  %d, data   %d", size, lTime, data[0]));
 		}
-	}	
+	}
 
-	private Handler mHandle = new Handler()
-	{
-		public void handleMessage(Message msg) 
-		{	
-			int nRC = 0;
+	class msgHandler extends Handler {
+		public msgHandler() {
+		}
+		@Override
+		public void handleMessage(Message msg) {
 			if (m_NativeContext == 0)
 				return;
-
+			if (msg.what == QC_MSG_VIDEO_HWDEC_FAILED) {
+				nativeUninit(m_NativeContext);
+				m_NativeContext = nativeInit(m_pObjPlayer, m_strApkPath, 0);
+				if (m_NativeSurface != null)
+					nativeSetView(m_NativeContext, m_NativeSurface);
+				nativeOpen (m_NativeContext, m_strURL, 0);
+				//return;
+			}
 			if (msg.what == QC_MSG_PLAY_OPEN_DONE) {
 				OnOpenComplete ();
 			}
-				
 			if (m_EventListener != null) {
-				nRC = m_EventListener.onEvent(msg.what, msg.arg1, msg.arg2, msg.obj);
+				m_EventListener.onEvent(msg.what, msg.arg1, msg.arg2, msg.obj);
 			}
 			if (msg.what == QC_MSG_SNKV_NEW_FORMAT) {
 				//onVideoSizeChanged ();
 				SetParam(PARAM_PID_EVENT_DONE, 0, null);
 			}
 		}
-	};
-	
+	}
+
 	// the native functions
     private native long	nativeInit(Object player, String apkPath, int nFlag);
     private native int 	nativeUninit(long nNativeContext);
