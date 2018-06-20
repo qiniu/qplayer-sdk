@@ -116,6 +116,9 @@
 #define QC_MSG_PLAY_CAPTURE_IMAGE		0x16000010		//param m_pInfo QC_DATA_BUFF pointer. 
 #define QC_MSG_PLAY_LOOP_TIMES			0x16000011
 
+#define QC_MSG_PLAY_CACHE_DONE			0x16000021
+#define QC_MSG_PLAY_CACHE_FAILED		0x16000022
+
 // define the buffer msg ID
 #define QC_MSG_BUFF_VBUFFTIME			0x18000001		//param: video buff time
 #define QC_MSG_BUFF_ABUFFTIME			0x18000002		//param: audio buff time

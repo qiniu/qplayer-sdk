@@ -237,6 +237,15 @@ typedef struct
 // The parameter should be int *. (ms)
 #define	QCPLAY_PID_PlayBuff_MinTime			QC_PLAY_BASE + 0X0212
 
+// Add the source in cache.
+// The parameter should be const char *
+#define	QCPLAY_PID_ADD_Cache				QC_PLAY_BASE + 0X0250
+
+// Del the source in cache list.
+// The parameter should be const char *. 
+// If the param is null, delete all cache source.
+#define	QCPLAY_PID_DEL_Cache				QC_PLAY_BASE + 0X0251
+
 // Set the DRM key 
 // The parameter should be char *.
 #define	QCPLAY_PID_DRM_KeyText				QC_PLAY_BASE + 0X0301
