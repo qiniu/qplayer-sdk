@@ -120,6 +120,15 @@ public interface BasePlayer {
 	// The parameter should be int (ms)
 	public static final int	QCPLAY_PID_PlayBuff_MinTime			= 0X11000212;
 
+	// Add the source in cache.
+	// The parameter should be const char *
+	public static final int	QCPLAY_PID_ADD_Cache				= 0X11000250;
+
+	// Del the source in cache list.
+	// The parameter should be const char *.
+	// If the param is null, delete all cache source.
+	public static final int	QCPLAY_PID_DEL_Cache				= 0X11000251;
+	
 	// Set the log out level
 	// The parameter should be int, 0, None, 1 error, 2 warning, 3 info, 4 debug.
 	public static final int	QCPLAY_PID_Log_Level				= 0X11000320;
@@ -170,6 +179,9 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_PLAY_STOP				= 0x1600000E;
 	public static final int 	QC_MSG_PLAY_LOOP_TIMES			= 0x16000011;
 
+	// the param object is String for source name.
+	public static final int 	QC_MSG_PLAY_CACHE_DONE 			= 0x16000021;
+	public static final int 	QC_MSG_PLAY_CACHE_FAILED 		= 0x16000022;
 
 	// http protocol messaage id
 	public static final int 	QC_MSG_HTTP_CONNECT_START		= 0x11000001;
