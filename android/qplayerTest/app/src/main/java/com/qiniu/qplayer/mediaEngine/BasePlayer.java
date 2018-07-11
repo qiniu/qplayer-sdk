@@ -188,6 +188,9 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_HTTP_CONNECT_FAILED		= 0x11000002;
 	public static final int 	QC_MSG_HTTP_CONNECT_SUCESS		= 0x11000003;
 	public static final int 	QC_MSG_HTTP_DNS_START			= 0x11000004;
+	public static final int     QC_MSG_HTTP_DNS_GET_CACHE       = 0x11000005;
+    public static final int     QC_MSG_HTTP_DNS_GET_IPADDR      = 0x11000006;
+    public static final int     QC_MSG_HTTP_GET_HEADDATA        = 0x11000010;
 	public static final int 	QC_MSG_HTTP_REDIRECT			= 0x11000012;
 	public static final int 	QC_MSG_HTTP_DISCONNECT_START	= 0x11000021;
 	public static final int 	QC_MSG_HTTP_DISCONNECT_DONE		= 0x11000022;
@@ -209,9 +212,17 @@ public interface BasePlayer {
 	// Param: long long bytes
 	public static final int		QC_MSG_HTTP_CONTENT_SIZE		= 0x11000062;
 	public static final int		QC_MSG_HTTP_BUFFER_SIZE			= 0x11000063;	
+	// Param: String
+	public static final int     QC_MSG_HTTP_CONTENT_TYPE        = 0x11000064;
+    public static final int     QC_MSG_HTTP_SEND_BYTE           = 0x11000065;
 	
 	// The obj is the string value
 	public static final int		QC_MSG_RTMP_METADATA			= 0x11010006;
+	//
+    public static final int     QC_MSG_IO_FIRST_BYTE_DONE       = 0x11020001;
+    public static final int     QC_MSG_IO_HANDSHAKE_START       = 0x11020003;
+    public static final int     QC_MSG_IO_HANDSHAKE_FAILED      = 0x11020004;
+    public static final int     QC_MSG_IO_HANDSHAKE_SUCESS      = 0x11020005;
 
 	// The nArg1 is the value.
 	public static final int 	QC_MSG_RTMP_DOWNLOAD_SPEED		= 0x11010004;
