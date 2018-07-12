@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
+    sourceSets.main.jniLibs.srcDirs = ['libs']
+
     defaultConfig {
         applicationId "com.qiniu.sampleplayer"
         minSdkVersion 15
