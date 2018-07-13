@@ -50,22 +50,22 @@
 
 ### 2.1 目录说明
 
-####2.1.1 安卓系统
-*示例：android/samplePlayer
-*库文件：android\samplePlayer\app\libs。包含 armeabi， armeabi-v7a， arm64-v8a， x86。
+#### 2.1.1 安卓系统
+* 示例：android/samplePlayer
+* 库文件：android\samplePlayer\app\libs。包含 armeabi， armeabi-v7a， arm64-v8a， x86。
 
-####2.1.2 苹果系统
-*示例：iOS/Sample
-*库文件：iOS/bin, include, lib
+#### 2.1.2 苹果系统
+* 示例：iOS/Sample
+* 库文件：iOS/bin, include, lib
 
-####2.1.3 Window
-*示例：win32/SamplePlayer
-*库文件：iwin32/SamplePlayer/bin, include
+#### 2.1.3 Window
+* 示例：win32/SamplePlayer
+* 库文件：iwin32/SamplePlayer/bin, include
 
 
 ### 2.2 SDK文档
 
-参见各自系统里面的doc目录。
+参见各系统里面的doc目录。(未完成）
 
 
 
