@@ -14,7 +14,9 @@
 * 当前未提供开源代码，如果需要其他定制化开发功能，请通过七牛云联系。
 
 ### 1.1 版本信息
+
 | Included Project	 | LICENSE	| VERSION |
+|:----------:|:---------------------------:|:--------------:|
 | ffmpeg	| LGPL 2.1 or later	| 3.1 |
 | openssl	| BSD-Style License	| 1.1.0f |
 | libyuv	| BSD-Style License	| 1487 |
