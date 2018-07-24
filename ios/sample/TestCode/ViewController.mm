@@ -51,6 +51,7 @@
     QC_VIDEO_FORMAT _fmtVideo;
     long long		_lastPlaybackPos;
     BOOL			_playbackFromLastPos;
+    BOOL			_useHW;
 }
 @end
 
@@ -65,10 +66,17 @@
     _currURL = 0;
     _clipboardURL = nil;
 
-    [_urlList addObject:@"http://nclive.grtn.cn/zjpd/playlist.m3u8?_upt=6eac0a671527759000&token=c739022aba5e40029ebbc71047bb9510"];
+    [_urlList addObject:@"http://p8jmhkg72.bkt.clouddn.com/video/20180719/20180719152757656867701.mp4"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"MP4"];
+    [_urlList addObject:@"http://op053v693.bkt.clouddn.com/IMG_3376.MP4"];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
+    [_urlList addObject:@"http://op053v693.bkt.clouddn.com/qiniu_960x540.mp4"];
+    [_urlList addObject:@"http://op053v693.bkt.clouddn.com/qiniu_480x270.mp4"];
+    [_urlList addObject:@"ROTATE"];
+    [_urlList addObject:@"http://static.zhibojie.tv/1502826524711_1_record.mp4"];
+    [_urlList addObject:@"HLS"];
+    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@"HKS"];
     [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
     [_urlList addObject:@"http://fms.cntv.lxdns.com/live/flv/channel84.flv"];
@@ -78,8 +86,6 @@
     [_urlList addObject:@"HD Live"];
     [_urlList addObject:@"http://stream1.hnntv.cn/lywsgq/sd/live.m3u8"];
     [_urlList addObject:@"http://skydvn-nowtv-atv-prod.skydvn.com/atv/skynews/1404/live/07.m3u8"];
-    [_urlList addObject:@"HLS"];
-    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@""];
     
     NSString* docPathDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -103,7 +109,6 @@
     
     //[self parseDemoLive];
 }
-
 
 #pragma mark Player event callback
 void NotifyEvent (void * pUserData, int nID, void * pValue1)
@@ -143,6 +148,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         NSLog(@"Open use time %d. %d", [self getSysTime]-_openStartTime, [self getSysTime]);
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [self showMessage:@"Open fail" duration:2.0];
+            [_switchCache setHidden:NO];
+            [_labelCache setHidden:NO];
             [self loopPlayback];
         }];
     }
@@ -161,8 +168,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
 
         if(![self loopPlayback])
-            //[self onStop: _btnStart];
-            _player.Run(_player.hPlayer);
+            [self onStop: _btnStart];
         }];
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
@@ -187,7 +193,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     else if(nID == QC_MSG_RTMP_CONNECT_START || nID == QC_MSG_HTTP_CONNECT_START)
     {
-        NSLog(@"[EVT]Connect start, %x", nID);
+        NSLog(@"[EVT]Connect start, %x\n", nID);
+    }
+    else if (nID == QC_MSG_HTTP_CONNECT_SUCESS || nID == QC_MSG_RTMP_CONNECT_SUCESS)
+    {
+        NSLog(@"[EVT]Connect success, %x\n", nID);
     }
     else if (nID == QC_MSG_HTTP_RECONNECT_SUCESS || nID == QC_MSG_RTMP_RECONNECT_SUCESS)
     {
@@ -197,10 +207,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [self showMessage:@"Reconnect success" duration:5.0];
         }];
-    }
-    else if (nID == QC_MSG_HTTP_CONNECT_SUCESS || nID == QC_MSG_RTMP_CONNECT_SUCESS)
-    {
-        NSLog(@"[EVT]Connect success, %x\n", nID);
     }
     else if(nID == QC_MSG_SNKV_FIRST_FRAME)
     {
@@ -322,6 +328,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         return;
     
     qcCreatePlayer(&_player, NULL);
+    
+#if 0
+    int log = 5;
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_Log_Level, (void*)&log);
+#endif
+
     _player.SetNotify(_player.hPlayer, NotifyEvent, (__bridge void*)self);
     
 #if 0
@@ -345,11 +357,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 #if 0
     _player.SetParam(_player.hPlayer, QCPLAY_PID_DNS_DETECT, (void*)"live.hkstv.hk.lxdns.com");
 #endif
-
-#if 0
-    int log = 5;
-    _player.SetParam(_player.hPlayer, QCPLAY_PID_Log_Level, (void*)&log);
-#endif
     
 #if 0
     int preLoadTime = 8000*10000;
@@ -365,6 +372,17 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     //unsigned char key[16] = {0x64,0x48,0x38,0x6a,0x71,0x53,0x68,0x78,0x57,0x43,0x4a,0x4e,0x70,0x77,0x6c,0x78};
     char* key = (char*)"dH8jqShxWCJNpwlx";
     _player.SetParam(_player.hPlayer, QCPLAY_PID_DRM_KeyText, (void*)key);
+#endif
+    
+#if 0
+    char* url = (char*)"http://op053v693.bkt.clouddn.com/IMG_3376.MP4";
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_ADD_Cache, (void*)url);
+    url = (char*)"http://demo-videos.qnsdk.com/movies/qiniu.mp4";
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_ADD_Cache, (void*)url);
+    url = (char*)"http://op053v693.bkt.clouddn.com/qiniu_960x540.mp4";
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_ADD_Cache, (void*)url);
+    url = (char*)"http://op053v693.bkt.clouddn.com/qiniu_480x270.mp4";
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_ADD_Cache, (void*)url);
 #endif
 }
 
@@ -611,6 +629,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [super viewDidLoad];
     
     //
+    _useHW = NO;
     _lastPlaybackPos = -1;
     _playbackFromLastPos = YES;
     _loopPlayback = NO;
@@ -647,6 +666,9 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     else
     {
+        if(_waitView)
+            [_waitView stopAnimating];
+
         [btn setTitle:@"PAUSE" forState:UIControlStateNormal];
         _timer = [NSTimer scheduledTimerWithTimeInterval:100.0/100.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
         
@@ -656,8 +678,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             url = [_clipboardURL UTF8String];
         
         // update options
-        if(_switchCache.on)
-            [self enableFileCacheMode];
+        [self updateFileCacheMode];
         int loop = _switchLoop.on?1:0;
         _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &loop);
         
@@ -667,11 +688,9 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         _openStartTime = [self getSysTime];
         _firstFrameTime = -1;
         NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
-#if 1
-        _player.Open(_player.hPlayer, url, 0);
-#else
-        _player.Open(_player.hPlayer, url, QCPLAY_OPEN_VIDDEC_HW);
-#endif
+
+        _player.Open(_player.hPlayer, url, _useHW?QCPLAY_OPEN_VIDDEC_HW:0);
+
         if(_clipboardURL)
         {
             _clipboardURL = nil;
@@ -691,6 +710,9 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     int useTime = [self getSysTime];
     NSLog(@"+Stop[KPI]");
     
+    if(_waitView)
+        [_waitView stopAnimating];
+
     [((UIButton*)sender) setTitle:@"START" forState:UIControlStateNormal];
     
     [_timer invalidate];
@@ -731,7 +753,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 {
     if(!_player.hPlayer)
         return;
-    
     long long pos = _player.GetPos(_player.hPlayer) / 1000;
     long long dur = _player.GetDur(_player.hPlayer) / 1000;
     static long long lastPos = 0;
@@ -750,7 +771,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     NSString* strPos = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", pos / 3600, pos % 3600 / 60, pos % 3600 % 60];
     NSString* strDur = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", dur / 3600, dur % 3600 / 60, dur % 3600 % 60];
 
-    _labelPlayingTime.text = [NSString stringWithFormat: @"%d - %dx%d - %@%@%@", _firstFrameTime, _fmtVideo.nWidth, _fmtVideo.nHeight, strPos, @" / " , strDur];
+    _labelPlayingTime.text = [NSString stringWithFormat: @"%s - %d - %dx%d - %@%@%@", _useHW?"HW":"SW", _firstFrameTime, _fmtVideo.nWidth, _fmtVideo.nHeight, strPos, @" / " , strDur];
 }
 
 -(void)onAppActive:(BOOL)active
@@ -762,7 +783,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if(!url)
         return;
     
-    bool isLive = [self isLive];
+    bool isLive = false;//[self isLive];
     
     if(active)
     {
@@ -796,30 +817,40 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     if(!_isFullScreen)
     {
         _isFullScreen = YES;
-        //[[UIDevice currentDevice]setValue:[NSNumber numberWithInteger:UIDeviceOrientationPortrait]  forKey:@"orientation"];
-        [[UIDevice currentDevice]setValue:[NSNumber numberWithInteger:UIDeviceOrientationLandscapeLeft] forKey:@"orientation"];
+        if([self isLandscape])
+        {
+            [[UIDevice currentDevice]setValue:[NSNumber numberWithInteger:UIDeviceOrientationLandscapeLeft] forKey:@"orientation"];
+        }
+        else
+        {
+        }
     }
     else
     {
         _isFullScreen = NO;
-        //[[UIDevice currentDevice]setValue:[NSNumber numberWithInteger:UIDeviceOrientationLandscapeLeft]  forKey:@"orientation"];
-        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIDeviceOrientationPortrait] forKey:@"orientation"];
+    
+        if([self isLandscape])
+            [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIDeviceOrientationPortrait] forKey:@"orientation"];
+        else
+        {
+            
+        }
     }
     
     [_tableViewURL setHidden:_isFullScreen?YES:NO];
     
-//    [UIView animateWithDuration:1.0 animations:^{
-    
-        if(_player.hPlayer)
+    if(_player.hPlayer)
+    {
+        if([self isLandscape])
+        	_viewVideo.frame = _isFullScreen?_rectFullScreen:_rectSmallScreen;
+        else
         {
-            _viewVideo.frame = _isFullScreen?_rectFullScreen:_rectSmallScreen;
-            CGRect r = _viewVideo.bounds;
-            RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
-            _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
+            _viewVideo.frame = _isFullScreen?self.view.bounds:_rectSmallScreen;
         }
-        
-//    } completion:^(BOOL finished) {
-//    }];
+        CGRect r = _viewVideo.bounds;
+        RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
+        _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
+    }
 }
 
 -(IBAction)onSelectStreamEnd:(id)sender
@@ -1140,8 +1171,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             {
                 NSLog(@"+Fast open, %s", newURL);
                 int flag = 0;//_switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0;
-                if(_switchCache.on)
-                    [self enableFileCacheMode];
+                [self updateFileCacheMode];
                 _openStartTime = [self getSysTime];
                 NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
                 [self enablePlaybackFromPosition];
@@ -1155,13 +1185,21 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     return NO;
 }
 
--(void)enableFileCacheMode
+-(void)updateFileCacheMode
 {
-    NSString* docPathDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    docPathDir = [docPathDir stringByAppendingString:@"/cache/"];
-    _player.SetParam(_player.hPlayer, QCPLAY_PID_PD_Save_Path, (void*)[docPathDir UTF8String]);
-    int nProtocol = QC_IOPROTOCOL_HTTPPD;
-    _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Protocol, &nProtocol);
+    if(_switchCache.on)
+    {
+        NSString* docPathDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        docPathDir = [docPathDir stringByAppendingString:@"/cache/"];
+        _player.SetParam(_player.hPlayer, QCPLAY_PID_PD_Save_Path, (void*)[docPathDir UTF8String]);
+        int nProtocol = QC_IOPROTOCOL_HTTPPD;
+        _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Protocol, &nProtocol);
+    }
+    else
+    {
+        int nProtocol = QC_IOPROTOCOL_NONE;
+        _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Protocol, &nProtocol);
+    }
 }
 
 -(bool)loopPlayback
@@ -1228,6 +1266,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     long long pos = 0x24c610;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_START_POS, &pos);
 #endif
+}
+
+- (BOOL)isLandscape
+{
+    return _fmtVideo.nWidth >= _fmtVideo.nHeight;
 }
 
 
