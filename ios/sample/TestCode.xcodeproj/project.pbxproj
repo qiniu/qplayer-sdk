@@ -72,6 +72,7 @@
 		A01B66F01F20FBAD0058D8D8 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../../../../bin/ios/libssl.a; sourceTree = "<group>"; };
 		A01B66F11F20FBAD0058D8D8 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = ../../../../bin/ios/libswresample.a; sourceTree = "<group>"; };
 		A01B670F1F2110100058D8D8 /* libspeex.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libspeex.a; path = ../../../../bin/ios/libspeex.a; sourceTree = "<group>"; };
+		A020A46920D3AAFC00B27E4F /* qcErr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qcErr.h; path = ../../../../include/qcErr.h; sourceTree = "<group>"; };
 		A060DC8B1F972DA700E2F792 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		A0914134205A491100D0F2E6 /* libyuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libyuv.a; path = ../../../../bin/ios/libyuv.a; sourceTree = "<group>"; };
 		A09DCC981E91F0CB00DC855E /* export.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = export.plist; sourceTree = "<group>"; };
@@ -86,28 +87,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A0914135205A491100D0F2E6 /* libyuv.a in Frameworks */,
-				A060DC8C1F972DA700E2F792 /* CoreTelephony.framework in Frameworks */,
 				A01503701E72488500B6093E /* libiconv.tbd in Frameworks */,
-				A01B67101F2110100058D8D8 /* libspeex.a in Frameworks */,
 				A015036E1E72482300B6093E /* libz.tbd in Frameworks */,
+				A060DC8C1F972DA700E2F792 /* CoreTelephony.framework in Frameworks */,
 				2741A0B81E55A9ED009F87FA /* VideoToolbox.framework in Frameworks */,
-				A01B66F31F20FBAD0058D8D8 /* libavformat.a in Frameworks */,
-				A01B66F51F20FBAD0058D8D8 /* libcrypto.a in Frameworks */,
 				27CCC17D1E3A3ADE00AEDA22 /* CoreVideo.framework in Frameworks */,
 				27CCC17B1E3A3AA100AEDA22 /* OpenGLES.framework in Frameworks */,
-				A01B66F41F20FBAD0058D8D8 /* libavutil.a in Frameworks */,
-				A01B66F21F20FBAD0058D8D8 /* libavcodec.a in Frameworks */,
 				27648E351E37A34F005C1A20 /* Foundation.framework in Frameworks */,
 				27648E331E37A336005C1A20 /* AVKit.framework in Frameworks */,
 				27648E291E3723EB005C1A20 /* QuartzCore.framework in Frameworks */,
 				27648E271E371F86005C1A20 /* MediaPlayer.framework in Frameworks */,
 				27648E251E371F7C005C1A20 /* CoreMedia.framework in Frameworks */,
 				27648E231E37184A005C1A20 /* AVFoundation.framework in Frameworks */,
-				A01B66F81F20FBAD0058D8D8 /* libswresample.a in Frameworks */,
 				27C98B291E3515DF0018DFA1 /* AudioToolbox.framework in Frameworks */,
-				A01B66F71F20FBAD0058D8D8 /* libssl.a in Frameworks */,
 				27C98B221E35008C0018DFA1 /* libqcPlayEng.a in Frameworks */,
+				A0914135205A491100D0F2E6 /* libyuv.a in Frameworks */,
+				A01B67101F2110100058D8D8 /* libspeex.a in Frameworks */,
+				A01B66F71F20FBAD0058D8D8 /* libssl.a in Frameworks */,
+				A01B66F51F20FBAD0058D8D8 /* libcrypto.a in Frameworks */,
+				A01B66F21F20FBAD0058D8D8 /* libavcodec.a in Frameworks */,
+				A01B66F81F20FBAD0058D8D8 /* libswresample.a in Frameworks */,
+				A01B66F41F20FBAD0058D8D8 /* libavutil.a in Frameworks */,
+				A01B66F31F20FBAD0058D8D8 /* libavformat.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +201,7 @@
 		A0DBD2681E6E60C200EBF5B8 /* inc */ = {
 			isa = PBXGroup;
 			children = (
+				A020A46920D3AAFC00B27E4F /* qcErr.h */,
 				A0DBD2671E6E60B600EBF5B8 /* qcPlayer.h */,
 				A0DBD2661E6E60B600EBF5B8 /* qcMsg.h */,
 			);
