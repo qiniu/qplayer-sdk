@@ -64,8 +64,30 @@
         android:id="@+id/listViewFile"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/videoView">
+        android:layout_below="@+id/videoView"
+        android:layout_marginBottom="36dp">
     </ListView>
 
+    <EditText
+        android:id="@+id/edtURL"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:ems="8"
+        android:inputType="textPersonName"
+        android:text=""
+        android:background="#FFFFFF"
+        android:layout_marginRight="88dp"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="Play" />
 
 </RelativeLayout>

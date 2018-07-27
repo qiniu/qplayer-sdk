@@ -3,7 +3,6 @@ package com.qiniu.sampleplayer;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
@@ -12,6 +11,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ArrayAdapter;
@@ -37,7 +38,8 @@ public class MainActivity extends AppCompatActivity
     private SeekBar             m_sbPos = null;
     private RelativeLayout      m_layVideo = null;
     private ListView            m_lstFiles = null;
-    private AdapterView.OnItemClickListener m_lvListener = null;
+    private EditText            m_txtURL = null;
+    private Button              m_btnPlay = null;
 
     private MediaPlayer         m_Player = null;
     private int                 m_nViewWidth = 0;
@@ -176,19 +178,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initListView() {
-        m_lvListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ArrayAdapter adapter = (ArrayAdapter) m_lstFiles.getAdapter();
-                String strFile = (String) adapter.getItem(position).toString();
-                int nFlag = 0;
-                //nFlag = BasePlayer.QCPLAY_OPEN_SAME_SOURCE;
-                m_Player.Open(strFile, nFlag);
-            }
-        };
-        m_lstFiles = (ListView) findViewById(R.id.listViewFile);
-        m_lstFiles.setOnItemClickListener(m_lvListener);
-
         m_svVideo = (SurfaceView) findViewById(R.id.svVideo);
         m_shVideo = m_svVideo.getHolder();
         m_shVideo.addCallback(this);
@@ -201,6 +190,11 @@ public class MainActivity extends AppCompatActivity
 
         m_layVideo = (RelativeLayout) findViewById(R.id.videoView);
 
+        m_txtURL = (EditText)findViewById (R.id.edtURL);
+        m_btnPlay = (Button)findViewById (R.id.btnPlay);
+        m_txtURL.setText ("rtmp://live.hkstv.hk.lxdns.com/live/hks");
+
+        m_lstFiles = (ListView) findViewById(R.id.listViewFile);
         String[] strFiles = new String[]{
                 "http://video.qiniu.3tong.com/720_201883248781950976.mp4",
                 "http://video.qiniu.3tong.com/720_182584969019785216.mp4",
@@ -220,6 +214,25 @@ public class MainActivity extends AppCompatActivity
             }
             public void onStartTrackingTouch(SeekBar seekBar) {}
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { }
+        });
+
+        m_lstFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayAdapter adapter = (ArrayAdapter) m_lstFiles.getAdapter();
+                String strFile = (String) adapter.getItem(position).toString();
+                int nFlag = 0;
+                //nFlag = BasePlayer.QCPLAY_OPEN_SAME_SOURCE;
+                m_Player.Open(strFile, nFlag);
+            }
+        });
+
+        m_btnPlay.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            String strURL = m_txtURL.getText ().toString();
+            if (m_Player != null)
+                m_Player.Open(strURL, 0);
+            }
         });
 
         m_ttPlay = new TimerTask() {
