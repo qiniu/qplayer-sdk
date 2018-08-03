@@ -70,8 +70,6 @@
     [_urlList addObject:@"MP4"];
     [_urlList addObject:@"http://op053v693.bkt.clouddn.com/IMG_3376.MP4"];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
-    [_urlList addObject:@"http://op053v693.bkt.clouddn.com/qiniu_960x540.mp4"];
-    [_urlList addObject:@"http://op053v693.bkt.clouddn.com/qiniu_480x270.mp4"];
     [_urlList addObject:@"ROTATE"];
     [_urlList addObject:@"http://static.zhibojie.tv/1502826524711_1_record.mp4"];
     [_urlList addObject:@"HLS"];
@@ -154,6 +152,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
     {
+        NSLog(@"[EVT]Seek done\n");
         if(_playbackFromLastPos && _lastPlaybackPos > 0)
         {
             _player.Run(_player.hPlayer);
@@ -169,10 +168,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         if(![self loopPlayback])
             [self onStop: _btnStart];
         }];
-    }
-    else if (nID == QC_MSG_PLAY_SEEK_DONE)
-    {
-        NSLog(@"[EVT]Seek done\n");
     }
     else if (nID == QC_MSG_HTTP_DISCONNECTED || nID == QC_MSG_RTMP_DISCONNECTED)
     {
@@ -229,6 +224,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else if(nID == QC_MSG_PLAY_CAPTURE_IMAGE)
     {
         NSLog(@"Capture data ready\n");
+        QC_DATA_BUFF* pData = (QC_DATA_BUFF*)pParam;
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *filePath = [[paths objectAtIndex:0] stringByAppendingString:@"/capture.jpg"];
+        [[NSFileManager defaultManager] createFileAtPath:filePath contents:[NSData dataWithBytes:pData->pBuff length:pData->uSize] attributes:nil];
     }
     else if (nID == QC_MSG_BUFF_START_BUFFERING)
     {
@@ -262,64 +261,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 }
 
 #pragma mark setup UI
-- (void)parseStream:(NSString *)html
-{
-    NSScanner* theScanner;
-    NSString* text = nil;
-    NSString* keyString = @"?stream=";
-    
-    [_urlList insertObject:@"" atIndex:0];
-    theScanner = [NSScanner scannerWithString:html];
-    
-    while ([theScanner isAtEnd] == NO)
-    {
-        BOOL res = [theScanner scanUpToString:keyString intoString:nil] ;
-        if(res && [theScanner isAtEnd] == NO)
-        {
-            theScanner.scanLocation += [keyString length];
-            res = [theScanner scanUpToString:@"\"" intoString:&text] ;
-            
-            if(text && res)
-            {
-                [_urlList insertObject:[NSString stringWithFormat:@"http://pili-live-hls.pili2test.qbox.net/pili2test/%@.m3u8", text] atIndex:0];
-                [_urlList insertObject:[NSString stringWithFormat:@"http://pili-live-hdl.pili2test.qbox.net/pili2test/%@.flv", text] atIndex:0];
-                [_urlList insertObject:[NSString stringWithFormat:@"rtmp://pili-live-rtmp.pili2test.qbox.net/pili2test/%@", text] atIndex:0];
-            }
-        }
-    }
-}
-
--(void)parseDemoLive
-{
-    return;
-    NSString *host = @"http://pili2-demo.qiniu.com";
-    NSString *method = @"GET";
-    
-    NSString *url = [NSString stringWithFormat:@"%@",  host];
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString: url]  cachePolicy:NSURLRequestReloadIgnoringLocalCacheData  timeoutInterval:  5];
-    request.HTTPMethod  =  method;
-    NSURLSession *requestSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    NSURLSessionDataTask *task = [requestSession dataTaskWithRequest:request
-                                                   completionHandler:^(NSData * _Nullable body , NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                                                       if(response && body)
-                                                       {
-                                                           NSString *bodyString = [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding];
-                                                           //NSLog(@"Response body: %@" , bodyString);
-                                                           [self parseStream:bodyString];
-                                                           [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                                               [_tableViewURL reloadData];
-                                                           }];
-                                                           bodyString = nil;
-                                                           //[bodyString release];
-                                                       }
-                                                       else
-                                                       {
-                                                           [self parseDemoLive];
-                                                       }
-                                                   }];
-    [task resume];
-}
 
 -(void) createPlayer
 {
@@ -336,7 +277,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _player.SetNotify(_player.hPlayer, NotifyEvent, (__bridge void*)self);
     
 #if 0
-    CGRect r = _viewVideo.bounds;
+    CGRect r = _viewVideo.frame;
     RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
     _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
 #else
@@ -402,11 +343,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     
     // Video view
-    _rectFullScreen = self.view.bounds;
-    _rectFullScreen.size.width = self.view.bounds.size.height;
-    _rectFullScreen.size.height = self.view.bounds.size.width;
+    _rectFullScreen = self.view.frame;
+    _rectFullScreen.size.width = self.view.frame.size.height;
+    _rectFullScreen.size.height = self.view.frame.size.width;
     
-    _rectSmallScreen = self.view.bounds;
+    _rectSmallScreen = self.view.frame;
     _rectSmallScreen.size.height /= 3;
     _rectSmallScreen.origin.y = 0;
     _viewVideo = [[UIView alloc] initWithFrame:_rectSmallScreen];
@@ -520,9 +461,9 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 
     // URL list view
-    CGRect r = self.view.bounds;
-    r.size.height -= _viewVideo.bounds.size.height;
-    r.origin.y = _viewVideo.bounds.size.height;
+    CGRect r = self.view.frame;
+    r.size.height -= _viewVideo.frame.size.height;
+    r.origin.y = _viewVideo.frame.size.height;
     _tableViewURL = [[UITableView alloc]initWithFrame:r style:UITableViewStylePlain];
     _tableViewURL.delegate = self;
     _tableViewURL.dataSource = self;
@@ -689,11 +630,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
 
         _player.Open(_player.hPlayer, url, _useHW?QCPLAY_OPEN_VIDDEC_HW:0);
-
-        if(_clipboardURL)
-        {
-            _clipboardURL = nil;
-        }
+        
+        _clipboardURL = nil;
         [_switchCache setHidden:YES];
         [_labelCache setHidden:YES];
     }
@@ -801,7 +739,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     {
         if(isLive)
         {
-            int nVal = NO?QC_PLAY_VideoDisable_Decoder|QC_PLAY_VideoDisable_Render:QC_PLAY_VideoDisable_Render;
+            int nVal = _useHW?QC_PLAY_VideoDisable_Decoder|QC_PLAY_VideoDisable_Render:QC_PLAY_VideoDisable_Render;
             _player.SetParam(_player.hPlayer, QCPLAY_PID_Disable_Video, &nVal);
         }
         else
@@ -812,43 +750,34 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 }
 
 -(IBAction)onFullScreen:(id)sender
-{
+{    
     if(!_isFullScreen)
     {
         _isFullScreen = YES;
-        if([self isLandscape])
+        if([self isVideoLandscape])
         {
             [[UIDevice currentDevice]setValue:[NSNumber numberWithInteger:UIDeviceOrientationLandscapeLeft] forKey:@"orientation"];
-        }
-        else
-        {
         }
     }
     else
     {
         _isFullScreen = NO;
     
-        if([self isLandscape])
+        if([self isVideoLandscape])
             [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIDeviceOrientationPortrait] forKey:@"orientation"];
-        else
-        {
-            
-        }
     }
     
     [_tableViewURL setHidden:_isFullScreen?YES:NO];
     
     if(_player.hPlayer)
     {
-        if([self isLandscape])
+        if([self isVideoLandscape])
         	_viewVideo.frame = _isFullScreen?_rectFullScreen:_rectSmallScreen;
         else
         {
-            _viewVideo.frame = _isFullScreen?self.view.bounds:_rectSmallScreen;
+            _viewVideo.frame = _isFullScreen?self.view.frame:_rectSmallScreen;
         }
-        CGRect r = _viewVideo.bounds;
-        RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
-        _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
+        _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
     }
 }
 
@@ -860,23 +789,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(IBAction)onSelectStream:(id)sender
 {
-#if 0
-    if(_player.hPlayer)
-    {
-        _viewVideo.frame = CGRectMake(_rectSmallScreen.origin.x, _rectSmallScreen.origin.y,
-                                      _rectSmallScreen.size.width, _rectSmallScreen.size.height + 100);
-        CGRect r = _viewVideo.bounds;
-        RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
-        _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
-    }
-    return;
-#endif
-
     QCPLAY_STATUS status = _player.GetStatus(_player.hPlayer);
     
     if(status == QC_PLAY_Run)
     {
-        CGRect r = self.view.bounds;
+        CGRect r = self.view.frame;
         
         if(!_tableViewStreamInfo)
         {
@@ -1125,7 +1042,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     label.font = [UIFont boldSystemFontOfSize:15];
     [showView addSubview:label];
     
-    CGSize videoViewSize = _viewVideo.bounds.size;
+    CGSize videoViewSize = _viewVideo.frame.size;
     
     showView.frame = CGRectMake((screenSize.width - labelSize.width - 20)/2,
                                 videoViewSize.height/2 - labelSize.height/2,
@@ -1141,7 +1058,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(int) getSysTime
 {
-    return [[NSProcessInfo processInfo] systemUptime] * 1000;
+    return ((long long)[[NSProcessInfo processInfo] systemUptime] * 1000) & 0x7FFFFFFF;
 }
 
 -(bool)isLive
@@ -1267,7 +1184,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 #endif
 }
 
-- (BOOL)isLandscape
+- (BOOL)isVideoLandscape
 {
     return _fmtVideo.nWidth >= _fmtVideo.nHeight;
 }
@@ -1297,10 +1214,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(void)dealloc
 {
+    [self onStop:nil];
     [self destroyPlayer];
     [self enableAudioSession:NO];
     
     _urlList = nil;
+    _tapGesture = nil;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
