@@ -26,15 +26,15 @@
 		27CCC17D1E3A3ADE00AEDA22 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CCC17C1E3A3ADE00AEDA22 /* CoreVideo.framework */; };
 		A015036E1E72482300B6093E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A015036D1E72482300B6093E /* libz.tbd */; };
 		A01503701E72488500B6093E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A015036F1E72488500B6093E /* libiconv.tbd */; };
-		A01B66F21F20FBAD0058D8D8 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66EB1F20FBAD0058D8D8 /* libavcodec.a */; };
-		A01B66F31F20FBAD0058D8D8 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66EC1F20FBAD0058D8D8 /* libavformat.a */; };
-		A01B66F41F20FBAD0058D8D8 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66ED1F20FBAD0058D8D8 /* libavutil.a */; };
-		A01B66F51F20FBAD0058D8D8 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66EE1F20FBAD0058D8D8 /* libcrypto.a */; };
-		A01B66F71F20FBAD0058D8D8 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66F01F20FBAD0058D8D8 /* libssl.a */; };
-		A01B66F81F20FBAD0058D8D8 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66F11F20FBAD0058D8D8 /* libswresample.a */; };
-		A01B67101F2110100058D8D8 /* libspeex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B670F1F2110100058D8D8 /* libspeex.a */; };
 		A060DC8C1F972DA700E2F792 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A060DC8B1F972DA700E2F792 /* CoreTelephony.framework */; };
-		A0914135205A491100D0F2E6 /* libyuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0914134205A491100D0F2E6 /* libyuv.a */; };
+		A06B2E362126AE0A0083A635 /* libyuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0914134205A491100D0F2E6 /* libyuv.a */; };
+		A06B2E3B2126AEE70083A635 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66EE1F20FBAD0058D8D8 /* libcrypto.a */; };
+		A06B2E3C2126AEE70083A635 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66F01F20FBAD0058D8D8 /* libssl.a */; };
+		A06B2E492126B4300083A635 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66EB1F20FBAD0058D8D8 /* libavcodec.a */; };
+		A06B2E4A2126B4300083A635 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66EC1F20FBAD0058D8D8 /* libavformat.a */; };
+		A06B2E4B2126B4300083A635 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66ED1F20FBAD0058D8D8 /* libavutil.a */; };
+		A06B2E4C2126B4300083A635 /* libspeex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B670F1F2110100058D8D8 /* libspeex.a */; };
+		A06B2E4D2126B4300083A635 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A01B66F11F20FBAD0058D8D8 /* libswresample.a */; };
 		A09DCC991E91F0CB00DC855E /* export.plist in Resources */ = {isa = PBXBuildFile; fileRef = A09DCC981E91F0CB00DC855E /* export.plist */; };
 		A0F41EA71E6C1BAC0024DA4C /* seekbar.png in Resources */ = {isa = PBXBuildFile; fileRef = A0F41EA51E6C1BAC0024DA4C /* seekbar.png */; };
 		A0F41EA81E6C1BAC0024DA4C /* seekbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A0F41EA61E6C1BAC0024DA4C /* seekbar@2x.png */; };
@@ -87,6 +87,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A06B2E492126B4300083A635 /* libavcodec.a in Frameworks */,
+				A06B2E4A2126B4300083A635 /* libavformat.a in Frameworks */,
+				A06B2E4B2126B4300083A635 /* libavutil.a in Frameworks */,
+				A06B2E4C2126B4300083A635 /* libspeex.a in Frameworks */,
+				A06B2E4D2126B4300083A635 /* libswresample.a in Frameworks */,
+				A06B2E3B2126AEE70083A635 /* libcrypto.a in Frameworks */,
+				A06B2E3C2126AEE70083A635 /* libssl.a in Frameworks */,
+				A06B2E362126AE0A0083A635 /* libyuv.a in Frameworks */,
 				A01503701E72488500B6093E /* libiconv.tbd in Frameworks */,
 				A015036E1E72482300B6093E /* libz.tbd in Frameworks */,
 				A060DC8C1F972DA700E2F792 /* CoreTelephony.framework in Frameworks */,
@@ -101,14 +109,6 @@
 				27648E231E37184A005C1A20 /* AVFoundation.framework in Frameworks */,
 				27C98B291E3515DF0018DFA1 /* AudioToolbox.framework in Frameworks */,
 				27C98B221E35008C0018DFA1 /* libqcPlayEng.a in Frameworks */,
-				A0914135205A491100D0F2E6 /* libyuv.a in Frameworks */,
-				A01B67101F2110100058D8D8 /* libspeex.a in Frameworks */,
-				A01B66F71F20FBAD0058D8D8 /* libssl.a in Frameworks */,
-				A01B66F51F20FBAD0058D8D8 /* libcrypto.a in Frameworks */,
-				A01B66F21F20FBAD0058D8D8 /* libavcodec.a in Frameworks */,
-				A01B66F81F20FBAD0058D8D8 /* libswresample.a in Frameworks */,
-				A01B66F41F20FBAD0058D8D8 /* libavutil.a in Frameworks */,
-				A01B66F31F20FBAD0058D8D8 /* libavformat.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,7 +409,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = GDFHW66V92;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					../../../include,
@@ -438,7 +438,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = GDFHW66V92;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				HEADER_SEARCH_PATHS = (
 					../../../include,

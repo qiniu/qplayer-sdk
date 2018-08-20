@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>compileBitcode</key>
-	<false/>
+	<true/>
 	<key>uploadSymbols</key>
 	<false/>
 </dict>

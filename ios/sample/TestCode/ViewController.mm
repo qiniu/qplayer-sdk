@@ -45,7 +45,6 @@
     
     NSInteger		_networkConnectionErrorTime;
     NSString*		_clipboardURL;
-    BOOL			_loopPlayback;
     int				_openStartTime;
     int				_firstFrameTime;
     QC_VIDEO_FORMAT _fmtVideo;
@@ -66,6 +65,7 @@
     _currURL = 0;
     _clipboardURL = nil;
 
+    [_urlList addObject:@"https://v4.cdn.xiangha.com/video/201808/14145b727c10e02e8/eGg0ODBw.m3u8?v=1.1&sign=f793c7b5b10ef21f1a66cdf768d02ed0&t=5b7518af"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"MP4"];
     [_urlList addObject:@"http://op053v693.bkt.clouddn.com/IMG_3376.MP4"];
@@ -147,7 +147,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             [self showMessage:@"Open fail" duration:2.0];
             [_switchCache setHidden:NO];
             [_labelCache setHidden:NO];
-            [self loopPlayback];
         }];
     }
     else if (nID == QC_MSG_PLAY_SEEK_DONE)
@@ -164,8 +163,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         int status = *(int*)pParam;
         NSLog(@"EOS status %d, %lld", status, _player.GetPos(_player.hPlayer));
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-
-        if(![self loopPlayback])
             [self onStop: _btnStart];
         }];
     }
@@ -232,14 +229,18 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else if (nID == QC_MSG_BUFF_START_BUFFERING)
     {
         NSLog(@"START_BUFFERING\n");
-        if(_waitView)
-            [_waitView startAnimating];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if(_waitView)
+                [_waitView startAnimating];
+        }];
     }
     else if (nID == QC_MSG_BUFF_END_BUFFERING)
     {
         NSLog(@"END_BUFFERING\n");
-        if(_waitView)
-            [_waitView stopAnimating];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if(_waitView)
+                [_waitView stopAnimating];
+        }];
     }
 }
 
@@ -268,22 +269,15 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         return;
     
     qcCreatePlayer(&_player, NULL);
-    
 #if 0
     int log = 5;
     _player.SetParam(_player.hPlayer, QCPLAY_PID_Log_Level, (void*)&log);
 #endif
-
     _player.SetNotify(_player.hPlayer, NotifyEvent, (__bridge void*)self);
-    
-#if 0
-    CGRect r = _viewVideo.frame;
-    RECT drawRect = {(int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height};
-    _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, &drawRect);
-#else
     _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
-#endif
 
+    
+    
 #if 0
     char* val = "127.0.0.1";
     _player.SetParam(_player.hPlayer, QCPLAY_PID_DNS_SERVER, (void*)val);
@@ -572,7 +566,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _useHW = NO;
     _lastPlaybackPos = -1;
     _playbackFromLastPos = YES;
-    _loopPlayback = NO;
     _firstFrameTime = -1;
     [self enableAudioSession:YES];
     [self setupUI];
@@ -1086,7 +1079,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             if(!strncmp(newURL, oldURL, end-oldURL))
             {
                 NSLog(@"+Fast open, %s", newURL);
-                int flag = 0;//_switchHW.on?QCPLAY_OPEN_VIDDEC_HW:0;
+                int flag = _useHW?QCPLAY_OPEN_VIDDEC_HW:0;
                 [self updateFileCacheMode];
                 _openStartTime = [self getSysTime];
                 NSLog(@"Open start time %d. %d", _openStartTime, [self getSysTime]);
@@ -1116,26 +1109,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         int nProtocol = QC_IOPROTOCOL_NONE;
         _player.SetParam(_player.hPlayer, QCPLAY_PID_Prefer_Protocol, &nProtocol);
     }
-}
-
--(bool)loopPlayback
-{
-    if(!_loopPlayback)
-        return false;
-    if([_urlList count] <= 0)
-        return false;
-    
-    _currURL++;
-    if(_currURL >= [_urlList count])
-        _currURL = 0;
-    
-    if([self fastOpen:[[_urlList objectAtIndex:_currURL] UTF8String]])
-        return true;
-    
-    [self onStop:_btnStart];
-    [self onStart:_btnStart];
-    
-    return true;
 }
 
 -(bool)updateVideoSize:(QC_VIDEO_FORMAT*)pFmt
@@ -1189,8 +1162,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     return _fmtVideo.nWidth >= _fmtVideo.nHeight;
 }
 
-
-
 -(NSString*)getVersion
 {
     QCM_Player player;
@@ -1204,14 +1175,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     return version;
 }
 
-
 #pragma mark Other
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 -(void)dealloc
 {
     [self onStop:nil];
