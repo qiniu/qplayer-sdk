@@ -135,6 +135,14 @@ public interface BasePlayer {
 	// Set the DRM key
 	// The parameter should be byte[].
 	public static final int	QCPLAY_PID_DRM_KeyText				= 0X11000301;
+	
+	// Set the pd file key
+	// The parameter should be byte[].
+	public static final int	QCPLAY_PID_FILE_KeyText				= 0X11000302;
+		
+	// Set the mp4 company key
+	// The parameter should be byte[].
+	public static final int	QCPLAY_PID_COMP_KeyText				= 0X11000303;	
 
 	// Set to call back video buffer. It should be set after open before run.
 	// The parameter is 1, it will render outside, 0 render internal
