@@ -254,6 +254,10 @@ typedef struct
 // The parameter should be char *.
 #define	QCPLAY_PID_FILE_KeyText				QC_PLAY_BASE + 0X0302
 
+// Set the comp key 
+// The parameter should be char *.
+#define	QCPLAY_PID_COMP_KeyText				QC_PLAY_BASE + 0X0303
+
 // Set to capture video image
 // The parameter should be long long * (ms). capture time. 0 is immediatily.
 // This should be called after open done event.

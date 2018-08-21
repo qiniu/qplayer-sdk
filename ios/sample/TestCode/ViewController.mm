@@ -65,7 +65,6 @@
     _currURL = 0;
     _clipboardURL = nil;
 
-    [_urlList addObject:@"https://v4.cdn.xiangha.com/video/201808/14145b727c10e02e8/eGg0ODBw.m3u8?v=1.1&sign=f793c7b5b10ef21f1a66cdf768d02ed0&t=5b7518af"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"MP4"];
     [_urlList addObject:@"http://op053v693.bkt.clouddn.com/IMG_3376.MP4"];
