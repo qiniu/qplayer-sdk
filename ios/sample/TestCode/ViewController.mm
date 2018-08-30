@@ -65,6 +65,7 @@
     _currURL = 0;
     _clipboardURL = nil;
 
+    [_urlList addObject:@""];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"MP4"];
     [_urlList addObject:@"http://op053v693.bkt.clouddn.com/IMG_3376.MP4"];
@@ -242,15 +243,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         }];
     }
 }
-
--(void)setVideoView:(UIView*)view rect:(RECT*)drawRect
-{
-    if(!_player.hPlayer)
-        return;
-    
-    _player.SetView(_player.hPlayer, (__bridge void*)view, drawRect);
-}
-
 
 -(void) destroyPlayer
 {
@@ -725,7 +717,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         {
             _player.Run(_player.hPlayer);
         }
-        
     }
     else
     {
@@ -742,7 +733,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 }
 
 -(IBAction)onFullScreen:(id)sender
-{    
+{
     if(!_isFullScreen)
     {
         _isFullScreen = YES;
