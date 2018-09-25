@@ -99,6 +99,42 @@ typedef struct
 // The parameter should be long long *
 #define QCIO_PID_HTTP_SAVE_SIZE			QC_MOD_IO_HTTP + 0X09
     
+// Set HTTP Disconnect
+// The parameter.
+#define QCIO_PID_HTTP_DISCONNECT		QC_MOD_IO_HTTP + 0X10
+
+// Set HTTP Reconnect
+// The parameter.
+#define QCIO_PID_HTTP_RECONNECT			QC_MOD_IO_HTTP + 0X12
+
+// Set HTTP Data start pos
+// The parameter, long long *
+#define QCIO_PID_HTTP_DATAPOS			QC_MOD_IO_HTTP + 0X13
+
+// Set HTTP Moov start pos
+// The parameter, long long *
+#define QCIO_PID_HTTP_MOOVPOS			QC_MOD_IO_HTTP + 0X14
+
+// Set HTTP Moov size
+// The parameter, int *
+#define QCIO_PID_HTTP_MOOVSIZE			QC_MOD_IO_HTTP + 0X15
+
+// Set HTTP the memory
+// The parameter, CHTTPIO2*
+#define QCIO_PID_HTTP_COPYMEM			QC_MOD_IO_HTTP + 0X16
+
+// Set HTTP notity message
+// The parameter, int * 0, not notify
+#define QCIO_PID_HTTP_NOTIFY			QC_MOD_IO_HTTP + 0X17
+
+// Set HTTP open cache
+// The parameter, int * 1, Open cache
+#define QCIO_PID_HTTP_OPENCACHE			QC_MOD_IO_HTTP + 0X18
+
+// Set HTTP open cache size
+// The parameter, int * 
+#define QCIO_PID_HTTP_CACHE_SIZE		QC_MOD_IO_HTTP + 0X19
+
 // Get RTMP audio message timestamp
 // The parameter should be long long *.
 #define QCIO_PID_RTMP_AUDIO_MSG_TIMESTAMP     QC_MOD_IO_RTMP + 0X01

@@ -85,6 +85,7 @@
 
 // define the Video Dec error ID
 #define QC_ERR_VIDEO_DEC				0x84000000
+#define QC_ERR_VIDEO_HWDEC				0x84000001
 
 // define the Video Dec error ID
 #define QC_ERR_VIDEO_DEC_H264			0x84100000

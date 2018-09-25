@@ -32,6 +32,10 @@ extern "C" {
 // The parameter should be long long *
 #define	QCPARSER_PID_SEEK_IO_POS	QC_PARSER_BASE + 0X03
 
+// Set Open with Cache
+// The parameter should be int. 1 cache, 0 no.
+#define	QCPARSER_PID_OpenCache		QC_PARSER_BASE + 0X10
+
 /**
  * the qc parser interface 
  */
