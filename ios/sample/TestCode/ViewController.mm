@@ -197,6 +197,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [self showMessage:@"Reconnect success" duration:5.0];
+            if(_waitView)
+                [_waitView stopAnimating];
         }];
     }
     else if(nID == QC_MSG_SNKV_FIRST_FRAME)
@@ -308,6 +310,11 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _player.SetParam(_player.hPlayer, QCPLAY_PID_ADD_Cache, (void*)url);
     url = (char*)"http://op053v693.bkt.clouddn.com/qiniu_480x270.mp4";
     _player.SetParam(_player.hPlayer, QCPLAY_PID_ADD_Cache, (void*)url);
+#endif
+    
+#if 0
+    char* value = (char*)"User-Agent:APPLE_iPhone7,1_iOS11.4.1;59EA6724-4D2D-4055-A755-4B507B691687;";
+    _player.SetParam(_player.hPlayer, QCPLAY_PID_HTTP_HeadUserAgent, (void*)value);
 #endif
 }
 
@@ -693,6 +700,12 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     NSString* strDur = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", dur / 3600, dur % 3600 / 60, dur % 3600 % 60];
 
     _labelPlayingTime.text = [NSString stringWithFormat: @"%s - %d - %dx%d - %@%@%@", _useHW?"HW":"SW", _firstFrameTime, _fmtVideo.nWidth, _fmtVideo.nHeight, strPos, @" / " , strDur];
+    
+    if(dur > 0)
+    {
+        if(![_sliderPosition isEnabled])
+            _sliderPosition.enabled = YES;
+    }
 }
 
 -(void)onAppActive:(BOOL)active

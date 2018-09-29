@@ -250,6 +250,19 @@ typedef struct
 // If the param is null, delete all cache source.
 #define	QCPLAY_PID_DEL_Cache				QC_PLAY_BASE + 0X0251
 
+// Add the source io in cache.
+// The parameter should be const char *
+#define	QCPLAY_PID_ADD_IOCache				QC_PLAY_BASE + 0X0255
+
+// Del the source io in cache list.
+// The parameter should be const char *. 
+// If the param is null, delete all cache source.
+#define	QCPLAY_PID_DEL_IOCache				QC_PLAY_BASE + 0X0256
+
+// Set the io cache size.
+// The parameter should be int *. 
+#define	QCPLAY_PID_IOCache_Size				QC_PLAY_BASE + 0X0257
+
 // Set the DRM key 
 // The parameter should be char *.
 #define	QCPLAY_PID_DRM_KeyText				QC_PLAY_BASE + 0X0301
