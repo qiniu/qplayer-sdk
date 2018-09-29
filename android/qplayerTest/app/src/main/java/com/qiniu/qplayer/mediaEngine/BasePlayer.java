@@ -129,6 +129,20 @@ public interface BasePlayer {
 	// If the param is null, delete all cache source.
 	public static final int	QCPLAY_PID_DEL_Cache				= 0X11000251;
 	
+		// Add the source io in cache.
+	// The parameter should be const char *
+	public static final int	QCPLAY_PID_ADD_IOCache				= 0X11000255;
+
+	// Del the source io in cache list.
+	// The parameter should be const char *.
+	// If the param is null, delete all cache source.
+	public static final int	QCPLAY_PID_DEL_IOCache				= 0X11000256;
+
+	// Set the io cache size.
+	// The parameter should be int *.
+	public static final int	QCPLAY_PID_IOCache_Size				= 0X11000257;
+	
+	
 	// Set the log out level
 	// The parameter should be int, 0, None, 1 error, 2 warning, 3 info, 4 debug.
 	public static final int	QCPLAY_PID_Log_Level				= 0X11000320;

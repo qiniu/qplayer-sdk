@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity
     private TimerTask           m_ttPlay = null;
     private uiHandler           m_handlerEvent = null;
 
+    private int                 m_nIndexItem = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity
             return 0;
 
         if (nID == BasePlayer.QC_MSG_PLAY_OPEN_DONE) {
+        //    if(m_nIndexItem == 0)
+        //        m_Player.SetParam(BasePlayer.QCPLAY_PID_Speed, 0X0004000a, null);
             m_Player.Play();
         } else if (nID == BasePlayer.QC_MSG_SNKV_NEW_FORMAT) {
             UpdateSurfaceViewPos(nArg1, nArg2);
@@ -124,9 +128,9 @@ public class MainActivity extends AppCompatActivity
             String strDnsServer = "114.114.114.114";    // UDP dns parser
             //String strDnsServer = "127.0.0.1";        // local system dns parser
             //m_Player.SetParam(BasePlayer.QCPLAY_PID_DNS_SERVER, 0, strDnsServer);
-            String strHost = "video.qiniu.3tong.com";
-            // m_Player.SetParam(BasePlayer.QCPLAY_PID_DNS_DETECT, 0, strHost);
-            //m_Player.SetParam(BasePlayer.QCPLAY_PID_Playback_Loop, 1, null);
+            String strHost = "play-sg.magicmovie.video";
+            m_Player.SetParam(BasePlayer.QCPLAY_PID_DNS_DETECT, 0, strHost);
+            m_Player.SetParam(BasePlayer.QCPLAY_PID_Playback_Loop, 1, null);
 
             //m_Player.SetParam(BasePlayer.QCPLAY_PID_Prefer_Protocol, BasePlayer.QC_IOPROTOCOL_HTTPPD, null);
             File file = Environment.getExternalStorageDirectory();
@@ -196,10 +200,9 @@ public class MainActivity extends AppCompatActivity
 
         m_lstFiles = (ListView) findViewById(R.id.listViewFile);
         String[] strFiles = new String[]{
-                "http://video.qiniu.3tong.com/720_201883248781950976.mp4",
-                "http://video.qiniu.3tong.com/720_182584969019785216.mp4",
-                "http://video.qiniu.3tong.com/720_179737636708024320.mp4",
-                "http://video.qiniu.3tong.com/720_188810429944823808.mp4",
+                "http://play-sg.magicmovie.video/1522840135682377_6533932314185962496_VZrIwtRwNf_o.mp4",
+                "http://play-sg.magicmovie.video/1522842052934924_6534017832290620416_DywxWfSnpl_o.mp4",
+                "http://play-sg.magicmovie.video/1522839490686343_6533947726588023808_BppAQqcNLc_o.mp4",
                 "http://oh4yf3sig.cvoda.com/cWEtZGlhbmJvdGVzdDpY54m56YGj6ZifLumfqeeJiC5IRGJ1eHVhbnppZG9uZzAwNC5tcDQ=_q00030002.mp4"
         };
         m_lstFiles.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strFiles));
@@ -219,10 +222,11 @@ public class MainActivity extends AppCompatActivity
         m_lstFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                m_nIndexItem = position;
                 ArrayAdapter adapter = (ArrayAdapter) m_lstFiles.getAdapter();
                 String strFile = (String) adapter.getItem(position).toString();
                 int nFlag = 0;
-                //nFlag = BasePlayer.QCPLAY_OPEN_SAME_SOURCE;
+                nFlag = BasePlayer.QCPLAY_OPEN_SAME_SOURCE;
                 m_Player.Open(strFile, nFlag);
             }
         });
