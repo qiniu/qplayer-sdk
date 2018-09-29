@@ -23,7 +23,7 @@
 #define QC_MSG_HTTP_CONNECT_SUCESS		0x11000003		// Param: 
 #define QC_MSG_HTTP_DNS_START			0x11000004		// Param: 
 #define QC_MSG_HTTP_DNS_GET_CACHE		0x11000005		// Param: 
-#define QC_MSG_HTTP_DNS_GET_IPADDR		0x11000006		// Param: 
+#define QC_MSG_HTTP_DNS_GET_IPADDR		0x11000006		// Param:
 #define QC_MSG_HTTP_GET_HEADDATA		0x11000010		// Param: 
 #define QC_MSG_HTTP_CONTENT_LEN			0x11000011		// Param: long long size.
 #define QC_MSG_HTTP_REDIRECT			0x11000012		// Param: redirect url
@@ -39,6 +39,8 @@
 #define QC_MSG_HTTP_DOWNLOAD_PERCENT	0x11000061		// Param: int 0 -100 %
 #define QC_MSG_HTTP_CONTENT_SIZE		0x11000062		// Param: long long bytes
 #define QC_MSG_HTTP_BUFFER_SIZE			0x11000063		// Param: long long bytes
+#define QC_MSG_HTTP_CONTENT_TYPE        0x11000064      // Param: string
+#define QC_MSG_HTTP_SEND_BYTE        	0x11000065      // Param: long long bytes
 
 #define QC_MSG_RTMP_CONNECT_START		0x11010001		// Param: URL.
 #define QC_MSG_RTMP_CONNECT_FAILED		0x11010002		// Param:
@@ -53,7 +55,10 @@
 
 
 #define QC_MSG_IO_FIRST_BYTE_DONE		0x11020001		// Param:
-#define QC_MSG_IO_SEEK_SOURCE_TYPE		0x11020002		// Param: int * 0, None, 1 File, 2 Http, 
+#define QC_MSG_IO_SEEK_SOURCE_TYPE		0x11020002		// Param: int * 0, None, 1 File, 2 Http,
+#define QC_MSG_IO_HANDSHAKE_START       0x11020003
+#define QC_MSG_IO_HANDSHAKE_FAILED      0x11020004
+#define QC_MSG_IO_HANDSHAKE_SUCESS      0x11020005
 
 
 // define the parser msg ID
@@ -115,6 +120,9 @@
 #define QC_MSG_PLAY_STOP				0x1600000E
 #define QC_MSG_PLAY_CAPTURE_IMAGE		0x16000010		//param m_pInfo QC_DATA_BUFF pointer. 
 #define QC_MSG_PLAY_LOOP_TIMES			0x16000011
+
+#define QC_MSG_PLAY_CACHE_DONE			0x16000021
+#define QC_MSG_PLAY_CACHE_FAILED		0x16000022
 
 // define the buffer msg ID
 #define QC_MSG_BUFF_VBUFFTIME			0x18000001		//param: video buff time
