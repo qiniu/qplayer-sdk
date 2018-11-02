@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -227,7 +229,8 @@ public class MainActivity extends AppCompatActivity
                 String strFile = (String) adapter.getItem(position).toString();
                 int nFlag = 0;
                 nFlag = BasePlayer.QCPLAY_OPEN_SAME_SOURCE;
-                m_Player.Open(strFile, nFlag);
+                //m_Player.Open(strFile, nFlag);
+                openExtSource ();
             }
         });
 
@@ -263,5 +266,111 @@ public class MainActivity extends AppCompatActivity
             m_txtPos.setText(strPos);
             m_sbPos.setProgress(nPos / (m_nDuration / 100));
         }
+    }
+
+    public void openExtSource () {
+        if (m_Player == null)
+            return;
+        m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_VIDEO_CODECID, BasePlayer.QC_CODEC_ID_H264, null);
+        //m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_AAC, null);
+        m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_G711, null);
+        m_Player.Open ("EXT_AV", BasePlayer.QCPLAY_OPEN_EXT_SOURCE_AV);
+        fillVideoData ();
+        fillAudioData ();
+    }
+
+    public void fillVideoData () {
+        Thread thread = new Thread(){
+            public void run() {
+                String strFile = "/sdcard/00Files/H264.dat";
+                try {
+                    File file = new File(strFile);
+                    FileInputStream input = new FileInputStream(file);
+                    int nFileSize = input.available();
+                    int nFilePos = 0;
+                    int nDataSize = 0;
+                    int nRC = 0;
+                    byte[]  byDataInfo = new byte[16];
+                    byte[]  byDataBuff = new byte[1024000];
+
+                    ByteBuffer byBuff = ByteBuffer.wrap(byDataInfo);
+
+                    while (nFilePos < nFileSize) {
+                        input.read (byDataInfo, 0, 16);
+                        nFilePos += 16;
+
+                        nDataSize = byBuff.getInt(0);
+
+                        input.read (byDataBuff, 0, nDataSize);
+                        nFilePos += nDataSize;
+
+                        nRC = -1;
+                        while (nRC != 0) {
+                            nRC = m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_SOURCE_INFO, 2, byDataInfo);
+                        }
+                        nRC = -1;
+                        while (nRC != 0) {
+                            nRC = m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_SOURCE_DATA, 2, byDataBuff);
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+    }
+
+    public void fillAudioData () {
+        Thread thread = new Thread(){
+            public void run() {
+                boolean bG711 = true;
+                String strFile = "/sdcard/00Files/AAC.dat";
+                if (bG711)
+                    strFile = "/sdcard/00Files/G711.alaw";
+                try {
+                    File file = new File(strFile);
+                    FileInputStream input = new FileInputStream(file);
+                    int nFileSize = input.available();
+                    int nFilePos = 0;
+                    int nDataSize = 200;
+                    long lTime = 0;
+                    int nRC = 0;
+                    byte[]  byDataInfo = new byte[16];
+                    byte[]  byDataBuff = new byte[192000];
+
+                    ByteBuffer byBuff = ByteBuffer.wrap(byDataInfo);
+
+                    while (nFilePos < nFileSize) {
+                        if (bG711) {
+                            byBuff.putInt(0, nDataSize);
+                            byBuff.putLong(4, lTime);
+                            byBuff.putInt (12, 0);
+                            lTime += 50;
+                        } else {
+                            input.read(byDataInfo, 0, 16);
+                            nFilePos += 16;
+                            nDataSize = byBuff.getInt(0);
+                        }
+                        input.read(byDataBuff, 0, nDataSize);
+                        nFilePos += nDataSize;
+
+                        nRC = -1;
+                        while (nRC != 0) {
+                            nRC = m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_SOURCE_INFO, 1, byDataInfo);
+                        }
+                        nRC = -1;
+                        while (nRC != 0) {
+                            nRC = m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_SOURCE_DATA, 1, byDataBuff);
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
     }
 }
