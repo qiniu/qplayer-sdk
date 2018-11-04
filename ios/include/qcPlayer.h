@@ -35,6 +35,9 @@ typedef enum {
 
 #define	QCPLAY_OPEN_SAME_SOURCE				0X02000000
 
+#define	QCPLAY_OPEN_EXT_SOURCE_AV			0X10000000
+#define	QCPLAY_OPEN_EXT_SOURCE_IO			0X20000000
+
 // Call back function of player notify event
 typedef void (QC_API * QCPlayerNotifyEvent) (void * pUserData, int nID, void * pValue1);
 
@@ -304,7 +307,21 @@ typedef struct
 // The parameter should be int *. 0, disable, 1 enable
 #define	QCPLAY_PID_EXT_AITracking			QC_PLAY_BASE + 0X0350
 
+// Set the ext source data
+// The parameter should be 
+// QCPLAY_OPEN_EXT_SOURCE_AV	QC_DATA_BUFF *		
+// QCPLAY_OPEN_EXT_SOURCE_IO	QC_DATA_BUFF *	llTime is data pos
+#define	QCPLAY_PID_EXT_SOURCE_DATA			QC_PLAY_BASE + 0X0500
 
+// for Android
+#define	QCPLAY_PID_EXT_SOURCE_INFO			QC_PLAY_BASE + 0X0501
+
+// Set the ext source video codec id
+// The parameter should be int * QCCodecID
+#define	QCPLAY_PID_EXT_VIDEO_CODEC			QC_PLAY_BASE + 0X0511
+// Set the ext source audio codec id
+// The parameter should be int * QCCodecID
+#define	QCPLAY_PID_EXT_AUDIO_CODEC			QC_PLAY_BASE + 0X0512
 
 // the video aspect ratio.
 typedef struct {
