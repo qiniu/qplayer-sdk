@@ -156,6 +156,7 @@ typedef enum {
     QC_IOTYPE_RTMP,
 	QC_IOTYPE_RTSP,
 	QC_IOTYPE_EXTLIB,
+	QC_IOTYPE_EXTIO,
 	QC_IOTYPE_MAX		= 0X7FFFFFFF
 }QCIOType;
 
@@ -202,7 +203,7 @@ typedef struct
 	// read the data from llPos until fill buff full
 	int				(* ReadSync)	(void * hIO, long long llPos, unsigned char * pBuff, int nSize, int nFlag);
 	// write the data, 
-	int				(* Write)		(void * hIO, unsigned char * pBuff, int & nSize);
+	int				(* Write)		(void * hIO, unsigned char * pBuff, int & nSize, long long llPos);
 	// return current pos after set pos.
 	long long 		(* SetPos)		(void * hIO, long long llPos, int nFlag);
 
