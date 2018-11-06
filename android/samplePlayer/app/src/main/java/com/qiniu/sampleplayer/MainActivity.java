@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity
     private TimerTask           m_ttPlay = null;
     private uiHandler           m_handlerEvent = null;
 
+    private Thread              m_threadSource = null;
+
     private int                 m_nIndexItem = 0;
 
     @Override
@@ -271,12 +273,18 @@ public class MainActivity extends AppCompatActivity
     public void openExtSource () {
         if (m_Player == null)
             return;
-        m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_VIDEO_CODECID, BasePlayer.QC_CODEC_ID_H264, null);
-        //m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_AAC, null);
-        m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_G711, null);
-        m_Player.Open ("EXT_AV", BasePlayer.QCPLAY_OPEN_EXT_SOURCE_AV);
-        fillVideoData ();
-        fillAudioData ();
+        boolean bSourceAV = true;
+        if (bSourceAV) {
+            m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_VIDEO_CODECID, BasePlayer.QC_CODEC_ID_H264, null);
+            //m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_AAC, null);
+            m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_G711, null);
+            m_Player.Open("EXT_AV", BasePlayer.QCPLAY_OPEN_EXT_SOURCE_AV);
+            fillVideoData();
+            fillAudioData();
+        } else {
+            m_Player.Open("EXT_AV", BasePlayer.QCPLAY_OPEN_EXT_SOURCE_IO);
+            filSourceData();
+        }
     }
 
     public void fillVideoData () {
@@ -372,5 +380,49 @@ public class MainActivity extends AppCompatActivity
             }
         };
         thread.start();
+    }
+
+    public void filSourceData () {
+        m_threadSource = new Thread(){
+            public void run() {
+                String strFile = "/sdcard/00Files/origin.mp4";
+                try {
+                    File file = new File(strFile);
+                    FileInputStream input = new FileInputStream(file);
+                    int nFileSize = input.available();
+                    int nFilePos = 0;
+                    int nDataSize = 32768;
+                    int nRC = 0;
+                    long lPos = 0;
+                    byte[]  byDataInfo = new byte[16];
+                    byte[]  byDataBuff = new byte[192000];
+                    ByteBuffer byBuff = ByteBuffer.wrap(byDataInfo);
+
+                    while (nFilePos < nFileSize) {
+                        byBuff.putInt(0, nDataSize);
+                        byBuff.putLong(4, lPos);
+                        byBuff.putInt (12, 0);
+                        lPos += nDataSize;
+
+                        input.read(byDataBuff, 0, nDataSize);
+                        nFilePos += nDataSize;
+
+                        nRC = -1;
+                        while (nRC != 0) {
+                            nRC = m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_SOURCE_INFO, 0, byDataInfo);
+                        }
+                        nRC = -1;
+                        while (nRC != 0) {
+                            nRC = m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_SOURCE_DATA, 0, byDataBuff);
+                            m_threadSource.sleep(10);
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        m_threadSource.start();
     }
 }
