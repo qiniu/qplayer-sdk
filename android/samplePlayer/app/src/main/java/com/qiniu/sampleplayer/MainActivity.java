@@ -275,10 +275,12 @@ public class MainActivity extends AppCompatActivity
             return;
         boolean bSourceAV = true;
         if (bSourceAV) {
+            m_Player.Open("EXT_AV", BasePlayer.QCPLAY_OPEN_EXT_SOURCE_AV);
+
             m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_VIDEO_CODECID, BasePlayer.QC_CODEC_ID_H264, null);
             //m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_AAC, null);
             m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_G711, null);
-            m_Player.Open("EXT_AV", BasePlayer.QCPLAY_OPEN_EXT_SOURCE_AV);
+
             fillVideoData();
             fillAudioData();
         } else {
@@ -336,13 +338,13 @@ public class MainActivity extends AppCompatActivity
                 boolean bG711 = true;
                 String strFile = "/sdcard/00Files/AAC.dat";
                 if (bG711)
-                    strFile = "/sdcard/00Files/G711.alaw";
+                    strFile = "/sdcard/00Files/test.g711";
                 try {
                     File file = new File(strFile);
                     FileInputStream input = new FileInputStream(file);
                     int nFileSize = input.available();
                     int nFilePos = 0;
-                    int nDataSize = 200;
+                    int nDataSize = 800;
                     long lTime = 0;
                     int nRC = 0;
                     byte[]  byDataInfo = new byte[16];
