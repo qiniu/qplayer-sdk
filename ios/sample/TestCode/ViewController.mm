@@ -65,8 +65,8 @@
     _currURL = 1;
     _clipboardURL = nil;
 
-    [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20181025/cont-1462783-10436258-142728-fhd.mp4"];
     [_urlList addObject:@"rtmp://media3.sinovision.net:1935/live/livestream"];
+    [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20181025/cont-1462783-10436258-142728-fhd.mp4"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"MP4"];
     [_urlList addObject:@"http://op053v693.bkt.clouddn.com/IMG_3376.MP4"];
@@ -766,17 +766,23 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIDeviceOrientationPortrait] forKey:@"orientation"];
     }
     
-    [_tableViewURL setHidden:_isFullScreen?YES:NO];
-    
     if(_player.hPlayer)
     {
         if([self isVideoLandscape])
-        	_viewVideo.frame = _isFullScreen?_rectFullScreen:_rectSmallScreen;
+        {
+            [_tableViewURL setHidden:_isFullScreen?YES:NO];
+            _viewVideo.frame = _isFullScreen?_rectFullScreen:_rectSmallScreen;
+            _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
+        }
         else
         {
-            _viewVideo.frame = _isFullScreen?self.view.frame:_rectSmallScreen;
+            [UIView animateKeyframesWithDuration:.3 delay:0 options:(UIViewKeyframeAnimationOptionLayoutSubviews) animations:^{
+                [_tableViewURL setHidden:_isFullScreen?YES:NO];
+                 _viewVideo.frame = _isFullScreen?self.view.frame:_rectSmallScreen;
+                _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
+             }completion:^(BOOL finished){
+             }];
         }
-        _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
     }
 }
 
