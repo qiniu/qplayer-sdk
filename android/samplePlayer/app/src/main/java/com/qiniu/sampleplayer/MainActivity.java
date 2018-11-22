@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity
 
             m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_VIDEO_CODECID, BasePlayer.QC_CODEC_ID_H264, null);
             //m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_AAC, null);
-            m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_G711, null);
+            m_Player.SetParam(BasePlayer.QCPLAY_PID_EXT_AUDIO_CODECID, BasePlayer.QC_CODEC_ID_G711U, null);
 
             fillVideoData();
             fillAudioData();
@@ -338,7 +338,8 @@ public class MainActivity extends AppCompatActivity
                 boolean bG711 = true;
                 String strFile = "/sdcard/00Files/AAC.dat";
                 if (bG711)
-                    strFile = "/sdcard/00Files/test.g711";
+                    //strFile = "/sdcard/00Files/test.g711";
+                    strFile = "/sdcard/00Files/test.ulaw";
                 try {
                     File file = new File(strFile);
                     FileInputStream input = new FileInputStream(file);

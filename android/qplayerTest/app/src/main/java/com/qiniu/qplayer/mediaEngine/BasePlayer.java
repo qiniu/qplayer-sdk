@@ -26,8 +26,9 @@ public interface BasePlayer {
 	public static final int		QC_CODEC_ID_H265			= 0X02;
 
 	public static final int		QC_CODEC_ID_AAC				= 0X10000;
-	public static final int		QC_CODEC_ID_G711			= 0X10006;
-
+	public static final int		QC_CODEC_ID_G711A			= 0X10006;
+	public static final int		QC_CODEC_ID_G711U			= 0X10007;
+	
 	public static final int		QC_IOPROTOCOL_HTTPPD 		= 6;
 
 	// define the flag for player
