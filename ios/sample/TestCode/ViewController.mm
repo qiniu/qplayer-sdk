@@ -571,8 +571,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     
     _isFullScreen = NO;
     
-    _switchLoop.on = YES;
-    [self onStart:nil];
+//    _switchLoop.on = YES;
+//    [self onStart:nil];
 }
 
 #pragma mark UI action
