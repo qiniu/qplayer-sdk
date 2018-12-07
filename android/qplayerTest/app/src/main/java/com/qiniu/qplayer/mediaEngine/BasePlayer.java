@@ -22,11 +22,20 @@ public interface BasePlayer {
 	public static final int		QCPLAY_FORMAT_MP3			= 5;
 	public static final int		QCPLAY_FORMAT_AAC			= 6;
 
+	public static final int		QC_CODEC_ID_H264			= 0X01;
+	public static final int		QC_CODEC_ID_H265			= 0X02;
+
+	public static final int		QC_CODEC_ID_AAC				= 0X10000;
+	public static final int		QC_CODEC_ID_G711A			= 0X10006;
+	public static final int		QC_CODEC_ID_G711U			= 0X10007;
+	
 	public static final int		QC_IOPROTOCOL_HTTPPD 		= 6;
 
 	// define the flag for player
 	public static final int		QCPLAY_OPEN_VIDDEC_HW		= 0X01000000;
 	public static final int		QCPLAY_OPEN_SAME_SOURCE		= 0X02000000;
+	public static final int		QCPLAY_OPEN_EXT_SOURCE_AV	= 0X10000000;
+	public static final int		QCPLAY_OPEN_EXT_SOURCE_IO	= 0X20000000;
 
 	// define the param id
 	public static final int 	PARAM_PID_EVENT_DONE		= 0X100;
@@ -53,21 +62,18 @@ public interface BasePlayer {
 
 	// Set the seek mode. 0, key frame, 1 any pos. int.
 	public static final int		QCPLAY_PID_Seek_Mode		= 0X11000021;
-	
-	// Set the start position before play. xxx ms. int.
-	public static final int		QCPLAY_PID_START_POS		= 0X11000022;
-
+	public static final int		QCPLAY_PID_Start_Pos		= 0X11000022;
 	// the param shoud null
 	public static final	int 	QCPLAY_PID_Flush_Buffer		= 0X11000025;
 
 	// the param.
 	public static final int 	QCPLAY_PID_Reconnect		= 0X11000030;
-	
+
 	// Set / Get downloading pause or run. The default is run
 	// The param sould be int. 0 run, 1 pause.
 	// This should be called when downloading.
 	public static final int 	QCPLAY_PID_Download_Pause	= 0X11000031;
-	
+
 	// Set the perfer io protocol. Param should QC_IOPROTOCOL_HTTPPD 
 	// This should be called before open.
 	public static final int 	QCPLAY_PID_Prefer_Protocol	= 0X11000060;
@@ -104,7 +110,11 @@ public interface BasePlayer {
 	// The parameter should be String.
 	public static final int	QCPLAY_PID_HTTP_HeadReferer			= 0X11000205;
 
-	// Set the ext dns server
+    // Set the http header referer
+    // The parameter should be String.
+    public static final int    QCPLAY_PID_HTTP_HeadUserAgent    = 0X11000206;
+
+    // Set the ext dns server
 	// The parameter should be String. "127.0.0.1" use local server.
 	public static final int	QCPLAY_PID_DNS_SERVER				= 0X11000208;
 
@@ -128,21 +138,8 @@ public interface BasePlayer {
 	// The parameter should be const char *.
 	// If the param is null, delete all cache source.
 	public static final int	QCPLAY_PID_DEL_Cache				= 0X11000251;
-	
-		// Add the source io in cache.
-	// The parameter should be const char *
-	public static final int	QCPLAY_PID_ADD_IOCache				= 0X11000255;
 
-	// Del the source io in cache list.
-	// The parameter should be const char *.
-	// If the param is null, delete all cache source.
-	public static final int	QCPLAY_PID_DEL_IOCache				= 0X11000256;
 
-	// Set the io cache size.
-	// The parameter should be int *.
-	public static final int	QCPLAY_PID_IOCache_Size				= 0X11000257;
-	
-	
 	// Set the log out level
 	// The parameter should be int, 0, None, 1 error, 2 warning, 3 info, 4 debug.
 	public static final int	QCPLAY_PID_Log_Level				= 0X11000320;
@@ -156,7 +153,8 @@ public interface BasePlayer {
 		
 	// Set the mp4 company key
 	// The parameter should be byte[].
-	public static final int	QCPLAY_PID_COMP_KeyText				= 0X11000303;	
+	public static final int	QCPLAY_PID_COMP_KeyText				= 0X11000303;
+	
 
 	// Set to call back video buffer. It should be set after open before run.
 	// The parameter is 1, it will render outside, 0 render internal
@@ -169,11 +167,27 @@ public interface BasePlayer {
 	// Set to playback or not.
 	// The parameter should be int. 0 not loop, 1 loop.
 	public static final int	QCPLAY_PID_Playback_Loop			= 0X11000340;
-	
-	// Set the mp4 preload time
-	// The parameter should be int *. it is ms to preload
-	public static final int	QCPLAY_PID_MP4_PRELOAD				= 0X00000341;
-	
+
+	// Set the ext source data
+	// The parameter should be
+	// nParam 0, IO data, 1 audio, 2 video. object is byte[]
+	public static final int	QCPLAY_PID_EXT_SOURCE_DATA			= 0X11000500;
+
+	// Set the ext source data info
+	// The parameter should be nParam 0, audio, 1 video. object is byte[16]
+	// the data should be [4] size, [8] timestamp, [4] flag
+	public static final int	QCPLAY_PID_EXT_SOURCE_INFO			= 0X11000501;
+
+	// Set the ext source video codec id
+	// The parameter should be int * QCCodecID
+	public static final int	QCPLAY_PID_EXT_VIDEO_CODECID		= 0X11000511;
+
+	// Set the ext source audio codec id
+	// The parameter should be int * QCCodecID
+	public static final int	QCPLAY_PID_EXT_AUDIO_CODECID		= 0X11000512;
+
+
+
 	// Define id of event listener.
 	public static final int 	QC_MSG_PLAY_OPEN_DONE 			= 0x16000001;
 	public static final int 	QC_MSG_PLAY_OPEN_FAILED 		= 0x16000002;
@@ -181,6 +195,10 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_PLAY_COMPLETE 			= 0x16000007;
 	public static final int 	QC_MSG_PLAY_SEEK_DONE 			= 0x16000005;
 	public static final int 	QC_MSG_PLAY_SEEK_FAILED 		= 0x16000006;
+
+	public static final int 	QC_MSG_PLAY_CACHE_DONE 			= 0x16000021;
+	public static final int 	QC_MSG_PLAY_CACHE_FAILED 		= 0x16000022;
+
 	// The first frame video was displayed.
 	public static final int 	QC_MSG_SNKV_FIRST_FRAME 		= 0x15200001;
 	// The video was render, the param is timestamp.
@@ -199,21 +217,17 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_PLAY_RUN					= 0x1600000C;
 	public static final int 	QC_MSG_PLAY_PAUSE				= 0x1600000D;
 	public static final int 	QC_MSG_PLAY_STOP				= 0x1600000E;
-	public static final int 	QC_MSG_PLAY_LOOP_TIMES			= 0x16000011;
 
-	// the param object is String for source name.
-	public static final int 	QC_MSG_PLAY_CACHE_DONE 			= 0x16000021;
-	public static final int 	QC_MSG_PLAY_CACHE_FAILED 		= 0x16000022;
 
 	// http protocol messaage id
 	public static final int 	QC_MSG_HTTP_CONNECT_START		= 0x11000001;
 	public static final int 	QC_MSG_HTTP_CONNECT_FAILED		= 0x11000002;
 	public static final int 	QC_MSG_HTTP_CONNECT_SUCESS		= 0x11000003;
 	public static final int 	QC_MSG_HTTP_DNS_START			= 0x11000004;
-	public static final int     QC_MSG_HTTP_DNS_GET_CACHE       = 0x11000005;
+    public static final int     QC_MSG_HTTP_DNS_GET_CACHE       = 0x11000005;
     public static final int     QC_MSG_HTTP_DNS_GET_IPADDR      = 0x11000006;
     public static final int     QC_MSG_HTTP_GET_HEADDATA        = 0x11000010;
-	public static final int 	QC_MSG_HTTP_REDIRECT			= 0x11000012;
+    public static final int 	QC_MSG_HTTP_REDIRECT			= 0x11000012;
 	public static final int 	QC_MSG_HTTP_DISCONNECT_START	= 0x11000021;
 	public static final int 	QC_MSG_HTTP_DISCONNECT_DONE		= 0x11000022;
 	public static final int 	QC_MSG_HTTP_DOWNLOAD_SPEED		= 0x11000030;
@@ -233,14 +247,14 @@ public interface BasePlayer {
 	public static final int		QC_MSG_HTTP_DOWNLOAD_PERCENT	= 0x11000061;
 	// Param: long long bytes
 	public static final int		QC_MSG_HTTP_CONTENT_SIZE		= 0x11000062;
-	public static final int		QC_MSG_HTTP_BUFFER_SIZE			= 0x11000063;	
-	// Param: String
-	public static final int     QC_MSG_HTTP_CONTENT_TYPE        = 0x11000064;
+	public static final int		QC_MSG_HTTP_BUFFER_SIZE			= 0x11000063;
+    public static final int     QC_MSG_HTTP_CONTENT_TYPE        = 0x11000064;
     public static final int     QC_MSG_HTTP_SEND_BYTE           = 0x11000065;
-	
+
 	// The obj is the string value
 	public static final int		QC_MSG_RTMP_METADATA			= 0x11010006;
-	//
+    
+    //
     public static final int     QC_MSG_IO_FIRST_BYTE_DONE       = 0x11020001;
     public static final int     QC_MSG_IO_HANDSHAKE_START       = 0x11020003;
     public static final int     QC_MSG_IO_HANDSHAKE_FAILED      = 0x11020004;
@@ -248,10 +262,6 @@ public interface BasePlayer {
 
 	// The nArg1 is the value.
 	public static final int 	QC_MSG_RTMP_DOWNLOAD_SPEED		= 0x11010004;
-	
-	// Param: int, 0, None, 1 File, 2 Http, 
-	public static final int		QC_MSG_IO_SEEK_SOURCE_TYPE		= 0x11020002;
-		
 	public static final int 	QC_MSG_BUFF_VBUFFTIME			= 0x18000001;
 	public static final int 	QC_MSG_BUFF_ABUFFTIME			= 0x18000002;
 
@@ -276,11 +286,12 @@ public interface BasePlayer {
 	public static final int 	QC_MSG_SNKV_NEW_FORMAT 			= 0x15200003;
 	// The audio format was changed.
 	public static final int 	QC_MSG_SNKA_NEW_FORMAT 			= 0x15100003;
-	
+
+
 	public static final int 	QC_FLAG_Video_CaptureImage		= 0x00000010;
 	public static final int 	QC_FLAG_Video_SEIDATA			= 0x00000020;
 	public static final int 	QC_FLAG_Video_YUV420P			= 0x00000000;
-	
+
 	public static final int 	QC_ERR_FAILED					= 0x80000001;
 	public static final int 	QC_ERR_MEMORY					= 0x80000002;
 	public static final int 	QC_ERR_IMPLEMENT				= 0x80000003;
@@ -292,6 +303,7 @@ public interface BasePlayer {
 	public static final int 	QC_ERR_FORCECLOSE				= 0x8000000c;
 	public static final int 	QC_ERR_FORMAT					= 0x8000000d;
 	public static final int 	QC_ERR_IO_FAILED				= 0x80000010;
+
 
 	// The event listener function
 	public interface onEventListener{

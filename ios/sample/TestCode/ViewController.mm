@@ -62,10 +62,11 @@
     else
         _urlList = [[NSMutableArray alloc] init];
     
-    _currURL = 0;
+    _currURL = 1;
     _clipboardURL = nil;
 
-    [_urlList addObject:@""];
+    [_urlList addObject:@"rtmp://media3.sinovision.net:1935/live/livestream"];
+    [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20181025/cont-1462783-10436258-142728-fhd.mp4"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"MP4"];
     [_urlList addObject:@"http://op053v693.bkt.clouddn.com/IMG_3376.MP4"];
@@ -74,8 +75,8 @@
     [_urlList addObject:@"http://static.zhibojie.tv/1502826524711_1_record.mp4"];
     [_urlList addObject:@"HLS"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-    [_urlList addObject:@"HKS"];
-    [_urlList addObject:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"];
+    [_urlList addObject:@"LIVE"];
+    [_urlList addObject:@"rtmp://media3.sinovision.net:1935/live/livestream"];
     [_urlList addObject:@"http://fms.cntv.lxdns.com/live/flv/channel84.flv"];
     [_urlList addObject:@"http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"];
     [_urlList addObject:@"http://zhibo.hkstv.tv/livestream/mutfysrq/playlist.m3u8"];
@@ -459,7 +460,6 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     _tableViewURL = [[UITableView alloc]initWithFrame:r style:UITableViewStylePlain];
     _tableViewURL.delegate = self;
     _tableViewURL.dataSource = self;
-    [_tableViewURL setBackgroundColor:[UIColor clearColor]];
     _tableViewURL.separatorInset = UIEdgeInsetsMake(0,10, 0, 10);
     _tableViewURL.separatorColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.2];
     [self.view addSubview:_tableViewURL];
@@ -570,6 +570,9 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [self prepareURL];
     
     _isFullScreen = NO;
+    
+//    _switchLoop.on = YES;
+//    [self onStart:nil];
 }
 
 #pragma mark UI action
@@ -686,7 +689,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     static long long lastPos = 0;
     if(lastPos == 0)
         lastPos = _player.GetPos(_player.hPlayer);
-    //NSLog(@"Pos %lld, duration %lld, interval %lld", _player.GetPos(_player.hPlayer), _player.GetDur(_player.hPlayer), _player.GetPos(_player.hPlayer)-lastPos);
+    //NSLog(@"Pos %lld, duration %lld, interval %lld, %d", _player.GetPos(_player.hPlayer), _player.GetDur(_player.hPlayer), _player.GetPos(_player.hPlayer)-lastPos, _player.GetVolume(_player.hPlayer));
     lastPos = _player.GetPos(_player.hPlayer);;
     if(!_isDragSlider)
     {
@@ -763,17 +766,23 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIDeviceOrientationPortrait] forKey:@"orientation"];
     }
     
-    [_tableViewURL setHidden:_isFullScreen?YES:NO];
-    
     if(_player.hPlayer)
     {
         if([self isVideoLandscape])
-        	_viewVideo.frame = _isFullScreen?_rectFullScreen:_rectSmallScreen;
+        {
+            [_tableViewURL setHidden:_isFullScreen?YES:NO];
+            _viewVideo.frame = _isFullScreen?_rectFullScreen:_rectSmallScreen;
+            _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
+        }
         else
         {
-            _viewVideo.frame = _isFullScreen?self.view.frame:_rectSmallScreen;
+            [UIView animateKeyframesWithDuration:.3 delay:0 options:(UIViewKeyframeAnimationOptionLayoutSubviews) animations:^{
+                [_tableViewURL setHidden:_isFullScreen?YES:NO];
+                 _viewVideo.frame = _isFullScreen?self.view.frame:_rectSmallScreen;
+                _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
+             }completion:^(BOOL finished){
+             }];
         }
-        _player.SetView(_player.hPlayer, (__bridge void*)_viewVideo, NULL);
     }
 }
 
@@ -785,6 +794,9 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
 
 -(IBAction)onSelectStream:(id)sender
 {
+    if(!_player.hPlayer)
+        return;
+    
     QCPLAY_STATUS status = _player.GetStatus(_player.hPlayer);
     
     if(status == QC_PLAY_Run)
