@@ -65,22 +65,18 @@
     _currURL = 1;
     _clipboardURL = nil;
 
-    [_urlList addObject:@"rtmp://media3.sinovision.net:1935/live/livestream"];
-    [_urlList addObject:@"http://video.pearvideo.com/mp4/third/20181025/cont-1462783-10436258-142728-fhd.mp4"];
+    [_urlList addObject:@""];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"MP4"];
     [_urlList addObject:@"http://op053v693.bkt.clouddn.com/IMG_3376.MP4"];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
     [_urlList addObject:@"ROTATE"];
     [_urlList addObject:@"http://static.zhibojie.tv/1502826524711_1_record.mp4"];
-    [_urlList addObject:@"HLS"];
-    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@"LIVE"];
     [_urlList addObject:@"rtmp://media3.sinovision.net:1935/live/livestream"];
-    [_urlList addObject:@"http://fms.cntv.lxdns.com/live/flv/channel84.flv"];
-    [_urlList addObject:@"http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"];
-    [_urlList addObject:@"http://zhibo.hkstv.tv/livestream/mutfysrq/playlist.m3u8"];
-    [_urlList addObject:@"rtmp://183.146.213.65/live/hks?domain=live.hkstv.hk.lxdns.com"];
+    [_urlList addObject:@"http://stream1.hnntv.cn/lywsgq/sd/live.m3u8"];
+    [_urlList addObject:@"HLS"];
+    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_urlList addObject:@"HD Live"];
     [_urlList addObject:@"http://stream1.hnntv.cn/lywsgq/sd/live.m3u8"];
     [_urlList addObject:@"http://skydvn-nowtv-atv-prod.skydvn.com/atv/skynews/1404/live/07.m3u8"];
