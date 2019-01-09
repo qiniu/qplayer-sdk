@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity
     public void openExtSource () {
         if (m_Player == null)
             return;
-        boolean bSourceAV = true;
+        boolean bSourceAV = false;
         if (bSourceAV) {
             m_Player.Open("EXT_AV", BasePlayer.QCPLAY_OPEN_EXT_SOURCE_AV);
 
@@ -284,6 +284,7 @@ public class MainActivity extends AppCompatActivity
             fillVideoData();
             fillAudioData();
         } else {
+            m_Player.SetParam(BasePlayer.QCPLAY_PID_Prefer_Format, 4, null);
             m_Player.Open("EXT_AV", BasePlayer.QCPLAY_OPEN_EXT_SOURCE_IO);
             filSourceData();
         }
@@ -389,12 +390,13 @@ public class MainActivity extends AppCompatActivity
         m_threadSource = new Thread(){
             public void run() {
                 String strFile = "/sdcard/00Files/origin.mp4";
+                strFile = "/sdcard/00Files/cam_gen.ts";
                 try {
                     File file = new File(strFile);
                     FileInputStream input = new FileInputStream(file);
                     int nFileSize = input.available();
                     int nFilePos = 0;
-                    int nDataSize = 32768;
+                    int nDataSize = 18800;
                     int nRC = 0;
                     long lPos = 0;
                     byte[]  byDataInfo = new byte[16];
