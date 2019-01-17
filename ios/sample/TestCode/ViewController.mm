@@ -65,21 +65,32 @@
     _currURL = 1;
     _clipboardURL = nil;
 
-    [_urlList addObject:@""];
+    
+    [_urlList addObject:@"http://pf1nvq2id.bkt.clouddn.com/testg711.m3u8"];
+    [_urlList addObject:@"http://oq2qpeuia.bkt.clouddn.com/test_g711.m3u8"];
+    [_urlList addObject:@"https://resource.hongse.shop/uploads_3/channel_video/video/93de0ac868902495135b3ca77630ca02.mp4"];
     [_urlList addObject:@"-------------------------------------------------------------------------------"];
     [_urlList addObject:@"MP4"];
     [_urlList addObject:@"http://op053v693.bkt.clouddn.com/IMG_3376.MP4"];
     [_urlList addObject:@"http://demo-videos.qnsdk.com/movies/qiniu.mp4"];
     [_urlList addObject:@"ROTATE"];
     [_urlList addObject:@"http://static.zhibojie.tv/1502826524711_1_record.mp4"];
+    [_urlList addObject:@"HTTPS"];
+    [_urlList addObject:@"https://www.bldimg.com/videos/ticktocks/27680892/27680892_1544012406.mp4"];
+    [_urlList addObject:@"https://video.itanyin.com/66b1a48f147f430895d71a98cb401a17/544a2b0f73194085bff2c53b68c47a02-f80de65afd786ff9fbce073729387b06-fd.mp4"];
     [_urlList addObject:@"LIVE"];
     [_urlList addObject:@"rtmp://media3.sinovision.net:1935/live/livestream"];
-    [_urlList addObject:@"http://stream1.hnntv.cn/lywsgq/sd/live.m3u8"];
+    [_urlList addObject:@"http://skydvn-nowtv-atv-prod.skydvn.com/atv/skynews/1404/live/04.m3u8"];
+    [_urlList addObject:@"rtmp://fc_video.bsgroup.com.hk:443/webcast/bshdlive-pc"];
+    [_urlList addObject:@"rtmp://202.69.69.180:443/webcast/bshdlive-pc"];
     [_urlList addObject:@"HLS"];
     [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8"];
+    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear2/prog_index.m3u8"];
+    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear3/prog_index.m3u8"];
+    [_urlList addObject:@"http://devimages.apple.com/iphone/samples/bipbop/gear4/prog_index.m3u8"];
     [_urlList addObject:@"HD Live"];
-    [_urlList addObject:@"http://stream1.hnntv.cn/lywsgq/sd/live.m3u8"];
-    [_urlList addObject:@"http://skydvn-nowtv-atv-prod.skydvn.com/atv/skynews/1404/live/07.m3u8"];
+    [_urlList addObject:@"http://skydvn-nowtv-atv-prod.skydvn.com/atv/skynews/1404/live/04.m3u8"];
     [_urlList addObject:@""];
     
     NSString* docPathDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -207,6 +218,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     else if(nID == QC_MSG_SNKA_FIRST_FRAME)
     {
         NSLog(@"[EVT]First audio frame rendered\n");
+        //_player.Pause(_player.hPlayer);
     }
     else if(nID == QC_MSG_SNKV_NEW_FORMAT)
     {
@@ -240,6 +252,10 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
             if(_waitView)
                 [_waitView stopAnimating];
         }];
+    }
+    else if (nID == QC_MSG_PLAY_STOP)
+    {
+        NSLog(@"[EVT]Stop");
     }
 }
 
@@ -313,6 +329,22 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     char* value = (char*)"User-Agent:APPLE_iPhone7,1_iOS11.4.1;59EA6724-4D2D-4055-A755-4B507B691687;";
     _player.SetParam(_player.hPlayer, QCPLAY_PID_HTTP_HeadUserAgent, (void*)value);
 #endif
+    //[self enableMuxer:YES];
+}
+
+-(void)enableMuxer:(BOOL)start
+{
+    if(!_player.hPlayer)
+        return;
+    if(start)
+    {
+        NSString* docPathDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        //docPathDir = [docPathDir stringByAppendingString:[NSString stringWithFormat:@"/mux%d.mp4", [self getSysTime]]];
+        docPathDir = [docPathDir stringByAppendingString:[NSString stringWithFormat:@"/mux0.mp4"]];
+        _player.SetParam(_player.hPlayer, QCPLAY_PID_START_MUX_FILE, (void*)[docPathDir UTF8String]);
+    }
+    else
+        _player.SetParam(_player.hPlayer, QCPLAY_PID_STOP_MUX_FILE, NULL);
 }
 
 
@@ -612,6 +644,7 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         int loop = _switchLoop.on?1:0;
         _player.SetParam(_player.hPlayer, QCPLAY_PID_Playback_Loop, &loop);
         
+        //[self enbaleMuxer:YES];
         [self enablePlaybackFromPosition];
         
         memset(&_fmtVideo, 0, sizeof(QC_VIDEO_FORMAT));
@@ -645,8 +678,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
     [_timer invalidate];
     _timer = nil;
     _player.Stop(_player.hPlayer);
-#if 0
-    _player.Close(_player.hPlayer);
+#if 1
+    //_player.Close(_player.hPlayer);
     [self destroyPlayer];
 #endif
     
@@ -761,6 +794,8 @@ void NotifyEvent (void * pUserData, int nID, void * pValue1)
         if([self isVideoLandscape])
             [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIDeviceOrientationPortrait] forKey:@"orientation"];
     }
+    
+    //[self enableMuxer:_isFullScreen];
     
     if(_player.hPlayer)
     {

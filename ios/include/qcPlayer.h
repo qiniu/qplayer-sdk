@@ -179,6 +179,13 @@ typedef struct
 // Set the PD save file ext name. Param should char *
 // This should be called before open.
 #define	QCPLAY_PID_PD_Save_ExtName	QC_PLAY_BASE + 0X62
+    
+// Start write file. Param is the save file name includes full path. Param should char *
+// This should be called before open.
+#define QCPLAY_PID_Muxer_Start		QC_PLAY_BASE + 0X63
+
+// Stop write file
+#define QCPLAY_PID_Muxer_Stop		QC_PLAY_BASE + 0X64
 
 // Background color for video render. Param should  QC_COLOR *
 // This should be called before open. Default value is black, {0.0, 0.0, 0.0, 1.0}
@@ -322,6 +329,13 @@ typedef struct
 // Set the ext source audio codec id
 // The parameter should be int * QCCodecID
 #define	QCPLAY_PID_EXT_AUDIO_CODEC			QC_PLAY_BASE + 0X0512
+
+// Set to start save output file. The format depend the file ext name.
+// The parameter should be char * . The output file name
+#define	QCPLAY_PID_START_MUX_FILE			QC_PLAY_BASE + 0X0520
+// Set to stop save output file. 
+// The parameter should be 0
+#define	QCPLAY_PID_STOP_MUX_FILE			QC_PLAY_BASE + 0X0521
 
 // the video aspect ratio.
 typedef struct {
