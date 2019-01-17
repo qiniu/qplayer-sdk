@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity
 
     private void Close() {
         if (m_Player != null) {
+            m_Player.SetParam(BasePlayer.QCPLAY_PID_STOP_SAVE_FILE, 0, null);
             m_Player.Stop();
             m_Player.Uninit();
             m_Player = null;
@@ -273,6 +274,8 @@ public class MainActivity extends AppCompatActivity
     public void openExtSource () {
         if (m_Player == null)
             return;
+        String strMuxFile = "/sdcard/00Files/mux001.mp4";
+        m_Player.SetParam(BasePlayer.QCPLAY_PID_START_SAVE_FILE, 0, strMuxFile);
         boolean bSourceAV = false;
         if (bSourceAV) {
             m_Player.Open("EXT_AV", BasePlayer.QCPLAY_OPEN_EXT_SOURCE_AV);
