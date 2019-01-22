@@ -233,15 +233,20 @@ public class MainActivity extends AppCompatActivity
                 int nFlag = 0;
                 nFlag = BasePlayer.QCPLAY_OPEN_SAME_SOURCE;
                 //m_Player.Open(strFile, nFlag);
+                String strMuxFile = "/sdcard/00Files/mux001.mp4";
+                m_Player.SetParam(BasePlayer.QCPLAY_PID_START_SAVE_FILE, 0, strMuxFile);
                 openExtSource ();
             }
         });
 
         m_btnPlay.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            String strURL = m_txtURL.getText ().toString();
-            if (m_Player != null)
-                m_Player.Open(strURL, 0);
+                String strMuxFile = "/sdcard/00Files/mux001.mp4";
+                m_Player.SetParam(BasePlayer.QCPLAY_PID_START_SAVE_FILE, 0, strMuxFile);
+
+                String strURL = m_txtURL.getText ().toString();
+          //  if (m_Player != null)
+           //     m_Player.Open(strURL, 0);
             }
         });
 
@@ -274,9 +279,7 @@ public class MainActivity extends AppCompatActivity
     public void openExtSource () {
         if (m_Player == null)
             return;
-        String strMuxFile = "/sdcard/00Files/mux001.mp4";
-        m_Player.SetParam(BasePlayer.QCPLAY_PID_START_SAVE_FILE, 0, strMuxFile);
-        boolean bSourceAV = false;
+        boolean bSourceAV = true;
         if (bSourceAV) {
             m_Player.Open("EXT_AV", BasePlayer.QCPLAY_OPEN_EXT_SOURCE_AV);
 
@@ -296,7 +299,7 @@ public class MainActivity extends AppCompatActivity
     public void fillVideoData () {
         Thread thread = new Thread(){
             public void run() {
-                String strFile = "/sdcard/00Files/H264.dat";
+                String strFile = "/sdcard/00Files/video.dat";
                 try {
                     File file = new File(strFile);
                     FileInputStream input = new FileInputStream(file);
@@ -343,7 +346,7 @@ public class MainActivity extends AppCompatActivity
                 String strFile = "/sdcard/00Files/AAC.dat";
                 if (bG711)
                     //strFile = "/sdcard/00Files/test.g711";
-                    strFile = "/sdcard/00Files/test.ulaw";
+                    strFile = "/sdcard/00Files/audio.alaw";
                 try {
                     File file = new File(strFile);
                     FileInputStream input = new FileInputStream(file);
