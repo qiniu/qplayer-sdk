@@ -323,6 +323,13 @@ typedef struct
 // The parameter should be int * QCCodecID
 #define	QCPLAY_PID_EXT_AUDIO_CODEC			QC_PLAY_BASE + 0X0512
 
+// Set to start save output file. The format depend the file ext name.
+// The parameter should be char * . The output file name
+#define	QCPLAY_PID_START_MUX_FILE			QC_PLAY_BASE + 0X0520
+// Set to stop save output file. 
+// The parameter should be int * 0 Stop, 1 Pause, 2 Restart.
+#define	QCPLAY_PID_STOP_MUX_FILE			QC_PLAY_BASE + 0X0521
+
 // the video aspect ratio.
 typedef struct {
 	int		nWidth;
