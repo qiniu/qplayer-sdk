@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity
 
         m_txtURL = (EditText)findViewById (R.id.edtURL);
         m_btnPlay = (Button)findViewById (R.id.btnPlay);
-        m_txtURL.setText ("rtmp://live.hkstv.hk.lxdns.com/live/hks");
+        m_txtURL.setText ("https://f1.eyee.com/community/video/190123/1548215371456.MP4");
 
         m_lstFiles = (ListView) findViewById(R.id.listViewFile);
         String[] strFiles = new String[]{
@@ -232,21 +232,21 @@ public class MainActivity extends AppCompatActivity
                 String strFile = (String) adapter.getItem(position).toString();
                 int nFlag = 0;
                 nFlag = BasePlayer.QCPLAY_OPEN_SAME_SOURCE;
-                //m_Player.Open(strFile, nFlag);
-                String strMuxFile = "/sdcard/00Files/mux001.mp4";
-                m_Player.SetParam(BasePlayer.QCPLAY_PID_START_SAVE_FILE, 0, strMuxFile);
-                openExtSource ();
+                m_Player.Open(strFile, nFlag);
+                //String strMuxFile = "/sdcard/00Files/mux001.mp4";
+                //m_Player.SetParam(BasePlayer.QCPLAY_PID_START_SAVE_FILE, 0, strMuxFile);
+                //openExtSource ();
             }
         });
 
         m_btnPlay.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String strMuxFile = "/sdcard/00Files/mux001.mp4";
-                m_Player.SetParam(BasePlayer.QCPLAY_PID_START_SAVE_FILE, 0, strMuxFile);
+               //String strMuxFile = "/sdcard/00Files/mux001.mp4";
+               //m_Player.SetParam(BasePlayer.QCPLAY_PID_START_SAVE_FILE, 0, strMuxFile);
 
                 String strURL = m_txtURL.getText ().toString();
-          //  if (m_Player != null)
-           //     m_Player.Open(strURL, 0);
+                if (m_Player != null)
+                    m_Player.Open(strURL, 0);
             }
         });
 
