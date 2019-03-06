@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         } else if (nID == BasePlayer.QC_MSG_PLAY_OPEN_FAILED) {
             Toast.makeText(this, "打开文件失败了！", Toast.LENGTH_SHORT).show();
         } else if (nID == BasePlayer.QC_MSG_PLAY_COMPLETE) {
-            m_Player.SetPos(0);
+            //m_Player.SetPos(0);
             //m_Player.Open(m_strFile, 0);
         } else if (nID == BasePlayer.QC_MSG_PLAY_DURATION) {
             m_nDuration = (int)m_Player.GetDuration();
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity
             //m_Player.SetParam(BasePlayer.QCPLAY_PID_DNS_SERVER, 0, strDnsServer);
             String strHost = "play-sg.magicmovie.video";
             m_Player.SetParam(BasePlayer.QCPLAY_PID_DNS_DETECT, 0, strHost);
-            m_Player.SetParam(BasePlayer.QCPLAY_PID_Playback_Loop, 1, null);
+            //m_Player.SetParam(BasePlayer.QCPLAY_PID_Playback_Loop, 1, null);
 
             //m_Player.SetParam(BasePlayer.QCPLAY_PID_Prefer_Protocol, BasePlayer.QC_IOPROTOCOL_HTTPPD, null);
             File file = Environment.getExternalStorageDirectory();
@@ -206,7 +206,8 @@ public class MainActivity extends AppCompatActivity
         m_lstFiles = (ListView) findViewById(R.id.listViewFile);
         String[] strFiles = new String[]{
                 //"http://play-sg.magicmovie.video/1522840135682377_6533932314185962496_VZrIwtRwNf_o.mp4",
-                "http://play-sg.magicmovie.video/magicmovie/sg/visha/20181121/15427952223097_water.mp4",
+                "http://linking.qiniuapi.com/v1/device/resource/fastfwd.fmp4?dtoken=ZLaj6xCX7-kN8FMz0AtPTmDuL4s6QyV_5i83JbbW:W5Tk-DlX1EMBhdYXafAf6IKTXCs=:eyJhcHBpZCI6IjJ4ZW56dmYwNmh0NWIiLCJkZXZpY2UiOiJsbWt0ZXN0MSIsImRlYWRsaW5lIjoxNTgyNTE1Mzk0LCJyYW5kb20iOjE1NTE0MTEzOTQ5MTAsInN0YXRlbWVudCI6W3siYWN0aW9uIjoibGlua2luZzp2b2QifV19&start=1551351960&end=1551351968&speed=8x",
+                "http://10008gi.playback1.z1.pili.qiniucdn.com/uqlivezhibo/6EEB888A83A89B555E51E35B6EBA250B.m3u8?start=1551791149&end=1551801739",
                 "http://play-sg.magicmovie.video/magicmovie/sg/visha/20190222/15508325369894_water.mp4",
                 "http://play-sg.magicmovie.video/1522842052934924_6534017832290620416_DywxWfSnpl_o.mp4",
                 "http://play-sg.magicmovie.video/1522839490686343_6533947726588023808_BppAQqcNLc_o.mp4",
